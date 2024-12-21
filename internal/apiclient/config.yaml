@@ -1,0 +1,9 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/oapi-codegen/oapi-codegen/HEAD/configuration-schema.json
+package: apiclient
+output: ./apiclient.gen.go
+generate:
+  models: true
+  client: true
+output-options:
+  # See: https://github.com/oapi-codegen/oapi-codegen/issues/1474
+  response-type-suffix: Resp

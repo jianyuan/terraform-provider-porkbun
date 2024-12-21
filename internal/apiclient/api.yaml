@@ -1,0 +1,140 @@
+openapi: 3.0.0
+info:
+  title: Porkbun API
+  version: 1.0.0
+servers:
+  - url: https://api.porkbun.com/api/json
+    description: Porkbun API
+    variables: {}
+paths:
+  /v3/domain/getNs/{domain}:
+    post:
+      operationId: domainGetNameServers
+      parameters:
+        - name: domain
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - apikey
+                - secretapikey
+              properties:
+                apikey:
+                  type: string
+                secretapikey:
+                  type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DomainGetNameServersResponse"
+  /v3/domain/listAll:
+    post:
+      operationId: domainListAll
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - apikey
+                - secretapikey
+              properties:
+                apikey:
+                  type: string
+                secretapikey:
+                  type: string
+                start:
+                  type: integer
+                includeLabels:
+                  type: string
+                  enum:
+                    - "yes"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DomainListAllResponse"
+components:
+  schemas:
+    Domain:
+      type: object
+      required:
+        - domain
+        - status
+        - tld
+        - createDate
+        - expireDate
+        - securityLock
+        - whoisPrivacy
+        - autoRenew
+        - notLocal
+        - labels
+      properties:
+        domain:
+          type: string
+        status:
+          type: string
+        tld:
+          type: string
+        createDate:
+          type: string
+        expireDate:
+          type: string
+        securityLock:
+          type: string
+        whoisPrivacy:
+          type: string
+        autoRenew:
+          type: string
+        notLocal:
+          type: integer
+        labels:
+          type: array
+          items:
+            type: object
+            required:
+              - id
+              - title
+              - color
+            properties:
+              id:
+                type: string
+              title:
+                type: string
+              color:
+                type: string
+    DomainGetNameServersResponse:
+      type: object
+      required:
+        - status
+        - ns
+      properties:
+        status:
+          type: string
+        ns:
+          type: array
+          items:
+            type: string
+    DomainListAllResponse:
+      type: object
+      required:
+        - status
+        - domains
+      properties:
+        status:
+          type: string
+        domains:
+          type: array
+          items:
+            $ref: "#/components/schemas/Domain"
