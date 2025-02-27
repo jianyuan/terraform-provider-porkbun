@@ -178,6 +178,8 @@ github.com/jhump/protoreflect v1.15.1 h1:HUMERORf3I3ZdX05WaQ6MIpd/NJ434hTp5YiKgf
 github.com/jhump/protoreflect v1.15.1/go.mod h1:jD/2GMKKE6OqX8qTjhADU1e6DShO+gavG9e0Q693nKo=
 github.com/jianyuan/go-utils v0.0.0-20241210005310-ec4088c3adbd h1:RB+XeSesQXve04fqa/CcenQ7rZAPxUS8LKDfBpxf5Sw=
 github.com/jianyuan/go-utils v0.0.0-20241210005310-ec4088c3adbd/go.mod h1:D1O+WiG+p0g3LExvWtPEn6+UDTKJoUxTfJxyM6Ya6+k=
+github.com/jianyuan/go-utils v0.0.0-20250223213401-62c93a9e0b6c h1:VG+sd6t1wnle1Rc9Z52CmsYuwhBkXcW+aPIHqcw9e0I=
+github.com/jianyuan/go-utils v0.0.0-20250223213401-62c93a9e0b6c/go.mod h1:D1O+WiG+p0g3LExvWtPEn6+UDTKJoUxTfJxyM6Ya6+k=
 github.com/josharian/intern v1.0.0 h1:vlS4z54oSdjm0bgjRigI+G1HpF+tI+9rE5LLzOg8HmY=
 github.com/josharian/intern v1.0.0/go.mod h1:5DoeVV0s6jJacbCEi61lwdGj/aVlrQvzHFFd8Hwg//Y=
 github.com/juju/gnuflag v0.0.0-20171113085948-2ce1bb71843d/go.mod h1:2PavIy+JPciBPrBUjwbNvtwB6RQlve+hkpll6QSNmOE=
