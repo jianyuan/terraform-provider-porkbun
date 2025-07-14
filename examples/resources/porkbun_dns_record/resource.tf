@@ -30,5 +30,5 @@ resource "porkbun_dns_record" "example" {
 
 import {
   to = porkbun_dns_record.example
-  id  = "123456789_jiancodes.com_CNAME"
+  id = "123456789_jiancodes.com_CNAME"
 }
