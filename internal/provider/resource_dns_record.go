@@ -5,8 +5,10 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
@@ -28,6 +30,7 @@ func NewDnsRecordResource() resource.Resource {
 }
 
 var _ resource.Resource = &DnsRecordResource{}
+var _ resource.ResourceWithImportState = &DnsRecordResource{}
 
 type DnsRecordResource struct {
 	baseResource
@@ -284,4 +287,18 @@ func (r *DnsRecordResource) Delete(ctx context.Context, req resource.DeleteReque
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to delete, got status code %d: %s", httpResp.StatusCode(), string(httpResp.Body)))
 		return
 	}
+}
+
+func (r *DnsRecordResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
+	parts := strings.SplitN(req.ID, "_", 3)
+	if len(parts) != 3 {
+		resp.Diagnostics.AddError(
+			"Invalid import ID format",
+			"Expected import ID in the format '<record_id>_<domain>_<type>' (e.g. 123456789_jiancodes.com_CNAME).",
+		)
+		return
+	}
+	resp.State.SetAttribute(ctx, path.Root("id"), parts[0])
+	resp.State.SetAttribute(ctx, path.Root("domain"), parts[1])
+	resp.State.SetAttribute(ctx, path.Root("type"), parts[2])
 }
