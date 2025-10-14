@@ -2,7 +2,7 @@ module github.com/jianyuan/terraform-provider-porkbun
 
 go 1.24.0
 
-toolchain go1.24.5
+toolchain go1.25.3
 
 require (
 	github.com/hashicorp/terraform-plugin-docs v0.22.0
