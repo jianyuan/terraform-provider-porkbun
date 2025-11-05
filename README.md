@@ -40,7 +40,7 @@ Then commit the changes to `go.mod` and `go.sum`.
 
 ## Using the provider
 
-Fill this in for each provider
+Please refer to the [provider documentation on the Terraform registry](https://registry.terraform.io/providers/jianyuan/porkbun/latest/docs).
 
 ## Developing the Provider
 
