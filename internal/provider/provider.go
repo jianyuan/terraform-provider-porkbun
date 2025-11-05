@@ -8,10 +8,9 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/function"
 	"github.com/hashicorp/terraform-plugin-framework/provider"
-	"github.com/hashicorp/terraform-plugin-framework/provider/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
-	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/jianyuan/terraform-provider-porkbun/internal/apiclient"
+	"github.com/jianyuan/terraform-provider-porkbun/internal/provider/provider_porkbun"
 )
 
 // Ensure PorkbunProvider satisfies various provider interfaces.
@@ -26,42 +25,17 @@ type PorkbunProvider struct {
 	version string
 }
 
-// PorkbunProviderModel describes the provider data model.
-type PorkbunProviderModel struct {
-	BaseUrl   types.String `tfsdk:"base_url"`
-	ApiKey    types.String `tfsdk:"api_key"`
-	SecretKey types.String `tfsdk:"secret_key"`
-}
-
 func (p *PorkbunProvider) Metadata(ctx context.Context, req provider.MetadataRequest, resp *provider.MetadataResponse) {
 	resp.TypeName = "porkbun"
 	resp.Version = p.version
 }
 
 func (p *PorkbunProvider) Schema(ctx context.Context, req provider.SchemaRequest, resp *provider.SchemaResponse) {
-	resp.Schema = schema.Schema{
-		MarkdownDescription: "The Porkbun provider is used to interact with the Porkbun service.\n\nIf you find this provider useful, please consider supporting me through GitHub Sponsorship or Ko-Fi to help with its development.\n\n[![Github-sponsors](https://img.shields.io/badge/sponsor-30363D?style=for-the-badge&logo=GitHub-Sponsors&logoColor=#EA4AAA)](https://github.com/sponsors/jianyuan)\n[![Ko-Fi](https://img.shields.io/badge/Ko--fi-F16061?style=for-the-badge&logo=ko-fi&logoColor=white)](https://ko-fi.com/L3L71DQEL)",
-		Attributes: map[string]schema.Attribute{
-			"base_url": schema.StringAttribute{
-				MarkdownDescription: "The base URL for the Porkbun API. Defaults to `https://api.porkbun.com/api/json`. It can be sourced from the `PORKBUN_BASE_URL` environment variable.",
-				Optional:            true,
-			},
-			"api_key": schema.StringAttribute{
-				MarkdownDescription: "The API key for the Porkbun account. It can be sourced from the `PORKBUN_API_KEY` environment variable.",
-				Optional:            true,
-				Sensitive:           true,
-			},
-			"secret_key": schema.StringAttribute{
-				MarkdownDescription: "The secret API key for the Porkbun account. It can be sourced from the `PORKBUN_SECRET_KEY` environment variable.",
-				Optional:            true,
-				Sensitive:           true,
-			},
-		},
-	}
+	resp.Schema = provider_porkbun.PorkbunProviderSchema(ctx)
 }
 
 func (p *PorkbunProvider) Configure(ctx context.Context, req provider.ConfigureRequest, resp *provider.ConfigureResponse) {
-	var data PorkbunProviderModel
+	var data provider_porkbun.PorkbunModel
 
 	resp.Diagnostics.Append(req.Config.Get(ctx, &data)...)
 	if resp.Diagnostics.HasError() {

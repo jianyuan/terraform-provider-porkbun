@@ -1,0 +1,35 @@
+{
+    "$schema": "https://raw.githubusercontent.com/hashicorp/terraform-plugin-codegen-spec/main/spec/v0.1/schema.json",
+    "version": "0.1",
+    "provider": {
+        "name": "porkbun",
+        "schema": {
+            "markdown_description": "The Porkbun provider is used to interact with the Porkbun service.\n\nIf you find this provider useful, please consider supporting me through GitHub Sponsorship or Ko-Fi to help with its development.\n\n[![Github-sponsors](https://img.shields.io/badge/sponsor-30363D?style=for-the-badge&logo=GitHub-Sponsors&logoColor=#EA4AAA)](https://github.com/sponsors/jianyuan)\n[![Ko-Fi](https://img.shields.io/badge/Ko--fi-F16061?style=for-the-badge&logo=ko-fi&logoColor=white)](https://ko-fi.com/L3L71DQEL)",
+            "attributes": [
+                {
+                    "name": "base_url",
+                    "string": {
+                        "description": "The base URL for the Porkbun API. Defaults to `https://api.porkbun.com/api/json`. It can be sourced from the `PORKBUN_BASE_URL` environment variable.",
+                        "optional_required": "optional"
+                    }
+                },
+                {
+                    "name": "api_key",
+                    "string": {
+                        "description": "The API key for the Porkbun account. It can be sourced from the `PORKBUN_API_KEY` environment variable.",
+                        "optional_required": "optional",
+                        "sensitive": true
+                    }
+                },
+                {
+                    "name": "secret_key",
+                    "string": {
+                        "description": "The secret API key for the Porkbun account. It can be sourced from the `PORKBUN_SECRET_KEY` environment variable.",
+                        "optional_required": "optional",
+                        "sensitive": true
+                    }
+                }
+            ]
+        }
+    }
+}
