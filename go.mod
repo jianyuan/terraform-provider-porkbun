@@ -17,7 +17,7 @@ require (
 	github.com/clipperhouse/uax29/v2 v2.3.0 // indirect
 	github.com/hashicorp/terraform-plugin-codegen-framework v0.4.1 // indirect
 	github.com/hashicorp/terraform-plugin-docs v0.24.0 // indirect
-	github.com/oapi-codegen/oapi-codegen/v2 v2.5.1 // indirect
+	github.com/oapi-codegen/oapi-codegen/v2 v2.6.0 // indirect
 	github.com/woodsbury/decimal128 v1.3.0 // indirect
 )
 
