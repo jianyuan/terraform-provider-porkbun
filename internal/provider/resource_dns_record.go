@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
@@ -23,6 +24,22 @@ type DnsRecordResourceModel struct {
 	Domain    types.String `tfsdk:"domain"`
 	Subdomain types.String `tfsdk:"subdomain"`
 	DnsRecordModel
+}
+
+func (m *DnsRecordResourceModel) Fill(ctx context.Context, record apiclient.DnsRecord) (diags diag.Diagnostics) {
+	diags.Append(m.DnsRecordModel.Fill(ctx, record)...)
+	if diags.HasError() {
+		return
+	}
+
+	fullName := strings.TrimSuffix(m.Name.ValueString(), ".")
+	domain := strings.TrimSuffix(m.Domain.ValueString(), ".")
+	if fullName == domain {
+		m.Subdomain = types.StringNull()
+	} else if suffix := "." + domain; strings.HasSuffix(fullName, suffix) {
+		m.Subdomain = types.StringValue(strings.TrimSuffix(fullName, suffix))
+	}
+	return
 }
 
 func NewDnsRecordResource() resource.Resource {
