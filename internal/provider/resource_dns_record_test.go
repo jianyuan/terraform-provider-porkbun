@@ -116,11 +116,11 @@ func TestAccDnsRecordResource(t *testing.T) {
 				},
 			},
 			{
-				Config:             subdomainConfig,
-				ResourceName:       rn,
-				ImportState:        true,
-				ImportStateIdFunc:  testAccDnsRecordImportStateIdFunc(rn),
-				ImportStatePersist: true,
+				Config:            subdomainConfig,
+				ResourceName:      rn,
+				ImportState:       true,
+				ImportStateIdFunc: testAccDnsRecordImportStateIdFunc(rn),
+				ImportStateVerify: true,
 			},
 			{
 				Config:           subdomainConfig,
@@ -151,11 +151,11 @@ func TestAccDnsRecordResource(t *testing.T) {
 				},
 			},
 			{
-				Config:             wildcardConfig,
-				ResourceName:       rn,
-				ImportState:        true,
-				ImportStateIdFunc:  testAccDnsRecordImportStateIdFunc(rn),
-				ImportStatePersist: true,
+				Config:            wildcardConfig,
+				ResourceName:      rn,
+				ImportState:       true,
+				ImportStateIdFunc: testAccDnsRecordImportStateIdFunc(rn),
+				ImportStateVerify: true,
 			},
 			{
 				Config:           wildcardConfig,
