@@ -8,6 +8,7 @@ import (
 	"strings"
 	"testing"
 
+	sdkacctest "github.com/hashicorp/terraform-plugin-testing/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 	"github.com/hashicorp/terraform-plugin-testing/knownvalue"
 	"github.com/hashicorp/terraform-plugin-testing/plancheck"
@@ -70,7 +71,7 @@ func init() {
 
 func TestAccDnsRecordResource(t *testing.T) {
 	rn := "porkbun_dns_record.test"
-	content := acctest.RandomWithPrefix("tf")
+	content := sdkacctest.RandomWithPrefix("tf")
 
 	subdomainConfig := testAccDnsRecordResourceConfig(fmt.Sprintf(`
 		subdomain = "%[1]s"
