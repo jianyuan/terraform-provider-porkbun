@@ -16,7 +16,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/jianyuan/go-utils/ptr"
 	"github.com/jianyuan/terraform-provider-porkbun/internal/apiclient"
 )
 
@@ -128,10 +127,10 @@ func (r *DnsRecordResource) Create(ctx context.Context, req resource.CreateReque
 		Content:      data.Content.ValueString(),
 	}
 	if !data.Ttl.IsNull() {
-		params.Ttl = ptr.Ptr(strconv.FormatInt(data.Ttl.ValueInt64(), 10))
+		params.Ttl = new(strconv.FormatInt(data.Ttl.ValueInt64(), 10))
 	}
 	if !data.Priority.IsNull() {
-		params.Prio = ptr.Ptr(strconv.FormatInt(data.Priority.ValueInt64(), 10))
+		params.Prio = new(strconv.FormatInt(data.Priority.ValueInt64(), 10))
 	}
 
 	createHttpResp, err := r.client.DnsCreateRecordWithResponse(
@@ -231,10 +230,10 @@ func (r *DnsRecordResource) Update(ctx context.Context, req resource.UpdateReque
 		Content:      data.Content.ValueString(),
 	}
 	if !data.Ttl.IsNull() {
-		params.Ttl = ptr.Ptr(strconv.FormatInt(data.Ttl.ValueInt64(), 10))
+		params.Ttl = new(strconv.FormatInt(data.Ttl.ValueInt64(), 10))
 	}
 	if !data.Priority.IsNull() {
-		params.Prio = ptr.Ptr(strconv.FormatInt(data.Priority.ValueInt64(), 10))
+		params.Prio = new(strconv.FormatInt(data.Priority.ValueInt64(), 10))
 	}
 
 	updateHttpResp, err := r.client.DnsEditRecordByDomainAndIdWithResponse(

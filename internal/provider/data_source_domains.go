@@ -9,7 +9,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/jianyuan/go-utils/ptr"
 	"github.com/jianyuan/terraform-provider-porkbun/internal/apiclient"
 	"github.com/jianyuan/terraform-provider-porkbun/internal/porkbuntypes"
 	"github.com/jianyuan/terraform-provider-porkbun/internal/tfutils"
@@ -124,7 +123,7 @@ func (d *DomainsDataSource) Read(ctx context.Context, req datasource.ReadRequest
 	params := apiclient.DomainListAllJSONRequestBody{
 		Apikey:       d.apiKey,
 		Secretapikey: d.secretKey,
-		Start:        ptr.Ptr(0),
+		Start:        new(0),
 	}
 
 	var domains []apiclient.Domain
@@ -148,7 +147,7 @@ func (d *DomainsDataSource) Read(ctx context.Context, req datasource.ReadRequest
 			break
 		}
 
-		params.Start = ptr.Ptr(len(domains) + 1)
+		params.Start = new(len(domains) + 1)
 	}
 
 	resp.Diagnostics.Append(data.Fill(ctx, domains)...)

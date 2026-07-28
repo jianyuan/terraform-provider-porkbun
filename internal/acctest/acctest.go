@@ -4,7 +4,6 @@ import (
 	"os"
 	"testing"
 
-	"github.com/jianyuan/go-utils/must"
 	"github.com/jianyuan/terraform-provider-porkbun/internal/apiclient"
 )
 
@@ -17,9 +16,13 @@ var (
 )
 
 func init() {
-	SharedClient = must.Get(apiclient.NewClientWithResponses(
+	var err error
+	SharedClient, err = apiclient.NewClientWithResponses(
 		"https://api.porkbun.com/api/json",
-	))
+	)
+	if err != nil {
+		panic(err)
+	}
 }
 
 func PreCheck(t *testing.T) {
