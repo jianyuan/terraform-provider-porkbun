@@ -147,7 +147,14 @@ func (r *DnsRecordResource) Create(ctx context.Context, req resource.CreateReque
 		return
 	}
 
-	id := strconv.FormatInt(createHttpResp.JSON200.Id, 10)
+	var id string
+	if v, err := createHttpResp.JSON200.Id.AsDnsCreateRecordResponseId0(); err == nil {
+		id = strconv.FormatInt(v, 10)
+	} else if v, err := createHttpResp.JSON200.Id.AsDnsCreateRecordResponseId1(); err == nil {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to create, got error: %v", v))
+		return
+	}
+
 	data.Id = types.StringValue(id)
 
 	readHttpResp, err := r.client.DnsRetrieveRecordsByDomainAndIdWithResponse(

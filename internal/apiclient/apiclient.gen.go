@@ -43,6 +43,23 @@ type BoolInteger = int
 // BoolString defines model for BoolString.
 type BoolString = string
 
+// DnsCreateRecordResponse defines model for DnsCreateRecordResponse.
+type DnsCreateRecordResponse struct {
+	Id     DnsCreateRecordResponse_Id `json:"id"`
+	Status string                     `json:"status"`
+}
+
+// DnsCreateRecordResponseId0 defines model for .
+type DnsCreateRecordResponseId0 = int64
+
+// DnsCreateRecordResponseId1 defines model for .
+type DnsCreateRecordResponseId1 map[string]interface{}
+
+// DnsCreateRecordResponse_Id defines model for DnsCreateRecordResponse.Id.
+type DnsCreateRecordResponse_Id struct {
+	union json.RawMessage
+}
+
 // DnsRecord defines model for DnsRecord.
 type DnsRecord struct {
 	Content string  `json:"content"`
@@ -176,6 +193,68 @@ type DomainListAllJSONRequestBody DomainListAllJSONBody
 
 // DomainUpdateNameServersJSONRequestBody defines body for DomainUpdateNameServers for application/json ContentType.
 type DomainUpdateNameServersJSONRequestBody DomainUpdateNameServersJSONBody
+
+// AsDnsCreateRecordResponseId0 returns the union data inside the DnsCreateRecordResponse_Id as a DnsCreateRecordResponseId0
+func (t DnsCreateRecordResponse_Id) AsDnsCreateRecordResponseId0() (DnsCreateRecordResponseId0, error) {
+	var body DnsCreateRecordResponseId0
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromDnsCreateRecordResponseId0 overwrites any union data inside the DnsCreateRecordResponse_Id as the provided DnsCreateRecordResponseId0
+func (t *DnsCreateRecordResponse_Id) FromDnsCreateRecordResponseId0(v DnsCreateRecordResponseId0) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeDnsCreateRecordResponseId0 performs a merge with any union data inside the DnsCreateRecordResponse_Id, using the provided DnsCreateRecordResponseId0
+func (t *DnsCreateRecordResponse_Id) MergeDnsCreateRecordResponseId0(v DnsCreateRecordResponseId0) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsDnsCreateRecordResponseId1 returns the union data inside the DnsCreateRecordResponse_Id as a DnsCreateRecordResponseId1
+func (t DnsCreateRecordResponse_Id) AsDnsCreateRecordResponseId1() (DnsCreateRecordResponseId1, error) {
+	var body DnsCreateRecordResponseId1
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromDnsCreateRecordResponseId1 overwrites any union data inside the DnsCreateRecordResponse_Id as the provided DnsCreateRecordResponseId1
+func (t *DnsCreateRecordResponse_Id) FromDnsCreateRecordResponseId1(v DnsCreateRecordResponseId1) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeDnsCreateRecordResponseId1 performs a merge with any union data inside the DnsCreateRecordResponse_Id, using the provided DnsCreateRecordResponseId1
+func (t *DnsCreateRecordResponse_Id) MergeDnsCreateRecordResponseId1(v DnsCreateRecordResponseId1) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t DnsCreateRecordResponse_Id) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *DnsCreateRecordResponse_Id) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
 
 // AsBoolInteger returns the union data inside the Domain_AutoRenew as a BoolInteger
 func (t Domain_AutoRenew) AsBoolInteger() (BoolInteger, error) {
@@ -1391,10 +1470,7 @@ type ClientWithResponsesInterface interface {
 type DnsCreateRecordResp struct {
 	Body         []byte
 	HTTPResponse *http.Response
-	JSON200      *struct {
-		Id     int64  `json:"id"`
-		Status string `json:"status"`
-	}
+	JSON200      *DnsCreateRecordResponse
 }
 
 // Status returns HTTPResponse.Status
@@ -1814,10 +1890,7 @@ func ParseDnsCreateRecordResp(rsp *http.Response) (*DnsCreateRecordResp, error) 
 
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest struct {
-			Id     int64  `json:"id"`
-			Status string `json:"status"`
-		}
+		var dest DnsCreateRecordResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}

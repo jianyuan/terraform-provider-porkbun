@@ -116,16 +116,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                required:
-                  - status
-                  - id
-                properties:
-                  status:
-                    type: string
-                  id:
-                    type: integer
-                    format: int64
+                $ref: "#/components/schemas/DnsCreateRecordResponse"
   /v3/dns/edit/{domain}/{record_id}:
     post:
       operationId: dnsEditRecordByDomainAndId
@@ -453,3 +444,18 @@ components:
         notes:
           type: string
           nullable: true
+    DnsCreateRecordResponse:
+      type: object
+      required:
+        - status
+        - id
+      properties:
+        status:
+          type: string
+        id:
+          oneOf:
+            - type: integer
+              format: int64
+            - type: object
+              properties: {}
+              additionalProperties: true

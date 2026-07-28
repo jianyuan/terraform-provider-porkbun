@@ -2,6 +2,7 @@ package provider
 
 import (
 	"context"
+	"net/http"
 	"os"
 
 	"github.com/hashicorp/go-retryablehttp"
@@ -11,6 +12,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/provider/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/logging"
 	"github.com/jianyuan/terraform-provider-porkbun/internal/apiclient"
 )
 
@@ -109,10 +111,13 @@ func (p *PorkbunProvider) Configure(ctx context.Context, req provider.ConfigureR
 	retryClient.ErrorHandler = retryablehttp.PassthroughErrorHandler
 	retryClient.Logger = nil
 	retryClient.RetryMax = 10
+	transport := retryClient.StandardClient().Transport
+
+	transport = logging.NewLoggingHTTPTransport(transport)
 
 	client, err := apiclient.NewClientWithResponses(
 		baseUrl,
-		apiclient.WithHTTPClient(retryClient.StandardClient()),
+		apiclient.WithHTTPClient(&http.Client{Transport: transport}),
 	)
 	if err != nil {
 		resp.Diagnostics.AddError("failed to create API client", err.Error())
