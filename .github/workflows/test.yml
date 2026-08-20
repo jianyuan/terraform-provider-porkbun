@@ -78,6 +78,5 @@ jobs:
           TF_ACC: "1"
           PORKBUN_API_KEY: ${{ secrets.PORKBUN_API_KEY }}
           PORKBUN_SECRET_KEY: ${{ secrets.PORKBUN_SECRET_KEY }}
-          PORKBUN_TEST_DOMAIN: ${{ secrets.PORKBUN_TEST_DOMAIN }}
         run: go test -v -cover ./internal/provider/
         timeout-minutes: 10

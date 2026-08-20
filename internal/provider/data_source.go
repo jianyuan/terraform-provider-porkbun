@@ -9,9 +9,7 @@ import (
 )
 
 type baseDataSource struct {
-	client    *apiclient.ClientWithResponses
-	apiKey    string
-	secretKey string
+	client *apiclient.ClientWithResponses
 }
 
 func (d *baseDataSource) Configure(ctx context.Context, req datasource.ConfigureRequest, resp *datasource.ConfigureResponse) {
@@ -32,6 +30,4 @@ func (d *baseDataSource) Configure(ctx context.Context, req datasource.Configure
 	}
 
 	d.client = providerData.client
-	d.apiKey = providerData.apiKey
-	d.secretKey = providerData.secretKey
 }

@@ -2,17 +2,14 @@ package provider
 
 import (
 	"context"
-	"net/http"
 	"os"
 
-	"github.com/hashicorp/go-retryablehttp"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/function"
 	"github.com/hashicorp/terraform-plugin-framework/provider"
 	"github.com/hashicorp/terraform-plugin-framework/provider/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/logging"
 	"github.com/jianyuan/terraform-provider-porkbun/internal/apiclient"
 )
 
@@ -49,7 +46,7 @@ func (p *PorkbunProvider) Schema(ctx context.Context, req provider.SchemaRequest
 				Sensitive:           true,
 			},
 			"base_url": schema.StringAttribute{
-				MarkdownDescription: "The base URL for the Porkbun API. Defaults to `https://api.porkbun.com/api/json`. It can be sourced from the `PORKBUN_BASE_URL` environment variable.",
+				MarkdownDescription: "The base URL for the Porkbun API. Defaults to `https://api.porkbun.com/api/json/v3`. It can be sourced from the `PORKBUN_BASE_URL` environment variable.",
 				Optional:            true,
 			},
 			"secret_key": schema.StringAttribute{
@@ -75,7 +72,7 @@ func (p *PorkbunProvider) Configure(ctx context.Context, req provider.ConfigureR
 	} else if v := os.Getenv("PORKBUN_BASE_URL"); v != "" {
 		baseUrl = v
 	} else {
-		baseUrl = "https://api.porkbun.com/api/json"
+		baseUrl = "https://api.porkbun.com/api/json/v3"
 	}
 
 	var apiKey string
@@ -107,27 +104,14 @@ func (p *PorkbunProvider) Configure(ctx context.Context, req provider.ConfigureR
 		return
 	}
 
-	retryClient := retryablehttp.NewClient()
-	retryClient.ErrorHandler = retryablehttp.PassthroughErrorHandler
-	retryClient.Logger = nil
-	retryClient.RetryMax = 10
-	transport := retryClient.StandardClient().Transport
-
-	transport = logging.NewLoggingHTTPTransport(transport)
-
-	client, err := apiclient.NewClientWithResponses(
-		baseUrl,
-		apiclient.WithHTTPClient(&http.Client{Transport: transport}),
-	)
+	client, err := apiclient.New(baseUrl, apiKey, secretKey)
 	if err != nil {
 		resp.Diagnostics.AddError("failed to create API client", err.Error())
 		return
 	}
 
 	providerData := &ProviderData{
-		client:    client,
-		apiKey:    apiKey,
-		secretKey: secretKey,
+		client: client,
 	}
 
 	resp.DataSourceData = providerData
@@ -163,7 +147,5 @@ func New(version string) func() provider.Provider {
 }
 
 type ProviderData struct {
-	client    *apiclient.ClientWithResponses
-	apiKey    string
-	secretKey string
+	client *apiclient.ClientWithResponses
 }

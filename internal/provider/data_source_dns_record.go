@@ -17,7 +17,7 @@ type DnsRecordDataSourceModel struct {
 	DnsRecordModel
 }
 
-func (m *DnsRecordDataSourceModel) Fill(ctx context.Context, record apiclient.DnsRecord) (diags diag.Diagnostics) {
+func (m *DnsRecordDataSourceModel) Fill(ctx context.Context, record apiclient.DnsRecordsResponse_Records) (diags diag.Diagnostics) {
 	diags.Append(m.DnsRecordModel.Fill(ctx, record)...)
 	return
 }
@@ -79,14 +79,11 @@ func (d *DnsRecordDataSource) Read(ctx context.Context, req datasource.ReadReque
 		return
 	}
 
-	httpResp, err := d.client.DnsRetrieveRecordsByDomainAndIdWithResponse(
+	httpResp, err := d.client.GetDnsRecordByIdWithResponse(
 		ctx,
 		data.Domain.ValueString(),
 		data.Id.ValueString(),
-		apiclient.DnsRetrieveRecordsByDomainAndIdJSONRequestBody{
-			Apikey:       d.apiKey,
-			Secretapikey: d.secretKey,
-		},
+		nil,
 	)
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read, got error: %s", err))

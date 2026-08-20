@@ -32,5 +32,5 @@ provider "porkbun" {
 ### Optional
 
 - `api_key` (String, Sensitive) The API key for the Porkbun account. It can be sourced from the `PORKBUN_API_KEY` environment variable.
-- `base_url` (String) The base URL for the Porkbun API. Defaults to `https://api.porkbun.com/api/json`. It can be sourced from the `PORKBUN_BASE_URL` environment variable.
+- `base_url` (String) The base URL for the Porkbun API. Defaults to `https://api.porkbun.com/api/json/v3`. It can be sourced from the `PORKBUN_BASE_URL` environment variable.
 - `secret_key` (String, Sensitive) The secret API key for the Porkbun account. It can be sourced from the `PORKBUN_SECRET_KEY` environment variable.
