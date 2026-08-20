@@ -9,6 +9,12 @@ actions:
       x-go-type: porkbuntypes.StringID
       x-go-type-import:
         path: github.com/jianyuan/terraform-provider-porkbun/internal/porkbuntypes
+  - target: $.paths['/domain/get/{domain}'].get.responses['200'].content['application/json'].schema.properties.domain.properties['securityLock', 'whoisPrivacy', 'autoRenew', 'apiAccess', 'notLocal']
+    update:
+      type: boolean
+      x-go-type: porkbuntypes.FlexibleBool
+      x-go-type-import:
+        path: github.com/jianyuan/terraform-provider-porkbun/internal/porkbuntypes
   - target: $.components.schemas.DomainListAllResponse.properties.domains.items.properties['securityLock', 'whoisPrivacy', 'autoRenew', 'apiAccess', 'notLocal']
     update:
       type: boolean
