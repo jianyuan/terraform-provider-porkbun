@@ -16,6 +16,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/jianyuan/terraform-provider-porkbun/internal/apiclient"
+	"github.com/jianyuan/terraform-provider-porkbun/internal/fwdiag"
 	"github.com/jianyuan/terraform-provider-porkbun/internal/porkbuntypes"
 )
 
@@ -134,10 +135,10 @@ func (r *DnsRecordResource) Create(ctx context.Context, req resource.CreateReque
 	)
 
 	if err != nil {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to create, got error: %s", err))
+		resp.Diagnostics.Append(fwdiag.NewClientCreateError(err))
 		return
 	} else if createHttpResp.StatusCode() != http.StatusOK || createHttpResp.JSON200 == nil || createHttpResp.JSON200.Status == nil || *createHttpResp.JSON200.Status != "SUCCESS" {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to create, got status code %d: %s", createHttpResp.StatusCode(), string(createHttpResp.Body)))
+		resp.Diagnostics.Append(fwdiag.NewClientCreateHTTPResponseError(createHttpResp))
 		return
 	}
 
@@ -150,13 +151,13 @@ func (r *DnsRecordResource) Create(ctx context.Context, req resource.CreateReque
 		nil,
 	)
 	if err != nil {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read, got error: %s", err))
+		resp.Diagnostics.Append(fwdiag.NewClientReadError(err))
 		return
 	} else if readHttpResp.StatusCode() != http.StatusOK || readHttpResp.JSON200 == nil || readHttpResp.JSON200.Status != "SUCCESS" {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read, got status code %d: %s", readHttpResp.StatusCode(), string(readHttpResp.Body)))
+		resp.Diagnostics.Append(fwdiag.NewClientReadHTTPResponseError(readHttpResp))
 		return
 	} else if len(readHttpResp.JSON200.Records) != 1 {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Expected exactly one record, got %d", len(readHttpResp.JSON200.Records)))
+		resp.Diagnostics.AddError("Client error", fmt.Sprintf("Expected exactly one record, got %d", len(readHttpResp.JSON200.Records)))
 		return
 	}
 
@@ -183,13 +184,16 @@ func (r *DnsRecordResource) Read(ctx context.Context, req resource.ReadRequest, 
 		nil,
 	)
 	if err != nil {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read, got error: %s", err))
+		resp.Diagnostics.Append(fwdiag.NewClientReadError(err))
+		return
+	} else if httpResp.StatusCode() == http.StatusNotFound {
+		resp.State.RemoveResource(ctx)
 		return
 	} else if httpResp.StatusCode() != http.StatusOK || httpResp.JSON200 == nil || httpResp.JSON200.Status != "SUCCESS" {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read, got status code %d: %s", httpResp.StatusCode(), string(httpResp.Body)))
+		resp.Diagnostics.Append(fwdiag.NewClientReadHTTPResponseError(httpResp))
 		return
 	} else if len(httpResp.JSON200.Records) != 1 {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Expected exactly one record, got %d", len(httpResp.JSON200.Records)))
+		resp.Diagnostics.AddError("Client error", fmt.Sprintf("Expected exactly one record, got %d", len(httpResp.JSON200.Records)))
 		return
 	}
 
@@ -225,10 +229,10 @@ func (r *DnsRecordResource) Update(ctx context.Context, req resource.UpdateReque
 	)
 
 	if err != nil {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to update, got error: %s", err))
+		resp.Diagnostics.Append(fwdiag.NewClientUpdateError(err))
 		return
 	} else if updateHttpResp.StatusCode() != http.StatusOK || updateHttpResp.JSON200 == nil || updateHttpResp.JSON200.Status != "SUCCESS" {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to update, got status code %d: %s", updateHttpResp.StatusCode(), string(updateHttpResp.Body)))
+		resp.Diagnostics.Append(fwdiag.NewClientUpdateHTTPResponseError(updateHttpResp))
 		return
 	}
 
@@ -239,13 +243,13 @@ func (r *DnsRecordResource) Update(ctx context.Context, req resource.UpdateReque
 		nil,
 	)
 	if err != nil {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read, got error: %s", err))
+		resp.Diagnostics.Append(fwdiag.NewClientReadError(err))
 		return
 	} else if readHttpResp.StatusCode() != http.StatusOK || readHttpResp.JSON200 == nil || readHttpResp.JSON200.Status != "SUCCESS" {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read, got status code %d: %s", readHttpResp.StatusCode(), string(readHttpResp.Body)))
+		resp.Diagnostics.Append(fwdiag.NewClientReadHTTPResponseError(readHttpResp))
 		return
 	} else if len(readHttpResp.JSON200.Records) != 1 {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Expected exactly one record, got %d", len(readHttpResp.JSON200.Records)))
+		resp.Diagnostics.AddError("Client error", fmt.Sprintf("Expected exactly one record, got %d", len(readHttpResp.JSON200.Records)))
 		return
 	}
 
@@ -272,10 +276,12 @@ func (r *DnsRecordResource) Delete(ctx context.Context, req resource.DeleteReque
 		apiclient.DnsDeleteJSONRequestBody{},
 	)
 	if err != nil {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to delete, got error: %s", err))
+		resp.Diagnostics.Append(fwdiag.NewClientDeleteError(err))
+		return
+	} else if httpResp.StatusCode() == http.StatusNotFound {
 		return
 	} else if httpResp.StatusCode() != http.StatusOK || httpResp.JSON200 == nil || httpResp.JSON200.Status != "SUCCESS" {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to delete, got status code %d: %s", httpResp.StatusCode(), string(httpResp.Body)))
+		resp.Diagnostics.Append(fwdiag.NewClientDeleteHTTPResponseError(httpResp))
 		return
 	}
 }
