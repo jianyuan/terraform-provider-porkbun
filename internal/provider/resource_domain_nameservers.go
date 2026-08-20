@@ -65,13 +65,11 @@ func (r *DomainNameserversResource) Create(ctx context.Context, req resource.Cre
 		return
 	}
 
-	createHttpResp, err := r.client.DomainUpdateNameServersWithResponse(
+	createHttpResp, err := r.client.DomainUpdateNsWithResponse(
 		ctx,
 		data.Domain.ValueString(),
-		apiclient.DomainUpdateNameServersJSONRequestBody{
-			Apikey:       r.apiKey,
-			Secretapikey: r.secretKey,
-			Ns:           nameservers,
+		apiclient.DomainUpdateNsJSONRequestBody{
+			Ns: nameservers,
 		},
 	)
 
@@ -83,23 +81,23 @@ func (r *DomainNameserversResource) Create(ctx context.Context, req resource.Cre
 		return
 	}
 
-	readHttpResp, err := r.client.DomainGetNameServersWithResponse(
+	readHttpResp, err := r.client.GetDomainNsWithResponse(
 		ctx,
 		data.Domain.ValueString(),
-		apiclient.DomainGetNameServersJSONRequestBody{
-			Apikey:       r.apiKey,
-			Secretapikey: r.secretKey,
-		},
+		nil,
 	)
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read, got error: %s", err))
 		return
-	} else if readHttpResp.StatusCode() != http.StatusOK || readHttpResp.JSON200 == nil || readHttpResp.JSON200.Status != "SUCCESS" {
+	} else if readHttpResp.StatusCode() != http.StatusOK || readHttpResp.JSON200 == nil || readHttpResp.JSON200.Status == nil || *readHttpResp.JSON200.Status != "SUCCESS" {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read, got status code %d: %s", readHttpResp.StatusCode(), string(readHttpResp.Body)))
+		return
+	} else if readHttpResp.JSON200.Ns == nil {
+		resp.Diagnostics.AddError("Client Error", "Unable to read, got no name servers")
 		return
 	}
 
-	resp.Diagnostics.Append(data.Fill(ctx, readHttpResp.JSON200.Ns)...)
+	resp.Diagnostics.Append(data.Fill(ctx, *readHttpResp.JSON200.Ns)...)
 	if resp.Diagnostics.HasError() {
 		return
 	}
@@ -115,23 +113,23 @@ func (r *DomainNameserversResource) Read(ctx context.Context, req resource.ReadR
 		return
 	}
 
-	httpResp, err := r.client.DomainGetNameServersWithResponse(
+	httpResp, err := r.client.GetDomainNsWithResponse(
 		ctx,
 		data.Domain.ValueString(),
-		apiclient.DomainGetNameServersJSONRequestBody{
-			Apikey:       r.apiKey,
-			Secretapikey: r.secretKey,
-		},
+		nil,
 	)
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read, got error: %s", err))
 		return
-	} else if httpResp.StatusCode() != http.StatusOK || httpResp.JSON200 == nil || httpResp.JSON200.Status != "SUCCESS" {
+	} else if httpResp.StatusCode() != http.StatusOK || httpResp.JSON200 == nil || httpResp.JSON200.Status == nil || *httpResp.JSON200.Status != "SUCCESS" {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read, got status code %d: %s", httpResp.StatusCode(), string(httpResp.Body)))
+		return
+	} else if httpResp.JSON200.Ns == nil {
+		resp.Diagnostics.AddError("Client Error", "Unable to read, got no name servers")
 		return
 	}
 
-	resp.Diagnostics.Append(data.Fill(ctx, httpResp.JSON200.Ns)...)
+	resp.Diagnostics.Append(data.Fill(ctx, *httpResp.JSON200.Ns)...)
 	if resp.Diagnostics.HasError() {
 		return
 	}
@@ -153,13 +151,11 @@ func (r *DomainNameserversResource) Update(ctx context.Context, req resource.Upd
 		return
 	}
 
-	updateHttpResp, err := r.client.DomainUpdateNameServersWithResponse(
+	updateHttpResp, err := r.client.DomainUpdateNsWithResponse(
 		ctx,
 		data.Domain.ValueString(),
-		apiclient.DomainUpdateNameServersJSONRequestBody{
-			Apikey:       r.apiKey,
-			Secretapikey: r.secretKey,
-			Ns:           nameservers,
+		apiclient.DomainUpdateNsJSONRequestBody{
+			Ns: nameservers,
 		},
 	)
 
@@ -171,23 +167,23 @@ func (r *DomainNameserversResource) Update(ctx context.Context, req resource.Upd
 		return
 	}
 
-	readHttpResp, err := r.client.DomainGetNameServersWithResponse(
+	readHttpResp, err := r.client.GetDomainNsWithResponse(
 		ctx,
 		data.Domain.ValueString(),
-		apiclient.DomainGetNameServersJSONRequestBody{
-			Apikey:       r.apiKey,
-			Secretapikey: r.secretKey,
-		},
+		nil,
 	)
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read, got error: %s", err))
 		return
-	} else if readHttpResp.StatusCode() != http.StatusOK || readHttpResp.JSON200 == nil || readHttpResp.JSON200.Status != "SUCCESS" {
+	} else if readHttpResp.StatusCode() != http.StatusOK || readHttpResp.JSON200 == nil || readHttpResp.JSON200.Status == nil || *readHttpResp.JSON200.Status != "SUCCESS" {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read, got status code %d: %s", readHttpResp.StatusCode(), string(readHttpResp.Body)))
+		return
+	} else if readHttpResp.JSON200.Ns == nil {
+		resp.Diagnostics.AddError("Client Error", "Unable to read, got no name servers")
 		return
 	}
 
-	resp.Diagnostics.Append(data.Fill(ctx, readHttpResp.JSON200.Ns)...)
+	resp.Diagnostics.Append(data.Fill(ctx, *readHttpResp.JSON200.Ns)...)
 	if resp.Diagnostics.HasError() {
 		return
 	}

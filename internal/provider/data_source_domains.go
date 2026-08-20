@@ -11,7 +11,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/jianyuan/terraform-provider-porkbun/internal/apiclient"
 	"github.com/jianyuan/terraform-provider-porkbun/internal/porkbuntypes"
-	"github.com/jianyuan/terraform-provider-porkbun/internal/tfutils"
 )
 
 type DomainsDomainDataSourceModel struct {
@@ -26,16 +25,16 @@ type DomainsDomainDataSourceModel struct {
 	NotLocal     types.Bool   `tfsdk:"not_local"`
 }
 
-func (m *DomainsDomainDataSourceModel) Fill(ctx context.Context, domain apiclient.Domain) (diags diag.Diagnostics) {
-	m.Domain = types.StringValue(domain.Domain)
-	m.Status = types.StringValue(domain.Status)
-	m.Tld = types.StringValue(domain.Tld)
-	m.CreateDate = types.StringValue(domain.CreateDate)
-	m.ExpireDate = types.StringValue(domain.ExpireDate)
-	m.SecurityLock = tfutils.MergeDiagnostics(porkbuntypes.BoolValue(domain.SecurityLock))(&diags)
-	m.WhoisPrivacy = tfutils.MergeDiagnostics(porkbuntypes.BoolValue(domain.WhoisPrivacy))(&diags)
-	m.AutoRenew = tfutils.MergeDiagnostics(porkbuntypes.BoolValue(domain.AutoRenew))(&diags)
-	m.NotLocal = tfutils.MergeDiagnostics(porkbuntypes.BoolValue(domain.NotLocal))(&diags)
+func (m *DomainsDomainDataSourceModel) Fill(ctx context.Context, domain apiclient.DomainListAllResponse_Domains) (diags diag.Diagnostics) {
+	m.Domain = types.StringPointerValue(domain.Domain)
+	m.Status = types.StringPointerValue(domain.Status)
+	m.Tld = types.StringPointerValue(domain.Tld)
+	m.CreateDate = types.StringPointerValue(domain.CreateDate)
+	m.ExpireDate = types.StringPointerValue(domain.ExpireDate)
+	m.SecurityLock = porkbuntypes.FlexibleBoolPointerValue(domain.SecurityLock)
+	m.WhoisPrivacy = porkbuntypes.FlexibleBoolPointerValue(domain.WhoisPrivacy)
+	m.AutoRenew = porkbuntypes.FlexibleBoolPointerValue(domain.AutoRenew)
+	m.NotLocal = porkbuntypes.FlexibleBoolPointerValue(domain.NotLocal)
 	return
 }
 
@@ -43,7 +42,7 @@ type DomainsDataSourceModel struct {
 	Domains []DomainsDomainDataSourceModel `tfsdk:"domains"`
 }
 
-func (m *DomainsDataSourceModel) Fill(ctx context.Context, domains []apiclient.Domain) (diags diag.Diagnostics) {
+func (m *DomainsDataSourceModel) Fill(ctx context.Context, domains []apiclient.DomainListAllResponse_Domains) (diags diag.Diagnostics) {
 	m.Domains = make([]DomainsDomainDataSourceModel, len(domains))
 	for i, domain := range domains {
 		diags = append(diags, m.Domains[i].Fill(ctx, domain)...)
@@ -120,16 +119,14 @@ func (d *DomainsDataSource) Read(ctx context.Context, req datasource.ReadRequest
 		return
 	}
 
-	params := apiclient.DomainListAllJSONRequestBody{
-		Apikey:       d.apiKey,
-		Secretapikey: d.secretKey,
-		Start:        new(0),
+	params := &apiclient.GetDomainsParams{
+		Start: new(int64(0)),
 	}
 
-	var domains []apiclient.Domain
+	var domains []apiclient.DomainListAllResponse_Domains
 
 	for {
-		httpResp, err := d.client.DomainListAllWithResponse(
+		httpResp, err := d.client.GetDomainsWithResponse(
 			ctx,
 			params,
 		)
@@ -147,7 +144,7 @@ func (d *DomainsDataSource) Read(ctx context.Context, req datasource.ReadRequest
 			break
 		}
 
-		params.Start = new(len(domains) + 1)
+		params.Start = new(int64(len(domains) + 1))
 	}
 
 	resp.Diagnostics.Append(data.Fill(ctx, domains)...)

@@ -20,17 +20,21 @@ type DnsRecordModel struct {
 	Notes    types.String `tfsdk:"notes"`
 }
 
-func (m *DnsRecordModel) Fill(ctx context.Context, record apiclient.DnsRecord) (diags diag.Diagnostics) {
-	m.Id = types.StringValue(record.Id)
-	m.Name = types.StringValue(record.Name)
-	m.Type = types.StringValue(record.Type)
-	m.Content = types.StringValue(record.Content)
+func (m *DnsRecordModel) Fill(ctx context.Context, record apiclient.DnsRecordsResponse_Records) (diags diag.Diagnostics) {
+	m.Id = types.StringPointerValue(record.Id)
+	m.Name = types.StringPointerValue(record.Name)
+	m.Type = types.StringPointerValue(record.Type)
+	m.Content = types.StringPointerValue(record.Content)
 
-	if v, err := strconv.ParseInt(record.Ttl, 10, 64); err == nil {
-		m.Ttl = types.Int64Value(v)
+	if record.Ttl == nil {
+		m.Ttl = types.Int64Null()
 	} else {
-		diags.AddError(fmt.Sprintf("failed to parse TTL: %s", err), fmt.Sprintf("failed to parse TTL: %s", err))
-		return
+		if v, err := strconv.ParseInt(*record.Ttl, 10, 64); err == nil {
+			m.Ttl = types.Int64Value(v)
+		} else {
+			diags.AddError(fmt.Sprintf("failed to parse TTL: %s", err), fmt.Sprintf("failed to parse TTL: %s", err))
+			return
+		}
 	}
 
 	if record.Prio == nil {

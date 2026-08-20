@@ -1,11 +1,7 @@
 package provider
 
 import (
-	"context"
 	"fmt"
-	"log"
-	"net/http"
-	"strings"
 	"testing"
 
 	sdkacctest "github.com/hashicorp/terraform-plugin-testing/helper/acctest"
@@ -16,58 +12,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-testing/terraform"
 	"github.com/hashicorp/terraform-plugin-testing/tfjsonpath"
 	"github.com/jianyuan/terraform-provider-porkbun/internal/acctest"
-	"github.com/jianyuan/terraform-provider-porkbun/internal/apiclient"
 )
-
-func init() {
-	resource.AddTestSweepers("porkbun_dns_record", &resource.Sweeper{
-		Name: "porkbun_dns_record",
-		F: func(r string) error {
-			ctx := context.Background()
-
-			httpResp, err := acctest.SharedClient.DnsRetrieveRecordsByDomainWithResponse(
-				ctx,
-				acctest.TestDomain,
-				apiclient.DnsRetrieveRecordsByDomainJSONRequestBody{
-					Apikey:       acctest.TestApiKey,
-					Secretapikey: acctest.TestSecretKey,
-				},
-			)
-			if err != nil {
-				return fmt.Errorf("Unable to read, got error: %s", err)
-			} else if httpResp.StatusCode() != http.StatusOK || httpResp.JSON200 == nil || httpResp.JSON200.Status != "SUCCESS" {
-				return fmt.Errorf("Unable to read, got status code %d: %s", httpResp.StatusCode(), string(httpResp.Body))
-			}
-
-			for _, record := range httpResp.JSON200.Records {
-				if !strings.HasPrefix(record.Name, "tf-") && !strings.HasPrefix(record.Content, "tf-") {
-					continue
-				}
-
-				log.Printf("[INFO] Destroying record %s", record.Id)
-
-				_, err := acctest.SharedClient.DnsDeleteRecordByDomainAndIdWithResponse(
-					ctx,
-					acctest.TestDomain,
-					record.Id,
-					apiclient.DnsDeleteRecordByDomainAndIdJSONRequestBody{
-						Apikey:       acctest.TestApiKey,
-						Secretapikey: acctest.TestSecretKey,
-					},
-				)
-
-				if err != nil {
-					log.Printf("[ERROR] Unable to delete record %s: %s", record.Id, err)
-					continue
-				}
-
-				log.Printf("[INFO] Deleted record %s", record.Id)
-			}
-
-			return nil
-		},
-	})
-}
 
 func TestAccDnsRecordResource(t *testing.T) {
 	rn := "porkbun_dns_record.test"

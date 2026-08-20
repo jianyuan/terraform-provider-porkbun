@@ -8,7 +8,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/jianyuan/terraform-provider-porkbun/internal/apiclient"
 )
 
 func NewDomainNameserversDataSource() datasource.DataSource {
@@ -50,23 +49,23 @@ func (d *DomainNameserversDataSource) Read(ctx context.Context, req datasource.R
 		return
 	}
 
-	httpResp, err := d.client.DomainGetNameServersWithResponse(
+	httpResp, err := d.client.GetDomainNsWithResponse(
 		ctx,
 		data.Domain.ValueString(),
-		apiclient.DomainGetNameServersJSONRequestBody{
-			Apikey:       d.apiKey,
-			Secretapikey: d.secretKey,
-		},
+		nil,
 	)
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read, got error: %s", err))
 		return
-	} else if httpResp.StatusCode() != http.StatusOK || httpResp.JSON200 == nil || httpResp.JSON200.Status != "SUCCESS" {
+	} else if httpResp.StatusCode() != http.StatusOK || httpResp.JSON200 == nil || httpResp.JSON200.Status == nil || *httpResp.JSON200.Status != "SUCCESS" {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read, got status code %d: %s", httpResp.StatusCode(), string(httpResp.Body)))
+		return
+	} else if httpResp.JSON200.Ns == nil {
+		resp.Diagnostics.AddError("Client Error", "Unable to read, got no name servers")
 		return
 	}
 
-	resp.Diagnostics.Append(data.Fill(ctx, httpResp.JSON200.Ns)...)
+	resp.Diagnostics.Append(data.Fill(ctx, *httpResp.JSON200.Ns)...)
 	if resp.Diagnostics.HasError() {
 		return
 	}

@@ -9,9 +9,7 @@ import (
 )
 
 type baseResource struct {
-	client    *apiclient.ClientWithResponses
-	apiKey    string
-	secretKey string
+	client *apiclient.ClientWithResponses
 }
 
 func (r *baseResource) Configure(ctx context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
@@ -32,6 +30,4 @@ func (r *baseResource) Configure(ctx context.Context, req resource.ConfigureRequ
 	}
 
 	r.client = providerData.client
-	r.apiKey = providerData.apiKey
-	r.secretKey = providerData.secretKey
 }

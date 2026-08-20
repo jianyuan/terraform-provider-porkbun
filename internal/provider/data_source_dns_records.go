@@ -26,7 +26,7 @@ type DnsRecordsDataSourceModel struct {
 	Records []DnsRecordModel                 `tfsdk:"records"`
 }
 
-func (m *DnsRecordsDataSourceModel) Fill(ctx context.Context, records []apiclient.DnsRecord) (diags diag.Diagnostics) {
+func (m *DnsRecordsDataSourceModel) Fill(ctx context.Context, records []apiclient.DnsRecordsResponse_Records) (diags diag.Diagnostics) {
 	m.Records = make([]DnsRecordModel, len(records))
 	for i, record := range records {
 		diags = append(diags, m.Records[i].Fill(ctx, record)...)
@@ -121,18 +121,15 @@ func (d *DnsRecordsDataSource) Read(ctx context.Context, req datasource.ReadRequ
 		return
 	}
 
-	var records []apiclient.DnsRecord
+	var records []apiclient.DnsRecordsResponse_Records
 	if data.Filter != nil && !data.Filter.Type.IsNull() {
 		if !data.Filter.Subdomain.IsNull() {
-			httpResp, err := d.client.DnsRetrieveRecordsByDomainAndTypeAndSubdomainWithResponse(
+			httpResp, err := d.client.GetDnsRecordsByNameTypeWithResponse(
 				ctx,
 				data.Domain.ValueString(),
 				data.Filter.Type.ValueString(),
 				data.Filter.Subdomain.ValueString(),
-				apiclient.DnsRetrieveRecordsByDomainAndTypeAndSubdomainJSONRequestBody{
-					Apikey:       d.apiKey,
-					Secretapikey: d.secretKey,
-				},
+				nil,
 			)
 			if err != nil {
 				resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read, got error: %s", err))
@@ -144,14 +141,12 @@ func (d *DnsRecordsDataSource) Read(ctx context.Context, req datasource.ReadRequ
 
 			records = httpResp.JSON200.Records
 		} else {
-			httpResp, err := d.client.DnsRetrieveRecordsByDomainAndTypeWithResponse(
+			httpResp, err := d.client.GetDnsRecordsByNameTypeWithResponse(
 				ctx,
 				data.Domain.ValueString(),
 				data.Filter.Type.ValueString(),
-				apiclient.DnsRetrieveRecordsByDomainAndTypeJSONRequestBody{
-					Apikey:       d.apiKey,
-					Secretapikey: d.secretKey,
-				},
+				"",
+				nil,
 			)
 			if err != nil {
 				resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read, got error: %s", err))
@@ -164,13 +159,10 @@ func (d *DnsRecordsDataSource) Read(ctx context.Context, req datasource.ReadRequ
 			records = httpResp.JSON200.Records
 		}
 	} else {
-		httpResp, err := d.client.DnsRetrieveRecordsByDomainWithResponse(
+		httpResp, err := d.client.GetDnsRecordsWithResponse(
 			ctx,
 			data.Domain.ValueString(),
-			apiclient.DnsRetrieveRecordsByDomainJSONRequestBody{
-				Apikey:       d.apiKey,
-				Secretapikey: d.secretKey,
-			},
+			nil,
 		)
 		if err != nil {
 			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read, got error: %s", err))

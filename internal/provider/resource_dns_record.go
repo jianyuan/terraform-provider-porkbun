@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"net/http"
-	"strconv"
 	"strings"
 
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
@@ -17,6 +16,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/jianyuan/terraform-provider-porkbun/internal/apiclient"
+	"github.com/jianyuan/terraform-provider-porkbun/internal/porkbuntypes"
 )
 
 type DnsRecordResourceModel struct {
@@ -25,7 +25,7 @@ type DnsRecordResourceModel struct {
 	DnsRecordModel
 }
 
-func (m *DnsRecordResourceModel) Fill(ctx context.Context, record apiclient.DnsRecord) (diags diag.Diagnostics) {
+func (m *DnsRecordResourceModel) Fill(ctx context.Context, record apiclient.DnsRecordsResponse_Records) (diags diag.Diagnostics) {
 	diags.Append(m.DnsRecordModel.Fill(ctx, record)...)
 	if diags.HasError() {
 		return
@@ -119,21 +119,15 @@ func (r *DnsRecordResource) Create(ctx context.Context, req resource.CreateReque
 		return
 	}
 
-	params := apiclient.DnsCreateRecordJSONRequestBody{
-		Apikey:       r.apiKey,
-		Secretapikey: r.secretKey,
-		Name:         data.Subdomain.ValueStringPointer(),
-		Type:         data.Type.ValueString(),
-		Content:      data.Content.ValueString(),
-	}
-	if !data.Ttl.IsNull() {
-		params.Ttl = new(strconv.FormatInt(data.Ttl.ValueInt64(), 10))
-	}
-	if !data.Priority.IsNull() {
-		params.Prio = new(strconv.FormatInt(data.Priority.ValueInt64(), 10))
+	params := apiclient.DnsCreateJSONRequestBody{
+		Name:    data.Subdomain.ValueStringPointer(),
+		Type:    apiclient.CreateDnsRequestType(data.Type.ValueString()),
+		Content: data.Content.ValueString(),
+		Prio:    data.Priority.ValueInt64Pointer(),
+		Ttl:     data.Ttl.ValueInt64Pointer(),
 	}
 
-	createHttpResp, err := r.client.DnsCreateRecordWithResponse(
+	createHttpResp, err := r.client.DnsCreateWithResponse(
 		ctx,
 		data.Domain.ValueString(),
 		params,
@@ -142,29 +136,18 @@ func (r *DnsRecordResource) Create(ctx context.Context, req resource.CreateReque
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to create, got error: %s", err))
 		return
-	} else if createHttpResp.StatusCode() != http.StatusOK || createHttpResp.JSON200 == nil || createHttpResp.JSON200.Status != "SUCCESS" {
+	} else if createHttpResp.StatusCode() != http.StatusOK || createHttpResp.JSON200 == nil || createHttpResp.JSON200.Status == nil || *createHttpResp.JSON200.Status != "SUCCESS" {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to create, got status code %d: %s", createHttpResp.StatusCode(), string(createHttpResp.Body)))
 		return
 	}
 
-	var id string
-	if v, err := createHttpResp.JSON200.Id.AsDnsCreateRecordResponseId0(); err == nil {
-		id = strconv.FormatInt(v, 10)
-	} else if v, err := createHttpResp.JSON200.Id.AsDnsCreateRecordResponseId1(); err == nil {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to create, got error: %v", v))
-		return
-	}
+	data.Id = porkbuntypes.StringIDPointerValue(createHttpResp.JSON200.Id)
 
-	data.Id = types.StringValue(id)
-
-	readHttpResp, err := r.client.DnsRetrieveRecordsByDomainAndIdWithResponse(
+	readHttpResp, err := r.client.GetDnsRecordByIdWithResponse(
 		ctx,
 		data.Domain.ValueString(),
-		id,
-		apiclient.DnsRetrieveRecordsByDomainAndIdJSONRequestBody{
-			Apikey:       r.apiKey,
-			Secretapikey: r.secretKey,
-		},
+		data.Id.ValueString(),
+		nil,
 	)
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read, got error: %s", err))
@@ -193,14 +176,11 @@ func (r *DnsRecordResource) Read(ctx context.Context, req resource.ReadRequest, 
 		return
 	}
 
-	httpResp, err := r.client.DnsRetrieveRecordsByDomainAndIdWithResponse(
+	httpResp, err := r.client.GetDnsRecordByIdWithResponse(
 		ctx,
 		data.Domain.ValueString(),
 		data.Id.ValueString(),
-		apiclient.DomainGetNameServersJSONRequestBody{
-			Apikey:       r.apiKey,
-			Secretapikey: r.secretKey,
-		},
+		nil,
 	)
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read, got error: %s", err))
@@ -229,21 +209,15 @@ func (r *DnsRecordResource) Update(ctx context.Context, req resource.UpdateReque
 		return
 	}
 
-	params := apiclient.DnsEditRecordByDomainAndIdJSONRequestBody{
-		Apikey:       r.apiKey,
-		Secretapikey: r.secretKey,
-		Name:         data.Name.ValueStringPointer(),
-		Type:         data.Type.ValueString(),
-		Content:      data.Content.ValueString(),
-	}
-	if !data.Ttl.IsNull() {
-		params.Ttl = new(strconv.FormatInt(data.Ttl.ValueInt64(), 10))
-	}
-	if !data.Priority.IsNull() {
-		params.Prio = new(strconv.FormatInt(data.Priority.ValueInt64(), 10))
+	params := apiclient.DnsEditJSONRequestBody{
+		Name:    data.Name.ValueStringPointer(),
+		Type:    apiclient.EditDnsRequestType(data.Type.ValueString()),
+		Content: data.Content.ValueString(),
+		Prio:    data.Priority.ValueInt64Pointer(),
+		Ttl:     data.Ttl.ValueInt64Pointer(),
 	}
 
-	updateHttpResp, err := r.client.DnsEditRecordByDomainAndIdWithResponse(
+	updateHttpResp, err := r.client.DnsEditWithResponse(
 		ctx,
 		data.Domain.ValueString(),
 		data.Id.ValueString(),
@@ -258,14 +232,11 @@ func (r *DnsRecordResource) Update(ctx context.Context, req resource.UpdateReque
 		return
 	}
 
-	readHttpResp, err := r.client.DnsRetrieveRecordsByDomainAndIdWithResponse(
+	readHttpResp, err := r.client.GetDnsRecordByIdWithResponse(
 		ctx,
 		data.Domain.ValueString(),
 		data.Id.ValueString(),
-		apiclient.DnsRetrieveRecordsByDomainAndIdJSONRequestBody{
-			Apikey:       r.apiKey,
-			Secretapikey: r.secretKey,
-		},
+		nil,
 	)
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to read, got error: %s", err))
@@ -294,14 +265,11 @@ func (r *DnsRecordResource) Delete(ctx context.Context, req resource.DeleteReque
 		return
 	}
 
-	httpResp, err := r.client.DnsDeleteRecordByDomainAndIdWithResponse(
+	httpResp, err := r.client.DnsDeleteWithResponse(
 		ctx,
 		data.Domain.ValueString(),
 		data.Id.ValueString(),
-		apiclient.DomainGetNameServersJSONRequestBody{
-			Apikey:       r.apiKey,
-			Secretapikey: r.secretKey,
-		},
+		apiclient.DnsDeleteJSONRequestBody{},
 	)
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to delete, got error: %s", err))

@@ -5,5 +5,12 @@ generate:
   models: true
   client: true
 output-options:
-  # See: https://github.com/oapi-codegen/oapi-codegen/issues/1474
-  response-type-suffix: Resp
+  resolve-type-name-collisions: true
+  generate-types-for-anonymous-schemas: true
+  type-mapping:
+    integer:
+      default:
+        type: int64
+  overlay:
+    path: overlay.yaml
+    strict: true
