@@ -47,9 +47,11 @@ func Setup(ctx context.Context) error {
 		return fmt.Errorf("failed to create Porkbun client: %w", err)
 	}
 
-	err = resetSandbox(ctx)
-	if err != nil {
-		return fmt.Errorf("failed to reset sandbox: %w", err)
+	if os.Getenv("PORKBUN_RESET_SANDBOX") == "true" {
+		err = resetSandbox(ctx)
+		if err != nil {
+			return fmt.Errorf("failed to reset sandbox: %w", err)
+		}
 	}
 
 	err = ensureTestDomain(ctx)
