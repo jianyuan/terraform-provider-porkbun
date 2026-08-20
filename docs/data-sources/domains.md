@@ -29,6 +29,7 @@ data "porkbun_domains" "example" {
 
 Read-Only:
 
+- `api_access` (Boolean)
 - `auto_renew` (Boolean)
 - `create_date` (String)
 - `domain` (String)
