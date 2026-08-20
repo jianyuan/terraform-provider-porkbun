@@ -11,6 +11,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/jianyuan/terraform-provider-porkbun/internal/apiclient"
 	"github.com/jianyuan/terraform-provider-porkbun/internal/porkbuntypes"
+	"github.com/samber/lo"
 )
 
 type DomainsDomainDataSourceModel struct {
@@ -22,6 +23,7 @@ type DomainsDomainDataSourceModel struct {
 	SecurityLock types.Bool   `tfsdk:"security_lock"`
 	WhoisPrivacy types.Bool   `tfsdk:"whois_privacy"`
 	AutoRenew    types.Bool   `tfsdk:"auto_renew"`
+	ApiAccess    types.Bool   `tfsdk:"api_access"`
 	NotLocal     types.Bool   `tfsdk:"not_local"`
 }
 
@@ -34,6 +36,7 @@ func (m *DomainsDomainDataSourceModel) Fill(ctx context.Context, domain apiclien
 	m.SecurityLock = porkbuntypes.FlexibleBoolPointerValue(domain.SecurityLock)
 	m.WhoisPrivacy = porkbuntypes.FlexibleBoolPointerValue(domain.WhoisPrivacy)
 	m.AutoRenew = porkbuntypes.FlexibleBoolPointerValue(domain.AutoRenew)
+	m.ApiAccess = porkbuntypes.FlexibleBoolPointerValue(domain.ApiAccess)
 	m.NotLocal = porkbuntypes.FlexibleBoolPointerValue(domain.NotLocal)
 	return
 }
@@ -43,13 +46,11 @@ type DomainsDataSourceModel struct {
 }
 
 func (m *DomainsDataSourceModel) Fill(ctx context.Context, domains []apiclient.DomainListAllResponse_Domains) (diags diag.Diagnostics) {
-	m.Domains = make([]DomainsDomainDataSourceModel, len(domains))
-	for i, domain := range domains {
-		diags = append(diags, m.Domains[i].Fill(ctx, domain)...)
-		if diags.HasError() {
-			return
-		}
-	}
+	m.Domains = lo.Map(domains, func(item apiclient.DomainListAllResponse_Domains, _ int) DomainsDomainDataSourceModel {
+		var mm DomainsDomainDataSourceModel
+		diags.Append(mm.Fill(ctx, item)...)
+		return mm
+	})
 	return
 }
 
@@ -58,6 +59,7 @@ func NewDomainsDataSource() datasource.DataSource {
 }
 
 var _ datasource.DataSource = &DomainsDataSource{}
+var _ datasource.DataSourceWithConfigure = &DomainsDataSource{}
 
 type DomainsDataSource struct {
 	baseDataSource
@@ -99,6 +101,9 @@ func (d *DomainsDataSource) Schema(ctx context.Context, req datasource.SchemaReq
 							Computed: true,
 						},
 						"auto_renew": schema.BoolAttribute{
+							Computed: true,
+						},
+						"api_access": schema.BoolAttribute{
 							Computed: true,
 						},
 						"not_local": schema.BoolAttribute{

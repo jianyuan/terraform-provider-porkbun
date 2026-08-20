@@ -24,3 +24,7 @@ sweep: ## Run sweepers
 sweeper: ## Run sweepers with failures allowed
 	@echo "WARNING: This will destroy infrastructure. Use only in development accounts."
 	$(GO_VER) test ./... -v -tags=sweep -sweep=$(SWEEP) -sweep-allow-failures -timeout $(SWEEP_TIMEOUT)
+
+.PHONY: generate
+generate: ## Generate code and documentation
+	$(GO_VER) generate ./...
