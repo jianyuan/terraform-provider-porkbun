@@ -2832,22 +2832,22 @@ type GetDomainParamsIncludeLabels string
 
 // GetDomain200JSONResponseBody_Domain defines parameters for GetDomain.
 type GetDomain200JSONResponseBody_Domain struct {
-	ApiAccess  *int64  `json:"apiAccess,omitempty"`
-	AutoRenew  *int64  `json:"autoRenew,omitempty"`
-	CreateDate *string `json:"createDate,omitempty"`
+	ApiAccess  *porkbuntypes.FlexibleBool `json:"apiAccess,omitempty"`
+	AutoRenew  *porkbuntypes.FlexibleBool `json:"autoRenew,omitempty"`
+	CreateDate *string                    `json:"createDate,omitempty"`
 
 	// Domain Example: example.com
-	Domain       *string `json:"domain,omitempty"`
-	ExpireDate   *string `json:"expireDate,omitempty"`
-	NotLocal     *int64  `json:"notLocal,omitempty"`
-	SecurityLock *int64  `json:"securityLock,omitempty"`
+	Domain       *string                    `json:"domain,omitempty"`
+	ExpireDate   *string                    `json:"expireDate,omitempty"`
+	NotLocal     *porkbuntypes.FlexibleBool `json:"notLocal,omitempty"`
+	SecurityLock *porkbuntypes.FlexibleBool `json:"securityLock,omitempty"`
 
 	// Status Example: ACTIVE
 	Status *string `json:"status,omitempty"`
 
 	// Tld Example: com
-	Tld          *string `json:"tld,omitempty"`
-	WhoisPrivacy *int64  `json:"whoisPrivacy,omitempty"`
+	Tld          *string                    `json:"tld,omitempty"`
+	WhoisPrivacy *porkbuntypes.FlexibleBool `json:"whoisPrivacy,omitempty"`
 }
 
 // GetDomain200JSONResponseBody defines parameters for GetDomain.
