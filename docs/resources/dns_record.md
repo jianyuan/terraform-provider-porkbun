@@ -69,3 +69,15 @@ import {
 - `id` (String) The record ID.
 - `name` (String) The full name of the record being created, including the subdomain and the domain itself.
 - `notes` (String)
+
+## Import
+
+Import is supported using the following syntax:
+
+The [`terraform import` command](https://developer.hashicorp.com/terraform/cli/commands/import) can be used, for example:
+
+```shell
+terraform import porkbun_dns_record.example <record_id>_<domain>_<type>
+
+terraform import porkbun_dns_record.example 123456789_jiancodes.com_CNAME
+```
