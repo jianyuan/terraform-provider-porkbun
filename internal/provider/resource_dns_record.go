@@ -65,6 +65,9 @@ func (r *DnsRecordResource) Schema(ctx context.Context, req resource.SchemaReque
 			"domain": schema.StringAttribute{
 				MarkdownDescription: "The domain for the record being created.",
 				Required:            true,
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.RequiresReplace(),
+				},
 			},
 			"id": schema.StringAttribute{
 				MarkdownDescription: "The record ID.",
