@@ -130,6 +130,7 @@ func (p *PorkbunProvider) DataSources(ctx context.Context) []func() datasource.D
 	return []func() datasource.DataSource{
 		NewDnsRecordDataSource,
 		NewDnsRecordsDataSource,
+		NewDnssecRecordsDataSource,
 		NewDomainDataSource,
 		NewDomainNameserversDataSource,
 		NewDomainsDataSource,

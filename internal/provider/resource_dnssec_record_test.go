@@ -50,7 +50,7 @@ func TestAccDnssecRecordResource(t *testing.T) {
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccDnssecRecordResourceConfig(dsData1.Alg, dsData1.Digest, dsData1.DigestType, dsData1.KeyTag, ""),
+				Config: testAccDnssecRecordResourceConfig(dsData1.Alg, dsData1.Digest, dsData1.DigestType, dsData1.KeyTag),
 				ConfigStateChecks: []statecheck.StateCheck{
 					statecheck.ExpectKnownValue(rn, tfjsonpath.New("domain"), knownvalue.StringExact(acctest.TestDomain)),
 					statecheck.ExpectKnownValue(rn, tfjsonpath.New("alg"), knownvalue.StringExact(dsData1.Alg)),
@@ -60,7 +60,7 @@ func TestAccDnssecRecordResource(t *testing.T) {
 				},
 			},
 			{
-				Config:                               testAccDnssecRecordResourceConfig(dsData1.Alg, dsData1.Digest, dsData1.DigestType, dsData1.KeyTag, ""),
+				Config:                               testAccDnssecRecordResourceConfig(dsData1.Alg, dsData1.Digest, dsData1.DigestType, dsData1.KeyTag),
 				ResourceName:                         rn,
 				ImportState:                          true,
 				ImportStateIdFunc:                    testAccDnssecRecordImportStateIdFunc(rn),
@@ -68,7 +68,7 @@ func TestAccDnssecRecordResource(t *testing.T) {
 				ImportStateVerifyIdentifierAttribute: "key_tag",
 			},
 			{
-				Config: testAccDnssecRecordResourceConfig(dsData2.Alg, dsData2.Digest, dsData2.DigestType, dsData2.KeyTag, ""),
+				Config: testAccDnssecRecordResourceConfig(dsData2.Alg, dsData2.Digest, dsData2.DigestType, dsData2.KeyTag),
 				ConfigStateChecks: []statecheck.StateCheck{
 					statecheck.ExpectKnownValue(rn, tfjsonpath.New("domain"), knownvalue.StringExact(acctest.TestDomain)),
 					statecheck.ExpectKnownValue(rn, tfjsonpath.New("alg"), knownvalue.StringExact(dsData2.Alg)),
@@ -91,7 +91,7 @@ func testAccDnssecRecordImportStateIdFunc(rn string) resource.ImportStateIdFunc 
 	}
 }
 
-func testAccDnssecRecordResourceConfig(alg, digest, digestType, keyTag, extras string) string {
+func testAccDnssecRecordResourceConfig(alg, digest, digestType, keyTag string) string {
 	return fmt.Sprintf(`
 resource "porkbun_dnssec_record" "test" {
 	domain = "%[1]s"
@@ -99,9 +99,8 @@ resource "porkbun_dnssec_record" "test" {
 	digest = "%[3]s"
 	digest_type = "%[4]s"
 	key_tag = "%[5]s"
-	%[6]s
 }
-`, acctest.TestDomain, alg, digest, digestType, keyTag, extras)
+`, acctest.TestDomain, alg, digest, digestType, keyTag)
 }
 
 type dsData struct {
