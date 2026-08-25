@@ -11,6 +11,7 @@ import (
 	"github.com/jianyuan/terraform-provider-porkbun/internal/apiclient"
 	"github.com/jianyuan/terraform-provider-porkbun/internal/fwdiag"
 	"github.com/jianyuan/terraform-provider-porkbun/internal/porkbuntypes"
+	supertypes "github.com/orange-cloudavenue/terraform-plugin-framework-supertypes"
 	"github.com/samber/lo"
 )
 
@@ -42,15 +43,15 @@ func (m *DomainsDomainDataSourceModel) Fill(ctx context.Context, domain apiclien
 }
 
 type DomainsDataSourceModel struct {
-	Domains []DomainsDomainDataSourceModel `tfsdk:"domains"`
+	Domains supertypes.SetNestedObjectValueOf[DomainsDomainDataSourceModel] `tfsdk:"domains"`
 }
 
 func (m *DomainsDataSourceModel) Fill(ctx context.Context, domains []apiclient.DomainListAllResponse_Domains) (diags diag.Diagnostics) {
-	m.Domains = lo.Map(domains, func(item apiclient.DomainListAllResponse_Domains, _ int) DomainsDomainDataSourceModel {
+	m.Domains = supertypes.NewSetNestedObjectValueOfValueSlice(ctx, lo.Map(domains, func(item apiclient.DomainListAllResponse_Domains, _ int) DomainsDomainDataSourceModel {
 		var mm DomainsDomainDataSourceModel
 		diags.Append(mm.Fill(ctx, item)...)
 		return mm
-	})
+	}))
 	return
 }
 
@@ -77,6 +78,7 @@ func (d *DomainsDataSource) Schema(ctx context.Context, req datasource.SchemaReq
 			"domains": schema.SetNestedAttribute{
 				MarkdownDescription: "Domain names in account.",
 				Computed:            true,
+				CustomType:          supertypes.NewSetNestedObjectTypeOf[DomainsDomainDataSourceModel](ctx),
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"domain": schema.StringAttribute{

@@ -13,6 +13,9 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/jianyuan/terraform-provider-porkbun/internal/apiclient"
 	"github.com/jianyuan/terraform-provider-porkbun/internal/fwdiag"
+	"github.com/jianyuan/terraform-provider-porkbun/internal/tfutils"
+	supertypes "github.com/orange-cloudavenue/terraform-plugin-framework-supertypes"
+	"github.com/samber/lo"
 )
 
 type DnsRecordsFilterDataSourceModel struct {
@@ -21,19 +24,17 @@ type DnsRecordsFilterDataSourceModel struct {
 }
 
 type DnsRecordsDataSourceModel struct {
-	Domain  types.String                     `tfsdk:"domain"`
-	Filter  *DnsRecordsFilterDataSourceModel `tfsdk:"filter"`
-	Records []DnsRecordModel                 `tfsdk:"records"`
+	Domain  types.String                                                          `tfsdk:"domain"`
+	Filter  supertypes.SingleNestedObjectValueOf[DnsRecordsFilterDataSourceModel] `tfsdk:"filter"`
+	Records supertypes.SetNestedObjectValueOf[DnsRecordModel]                     `tfsdk:"records"`
 }
 
 func (m *DnsRecordsDataSourceModel) Fill(ctx context.Context, records []apiclient.DnsRecordsResponse_Records) (diags diag.Diagnostics) {
-	m.Records = make([]DnsRecordModel, len(records))
-	for i, record := range records {
-		diags = append(diags, m.Records[i].Fill(ctx, record)...)
-		if diags.HasError() {
-			return
-		}
-	}
+	m.Records = supertypes.NewSetNestedObjectValueOfValueSlice(ctx, lo.Map(records, func(record apiclient.DnsRecordsResponse_Records, _ int) DnsRecordModel {
+		var mm DnsRecordModel
+		diags.Append(mm.Fill(ctx, record)...)
+		return mm
+	}))
 	return
 }
 
@@ -63,6 +64,7 @@ func (d *DnsRecordsDataSource) Schema(ctx context.Context, req datasource.Schema
 			"filter": schema.SingleNestedAttribute{
 				MarkdownDescription: "Record filter.",
 				Optional:            true,
+				CustomType:          supertypes.NewSingleNestedObjectTypeOf[DnsRecordsFilterDataSourceModel](ctx),
 				Attributes: map[string]schema.Attribute{
 					"type": schema.StringAttribute{
 						MarkdownDescription: "Record type. Valid types are: A, MX, CNAME, ALIAS, TXT, NS, AAAA, SRV, TLSA, CAA, HTTPS, SVCB.",
@@ -83,6 +85,7 @@ func (d *DnsRecordsDataSource) Schema(ctx context.Context, req datasource.Schema
 			"records": schema.SetNestedAttribute{
 				MarkdownDescription: "All editable DNS records.",
 				Computed:            true,
+				CustomType:          supertypes.NewSetNestedObjectTypeOf[DnsRecordModel](ctx),
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
@@ -122,42 +125,29 @@ func (d *DnsRecordsDataSource) Read(ctx context.Context, req datasource.ReadRequ
 	}
 
 	var records []apiclient.DnsRecordsResponse_Records
-	if data.Filter != nil && !data.Filter.Type.IsNull() {
-		if !data.Filter.Subdomain.IsNull() {
-			httpResp, err := d.client.GetDnsRecordsByNameTypeWithResponse(
-				ctx,
-				data.Domain.ValueString(),
-				data.Filter.Type.ValueString(),
-				data.Filter.Subdomain.ValueString(),
-				nil,
-			)
-			if err != nil {
-				resp.Diagnostics.Append(fwdiag.NewClientReadError(err))
-				return
-			} else if httpResp.StatusCode() != http.StatusOK || httpResp.JSON200 == nil || httpResp.JSON200.Status != "SUCCESS" {
-				resp.Diagnostics.Append(fwdiag.NewClientReadHTTPResponseError(httpResp))
-				return
-			}
-
-			records = httpResp.JSON200.Records
-		} else {
-			httpResp, err := d.client.GetDnsRecordsByNameTypeWithResponse(
-				ctx,
-				data.Domain.ValueString(),
-				data.Filter.Type.ValueString(),
-				"",
-				nil,
-			)
-			if err != nil {
-				resp.Diagnostics.Append(fwdiag.NewClientReadError(err))
-				return
-			} else if httpResp.StatusCode() != http.StatusOK || httpResp.JSON200 == nil || httpResp.JSON200.Status != "SUCCESS" {
-				resp.Diagnostics.Append(fwdiag.NewClientReadHTTPResponseError(httpResp))
-				return
-			}
-
-			records = httpResp.JSON200.Records
+	if data.Filter.IsKnown() {
+		filter := tfutils.MergeDiagnostics(data.Filter.Get(ctx))(&resp.Diagnostics)
+		if resp.Diagnostics.HasError() {
+			return
 		}
+
+		httpResp, err := d.client.GetDnsRecordsByNameTypeWithResponse(
+			ctx,
+			data.Domain.ValueString(),
+			filter.Type.ValueString(),
+			filter.Subdomain.ValueString(),
+			nil,
+		)
+		if err != nil {
+			resp.Diagnostics.Append(fwdiag.NewClientReadError(err))
+			return
+		} else if httpResp.StatusCode() != http.StatusOK || httpResp.JSON200 == nil || httpResp.JSON200.Status != "SUCCESS" {
+			resp.Diagnostics.Append(fwdiag.NewClientReadHTTPResponseError(httpResp))
+			return
+		}
+
+		records = httpResp.JSON200.Records
+
 	} else {
 		httpResp, err := d.client.GetDnsRecordsWithResponse(
 			ctx,

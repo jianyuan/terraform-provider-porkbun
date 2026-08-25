@@ -10,20 +10,21 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/jianyuan/terraform-provider-porkbun/internal/apiclient"
 	"github.com/jianyuan/terraform-provider-porkbun/internal/fwdiag"
+	supertypes "github.com/orange-cloudavenue/terraform-plugin-framework-supertypes"
 	"github.com/samber/lo"
 )
 
 type DnssecRecordsDataSourceModel struct {
-	Domain  types.String                              `tfsdk:"domain"`
-	Records []DnssecRecordsDataSourceModelRecordsItem `tfsdk:"records"`
+	Domain  types.String                                                               `tfsdk:"domain"`
+	Records supertypes.SetNestedObjectValueOf[DnssecRecordsDataSourceModelRecordsItem] `tfsdk:"records"`
 }
 
 func (m *DnssecRecordsDataSourceModel) Fill(ctx context.Context, items []apiclient.GetDnssecRecords200JSONResponseBody_Records) (diags diag.Diagnostics) {
-	m.Records = lo.Map(items, func(item apiclient.GetDnssecRecords200JSONResponseBody_Records, _ int) DnssecRecordsDataSourceModelRecordsItem {
+	m.Records = supertypes.NewSetNestedObjectValueOfValueSlice(ctx, lo.Map(items, func(item apiclient.GetDnssecRecords200JSONResponseBody_Records, _ int) DnssecRecordsDataSourceModelRecordsItem {
 		var mm DnssecRecordsDataSourceModelRecordsItem
 		diags.Append(mm.Fill(ctx, item)...)
 		return mm
-	})
+	}))
 	return
 }
 
@@ -70,6 +71,7 @@ func (d *DnssecRecordsDataSource) Schema(ctx context.Context, req datasource.Sch
 			"records": schema.SetNestedAttribute{
 				MarkdownDescription: "All DNSSEC records.",
 				Computed:            true,
+				CustomType:          supertypes.NewSetNestedObjectTypeOf[DnssecRecordsDataSourceModelRecordsItem](ctx),
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"key_tag": schema.StringAttribute{
