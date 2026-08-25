@@ -1693,12 +1693,12 @@ type DnsRecordsResponse_Records struct {
 	// Prio Priority (used for MX, SRV records). Null if not applicable.
 	//
 	// Example: 10
-	Prio *string `json:"prio,omitempty"`
+	Prio *porkbuntypes.FlexibleInt64 `json:"prio,omitempty"`
 
 	// Ttl Time to live in seconds
 	//
 	// Example: 600
-	Ttl *string `json:"ttl,omitempty"`
+	Ttl *porkbuntypes.FlexibleInt64 `json:"ttl,omitempty"`
 
 	// Type DNS record type
 	//
@@ -2660,6 +2660,11 @@ type ApikeyRequestJSONBody struct {
 	// Example: Acme deploy bot — my-project
 	Name *string `json:"name,omitempty"`
 
+	// ReturnUrl Optional app-return redirect for native/mobile apps. Requires codeChallenge (PKCE). Must be an HTTPS URL your app claims as a Universal Link / App Link (custom URI schemes are rejected — another app could hijack them). After the account holder approves in the system browser, Porkbun redirects here with `?status=approved&requestToken=<token>` (or `status=denied`) so control returns to your app; it then calls /apikey/retrieve with its codeVerifier to receive the keys. The key is NEVER placed in the redirect — only the request token and status.
+	//
+	// Example: https://app.example.com/porkbun/callback
+	ReturnUrl *string `json:"returnUrl,omitempty"`
+
 	// Sandbox If true, skip the approval flow and immediately return a throwaway SANDBOX key pair (public `pk1_sb_`, secret `sk1_sb_`) for a fresh test account seeded with $1000 fake credit. Use it as apikey/secretapikey against the same base URL to run the whole API in the isolated sandbox — no real registry actions, DNS changes, or charges. Rate-limited (20/IP/hour).
 	Sandbox *bool `json:"sandbox,omitempty"`
 }
@@ -2680,7 +2685,7 @@ type ApikeyRequest200JSONResponseBody struct {
 	// DeliveryMode Which delivery flow this request uses. 'pkce' when a codeChallenge was supplied (the secret is returned once via /apikey/retrieve to the verifier holder); 'legacy' otherwise (the secret is shown only in the browser).
 	DeliveryMode *ApikeyRequest200JSONResponseBodyDeliveryMode `json:"deliveryMode,omitempty"`
 
-	// Expiration ISO datetime when this request expires (10 minutes from creation)
+	// Expiration ISO datetime when this request expires (30 minutes from creation)
 	//
 	// Example: 2026-03-30 14:30:00
 	Expiration *string `json:"expiration,omitempty"`
@@ -4325,7 +4330,7 @@ type ClientInterface interface {
 
 	// ApikeyRequestWithBody Initiate an API key authorization request
 	//
-	// Initiate an API key authorization flow. No credentials are required. Returns a `requestToken` and `authUrl` that the account holder must visit (while logged in to Porkbun in that browser) to approve the request. The `authUrl` is valid for **10 minutes**; if it lapses, call this endpoint again for a fresh token. After approval, call `/apikey/retrieve` to get the public API key. By default (legacy flow) the secret API key is shown only once, in the user's browser, and must be pasted into the application manually. To let an agent receive the secret without a browser copy, supply a PKCE `codeChallenge` (see the parameter below): the key is then minted lazily and BOTH keys are returned once from `/apikey/retrieve` to the caller presenting the matching `codeVerifier`.
+	// Initiate an API key authorization flow. No credentials are required. Returns a `requestToken` and `authUrl` that the account holder must visit (while logged in to Porkbun in that browser) to approve the request. The `authUrl` is valid for **30 minutes** (long enough for a brand-new user to create an account and verify their email); if it lapses, call this endpoint again for a fresh token. After approval, call `/apikey/retrieve` to get the public API key. By default (legacy flow) the secret API key is shown only once, in the user's browser, and must be pasted into the application manually. To let an agent receive the secret without a browser copy, supply a PKCE `codeChallenge` (see the parameter below): the key is then minted lazily and BOTH keys are returned once from `/apikey/retrieve` to the caller presenting the matching `codeVerifier`.
 	//
 	// **Rate limit:** 20 requests per IP per 3600 seconds.
 	//
@@ -4338,7 +4343,7 @@ type ClientInterface interface {
 
 	// ApikeyRequest Initiate an API key authorization request
 	//
-	// Initiate an API key authorization flow. No credentials are required. Returns a `requestToken` and `authUrl` that the account holder must visit (while logged in to Porkbun in that browser) to approve the request. The `authUrl` is valid for **10 minutes**; if it lapses, call this endpoint again for a fresh token. After approval, call `/apikey/retrieve` to get the public API key. By default (legacy flow) the secret API key is shown only once, in the user's browser, and must be pasted into the application manually. To let an agent receive the secret without a browser copy, supply a PKCE `codeChallenge` (see the parameter below): the key is then minted lazily and BOTH keys are returned once from `/apikey/retrieve` to the caller presenting the matching `codeVerifier`.
+	// Initiate an API key authorization flow. No credentials are required. Returns a `requestToken` and `authUrl` that the account holder must visit (while logged in to Porkbun in that browser) to approve the request. The `authUrl` is valid for **30 minutes** (long enough for a brand-new user to create an account and verify their email); if it lapses, call this endpoint again for a fresh token. After approval, call `/apikey/retrieve` to get the public API key. By default (legacy flow) the secret API key is shown only once, in the user's browser, and must be pasted into the application manually. To let an agent receive the secret without a browser copy, supply a PKCE `codeChallenge` (see the parameter below): the key is then minted lazily and BOTH keys are returned once from `/apikey/retrieve` to the caller presenting the matching `codeVerifier`.
 	//
 	// **Rate limit:** 20 requests per IP per 3600 seconds.
 	//
@@ -5826,7 +5831,7 @@ func (c *Client) GetAccountInviteStatus(ctx context.Context, params *GetAccountI
 
 // ApikeyRequestWithBody Initiate an API key authorization request
 //
-// Initiate an API key authorization flow. No credentials are required. Returns a `requestToken` and `authUrl` that the account holder must visit (while logged in to Porkbun in that browser) to approve the request. The `authUrl` is valid for **10 minutes**; if it lapses, call this endpoint again for a fresh token. After approval, call `/apikey/retrieve` to get the public API key. By default (legacy flow) the secret API key is shown only once, in the user's browser, and must be pasted into the application manually. To let an agent receive the secret without a browser copy, supply a PKCE `codeChallenge` (see the parameter below): the key is then minted lazily and BOTH keys are returned once from `/apikey/retrieve` to the caller presenting the matching `codeVerifier`.
+// Initiate an API key authorization flow. No credentials are required. Returns a `requestToken` and `authUrl` that the account holder must visit (while logged in to Porkbun in that browser) to approve the request. The `authUrl` is valid for **30 minutes** (long enough for a brand-new user to create an account and verify their email); if it lapses, call this endpoint again for a fresh token. After approval, call `/apikey/retrieve` to get the public API key. By default (legacy flow) the secret API key is shown only once, in the user's browser, and must be pasted into the application manually. To let an agent receive the secret without a browser copy, supply a PKCE `codeChallenge` (see the parameter below): the key is then minted lazily and BOTH keys are returned once from `/apikey/retrieve` to the caller presenting the matching `codeVerifier`.
 //
 // **Rate limit:** 20 requests per IP per 3600 seconds.
 //
@@ -5849,7 +5854,7 @@ func (c *Client) ApikeyRequestWithBody(ctx context.Context, contentType string, 
 
 // ApikeyRequest Initiate an API key authorization request
 //
-// Initiate an API key authorization flow. No credentials are required. Returns a `requestToken` and `authUrl` that the account holder must visit (while logged in to Porkbun in that browser) to approve the request. The `authUrl` is valid for **10 minutes**; if it lapses, call this endpoint again for a fresh token. After approval, call `/apikey/retrieve` to get the public API key. By default (legacy flow) the secret API key is shown only once, in the user's browser, and must be pasted into the application manually. To let an agent receive the secret without a browser copy, supply a PKCE `codeChallenge` (see the parameter below): the key is then minted lazily and BOTH keys are returned once from `/apikey/retrieve` to the caller presenting the matching `codeVerifier`.
+// Initiate an API key authorization flow. No credentials are required. Returns a `requestToken` and `authUrl` that the account holder must visit (while logged in to Porkbun in that browser) to approve the request. The `authUrl` is valid for **30 minutes** (long enough for a brand-new user to create an account and verify their email); if it lapses, call this endpoint again for a fresh token. After approval, call `/apikey/retrieve` to get the public API key. By default (legacy flow) the secret API key is shown only once, in the user's browser, and must be pasted into the application manually. To let an agent receive the secret without a browser copy, supply a PKCE `codeChallenge` (see the parameter below): the key is then minted lazily and BOTH keys are returned once from `/apikey/retrieve` to the caller presenting the matching `codeVerifier`.
 //
 // **Rate limit:** 20 requests per IP per 3600 seconds.
 //
@@ -12877,7 +12882,7 @@ type ClientWithResponsesInterface interface {
 
 	// ApikeyRequestWithBodyWithResponse Initiate an API key authorization request
 	//
-	// Initiate an API key authorization flow. No credentials are required. Returns a `requestToken` and `authUrl` that the account holder must visit (while logged in to Porkbun in that browser) to approve the request. The `authUrl` is valid for **10 minutes**; if it lapses, call this endpoint again for a fresh token. After approval, call `/apikey/retrieve` to get the public API key. By default (legacy flow) the secret API key is shown only once, in the user's browser, and must be pasted into the application manually. To let an agent receive the secret without a browser copy, supply a PKCE `codeChallenge` (see the parameter below): the key is then minted lazily and BOTH keys are returned once from `/apikey/retrieve` to the caller presenting the matching `codeVerifier`.
+	// Initiate an API key authorization flow. No credentials are required. Returns a `requestToken` and `authUrl` that the account holder must visit (while logged in to Porkbun in that browser) to approve the request. The `authUrl` is valid for **30 minutes** (long enough for a brand-new user to create an account and verify their email); if it lapses, call this endpoint again for a fresh token. After approval, call `/apikey/retrieve` to get the public API key. By default (legacy flow) the secret API key is shown only once, in the user's browser, and must be pasted into the application manually. To let an agent receive the secret without a browser copy, supply a PKCE `codeChallenge` (see the parameter below): the key is then minted lazily and BOTH keys are returned once from `/apikey/retrieve` to the caller presenting the matching `codeVerifier`.
 	//
 	// **Rate limit:** 20 requests per IP per 3600 seconds.
 	//
@@ -12890,7 +12895,7 @@ type ClientWithResponsesInterface interface {
 
 	// ApikeyRequestWithResponse Initiate an API key authorization request
 	//
-	// Initiate an API key authorization flow. No credentials are required. Returns a `requestToken` and `authUrl` that the account holder must visit (while logged in to Porkbun in that browser) to approve the request. The `authUrl` is valid for **10 minutes**; if it lapses, call this endpoint again for a fresh token. After approval, call `/apikey/retrieve` to get the public API key. By default (legacy flow) the secret API key is shown only once, in the user's browser, and must be pasted into the application manually. To let an agent receive the secret without a browser copy, supply a PKCE `codeChallenge` (see the parameter below): the key is then minted lazily and BOTH keys are returned once from `/apikey/retrieve` to the caller presenting the matching `codeVerifier`.
+	// Initiate an API key authorization flow. No credentials are required. Returns a `requestToken` and `authUrl` that the account holder must visit (while logged in to Porkbun in that browser) to approve the request. The `authUrl` is valid for **30 minutes** (long enough for a brand-new user to create an account and verify their email); if it lapses, call this endpoint again for a fresh token. After approval, call `/apikey/retrieve` to get the public API key. By default (legacy flow) the secret API key is shown only once, in the user's browser, and must be pasted into the application manually. To let an agent receive the secret without a browser copy, supply a PKCE `codeChallenge` (see the parameter below): the key is then minted lazily and BOTH keys are returned once from `/apikey/retrieve` to the caller presenting the matching `codeVerifier`.
 	//
 	// **Rate limit:** 20 requests per IP per 3600 seconds.
 	//
@@ -18298,7 +18303,7 @@ func (c *ClientWithResponses) GetAccountInviteStatusWithResponse(ctx context.Con
 
 // ApikeyRequestWithBodyWithResponse Initiate an API key authorization request
 //
-// Initiate an API key authorization flow. No credentials are required. Returns a `requestToken` and `authUrl` that the account holder must visit (while logged in to Porkbun in that browser) to approve the request. The `authUrl` is valid for **10 minutes**; if it lapses, call this endpoint again for a fresh token. After approval, call `/apikey/retrieve` to get the public API key. By default (legacy flow) the secret API key is shown only once, in the user's browser, and must be pasted into the application manually. To let an agent receive the secret without a browser copy, supply a PKCE `codeChallenge` (see the parameter below): the key is then minted lazily and BOTH keys are returned once from `/apikey/retrieve` to the caller presenting the matching `codeVerifier`.
+// Initiate an API key authorization flow. No credentials are required. Returns a `requestToken` and `authUrl` that the account holder must visit (while logged in to Porkbun in that browser) to approve the request. The `authUrl` is valid for **30 minutes** (long enough for a brand-new user to create an account and verify their email); if it lapses, call this endpoint again for a fresh token. After approval, call `/apikey/retrieve` to get the public API key. By default (legacy flow) the secret API key is shown only once, in the user's browser, and must be pasted into the application manually. To let an agent receive the secret without a browser copy, supply a PKCE `codeChallenge` (see the parameter below): the key is then minted lazily and BOTH keys are returned once from `/apikey/retrieve` to the caller presenting the matching `codeVerifier`.
 //
 // **Rate limit:** 20 requests per IP per 3600 seconds.
 //
@@ -18317,7 +18322,7 @@ func (c *ClientWithResponses) ApikeyRequestWithBodyWithResponse(ctx context.Cont
 
 // ApikeyRequestWithResponse Initiate an API key authorization request
 //
-// Initiate an API key authorization flow. No credentials are required. Returns a `requestToken` and `authUrl` that the account holder must visit (while logged in to Porkbun in that browser) to approve the request. The `authUrl` is valid for **10 minutes**; if it lapses, call this endpoint again for a fresh token. After approval, call `/apikey/retrieve` to get the public API key. By default (legacy flow) the secret API key is shown only once, in the user's browser, and must be pasted into the application manually. To let an agent receive the secret without a browser copy, supply a PKCE `codeChallenge` (see the parameter below): the key is then minted lazily and BOTH keys are returned once from `/apikey/retrieve` to the caller presenting the matching `codeVerifier`.
+// Initiate an API key authorization flow. No credentials are required. Returns a `requestToken` and `authUrl` that the account holder must visit (while logged in to Porkbun in that browser) to approve the request. The `authUrl` is valid for **30 minutes** (long enough for a brand-new user to create an account and verify their email); if it lapses, call this endpoint again for a fresh token. After approval, call `/apikey/retrieve` to get the public API key. By default (legacy flow) the secret API key is shown only once, in the user's browser, and must be pasted into the application manually. To let an agent receive the secret without a browser copy, supply a PKCE `codeChallenge` (see the parameter below): the key is then minted lazily and BOTH keys are returned once from `/apikey/retrieve` to the caller presenting the matching `codeVerifier`.
 //
 // **Rate limit:** 20 requests per IP per 3600 seconds.
 //

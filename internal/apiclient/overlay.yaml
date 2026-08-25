@@ -15,6 +15,12 @@ actions:
       x-go-type: porkbuntypes.FlexibleBool
       x-go-type-import:
         path: github.com/jianyuan/terraform-provider-porkbun/internal/porkbuntypes
+  - target: $.components.schemas.DnsRecordsResponse.properties.records.items.properties['ttl', 'prio']
+    update:
+      type: integer
+      x-go-type: porkbuntypes.FlexibleInt64
+      x-go-type-import:
+        path: github.com/jianyuan/terraform-provider-porkbun/internal/porkbuntypes
   - target: $.components.schemas.DomainListAllResponse.properties.domains.items.properties['securityLock', 'whoisPrivacy', 'autoRenew', 'apiAccess', 'notLocal']
     update:
       type: boolean

@@ -2,12 +2,11 @@ package provider
 
 import (
 	"context"
-	"fmt"
-	"strconv"
 
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/jianyuan/terraform-provider-porkbun/internal/apiclient"
+	"github.com/jianyuan/terraform-provider-porkbun/internal/porkbuntypes"
 )
 
 type DnsRecordModel struct {
@@ -25,27 +24,8 @@ func (m *DnsRecordModel) Fill(ctx context.Context, record apiclient.DnsRecordsRe
 	m.Name = types.StringPointerValue(record.Name)
 	m.Type = types.StringPointerValue(record.Type)
 	m.Content = types.StringPointerValue(record.Content)
-
-	if record.Ttl == nil {
-		m.Ttl = types.Int64Null()
-	} else {
-		if v, err := strconv.ParseInt(*record.Ttl, 10, 64); err == nil {
-			m.Ttl = types.Int64Value(v)
-		} else {
-			diags.AddError(fmt.Sprintf("failed to parse TTL: %s", err), fmt.Sprintf("failed to parse TTL: %s", err))
-			return
-		}
-	}
-
-	if record.Prio == nil {
-		m.Priority = types.Int64Null()
-	} else if v, err := strconv.ParseInt(*record.Prio, 10, 64); err == nil {
-		m.Priority = types.Int64Value(v)
-	} else {
-		diags.AddError(fmt.Sprintf("failed to parse PRIO: %s", err), fmt.Sprintf("failed to parse PRIO: %s", err))
-		return
-	}
-
+	m.Ttl = porkbuntypes.FlexibleInt64PointerValue(record.Ttl)
+	m.Priority = porkbuntypes.FlexibleInt64PointerValue(record.Prio)
 	m.Notes = types.StringPointerValue(record.Notes)
 	return
 }
