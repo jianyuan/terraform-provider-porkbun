@@ -6,8 +6,8 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
-	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/jianyuan/terraform-provider-porkbun/internal/fwdiag"
+	supertypes "github.com/orange-cloudavenue/terraform-plugin-framework-supertypes"
 )
 
 func NewDomainNameserversDataSource() datasource.DataSource {
@@ -34,8 +34,8 @@ func (d *DomainNameserversDataSource) Schema(ctx context.Context, req datasource
 				Required:            true,
 			},
 			"nameservers": schema.SetAttribute{
-				Computed:    true,
-				ElementType: types.StringType,
+				Computed:   true,
+				CustomType: supertypes.NewSetTypeOf[string](ctx),
 			},
 		},
 	}

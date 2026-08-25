@@ -10,9 +10,9 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
-	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/jianyuan/terraform-provider-porkbun/internal/apiclient"
 	"github.com/jianyuan/terraform-provider-porkbun/internal/fwdiag"
+	supertypes "github.com/orange-cloudavenue/terraform-plugin-framework-supertypes"
 )
 
 func NewDomainNameserversResource() resource.Resource {
@@ -41,8 +41,8 @@ func (r *DomainNameserversResource) Schema(ctx context.Context, req resource.Sch
 				},
 			},
 			"nameservers": schema.SetAttribute{
-				Required:    true,
-				ElementType: types.StringType,
+				Required:   true,
+				CustomType: supertypes.NewSetTypeOf[string](ctx),
 				Validators: []validator.Set{
 					setvalidator.SizeAtLeast(1),
 				},

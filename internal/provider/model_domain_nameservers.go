@@ -3,20 +3,18 @@ package provider
 import (
 	"context"
 
-	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+	supertypes "github.com/orange-cloudavenue/terraform-plugin-framework-supertypes"
 	"github.com/samber/lo"
 )
 
 type DomainNameserversModel struct {
-	Domain      types.String `tfsdk:"domain"`
-	Nameservers types.Set    `tfsdk:"nameservers"`
+	Domain      types.String                  `tfsdk:"domain"`
+	Nameservers supertypes.SetValueOf[string] `tfsdk:"nameservers"`
 }
 
 func (m *DomainNameserversModel) Fill(ctx context.Context, nameservers []string) (diags diag.Diagnostics) {
-	m.Nameservers = types.SetValueMust(types.StringType, lo.Map(nameservers, func(v string, _ int) attr.Value {
-		return types.StringValue(v)
-	}))
+	diags.Append(m.Nameservers.Set(ctx, lo.Uniq(nameservers))...)
 	return
 }
