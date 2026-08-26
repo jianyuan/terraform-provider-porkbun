@@ -2895,10 +2895,30 @@ type GetDomainGlueParams struct {
 	XSecretAPIKey *string `json:"X-Secret-API-Key,omitempty"`
 }
 
+// GetDomainGlue200JSONResponseBodyHosts0 defines parameters for GetDomainGlue.
+type GetDomainGlue200JSONResponseBodyHosts0 = string
+
+// GetDomainGlue200JSONResponseBodyHosts1 defines parameters for GetDomainGlue.
+type GetDomainGlue200JSONResponseBodyHosts1 = []string
+
+// GetDomainGlue200JSONResponseBodyHosts2 defines parameters for GetDomainGlue.
+type GetDomainGlue200JSONResponseBodyHosts2 GetDomainGlue200JSONResponseBody_Hosts_2
+
+// GetDomainGlue200JSONResponseBody_Hosts_2 defines parameters for GetDomainGlue.
+type GetDomainGlue200JSONResponseBody_Hosts_2 struct {
+	V4 *[]string `json:"v4,omitempty"`
+	V6 *[]string `json:"v6,omitempty"`
+}
+
+// GetDomainGlue200JSONResponseBody_Hosts defines parameters for GetDomainGlue.
+type GetDomainGlue200JSONResponseBody_Hosts struct {
+	union json.RawMessage
+}
+
 // GetDomainGlue200JSONResponseBody defines parameters for GetDomainGlue.
 type GetDomainGlue200JSONResponseBody struct {
 	// Hosts Array of [hostname, ipAddresses] tuples. Each element is a two-item array: index 0 is the full hostname (string), index 1 is an object with `v4` (array of IPv4 strings) and `v6` (array of IPv6 strings). Example: `["ns1.example.com", {"v4": ["1.2.3.4"], "v6": []}]`
-	Hosts *[][]interface{} `json:"hosts,omitempty"`
+	Hosts *[][]GetDomainGlue200JSONResponseBody_Hosts `json:"hosts,omitempty"`
 
 	// Status Example: SUCCESS
 	Status *string `json:"status,omitempty"`
@@ -4069,6 +4089,94 @@ func (t DomainCreate200JSONResponseBody) MarshalJSON() ([]byte, error) {
 }
 
 func (t *DomainCreate200JSONResponseBody) UnmarshalJSON(b []byte) error {
+	err := t.union.UnmarshalJSON(b)
+	return err
+}
+
+// AsGetDomainGlue200JSONResponseBodyHosts0 returns the union data inside the GetDomainGlue200JSONResponseBody_Hosts as a GetDomainGlue200JSONResponseBodyHosts0
+func (t GetDomainGlue200JSONResponseBody_Hosts) AsGetDomainGlue200JSONResponseBodyHosts0() (GetDomainGlue200JSONResponseBodyHosts0, error) {
+	var body GetDomainGlue200JSONResponseBodyHosts0
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromGetDomainGlue200JSONResponseBodyHosts0 overwrites any union data inside the GetDomainGlue200JSONResponseBody_Hosts as the provided GetDomainGlue200JSONResponseBodyHosts0
+func (t *GetDomainGlue200JSONResponseBody_Hosts) FromGetDomainGlue200JSONResponseBodyHosts0(v GetDomainGlue200JSONResponseBodyHosts0) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeGetDomainGlue200JSONResponseBodyHosts0 performs a merge with any union data inside the GetDomainGlue200JSONResponseBody_Hosts, using the provided GetDomainGlue200JSONResponseBodyHosts0
+func (t *GetDomainGlue200JSONResponseBody_Hosts) MergeGetDomainGlue200JSONResponseBodyHosts0(v GetDomainGlue200JSONResponseBodyHosts0) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsGetDomainGlue200JSONResponseBodyHosts1 returns the union data inside the GetDomainGlue200JSONResponseBody_Hosts as a GetDomainGlue200JSONResponseBodyHosts1
+func (t GetDomainGlue200JSONResponseBody_Hosts) AsGetDomainGlue200JSONResponseBodyHosts1() (GetDomainGlue200JSONResponseBodyHosts1, error) {
+	var body GetDomainGlue200JSONResponseBodyHosts1
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromGetDomainGlue200JSONResponseBodyHosts1 overwrites any union data inside the GetDomainGlue200JSONResponseBody_Hosts as the provided GetDomainGlue200JSONResponseBodyHosts1
+func (t *GetDomainGlue200JSONResponseBody_Hosts) FromGetDomainGlue200JSONResponseBodyHosts1(v GetDomainGlue200JSONResponseBodyHosts1) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeGetDomainGlue200JSONResponseBodyHosts1 performs a merge with any union data inside the GetDomainGlue200JSONResponseBody_Hosts, using the provided GetDomainGlue200JSONResponseBodyHosts1
+func (t *GetDomainGlue200JSONResponseBody_Hosts) MergeGetDomainGlue200JSONResponseBodyHosts1(v GetDomainGlue200JSONResponseBodyHosts1) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+// AsGetDomainGlue200JSONResponseBodyHosts2 returns the union data inside the GetDomainGlue200JSONResponseBody_Hosts as a GetDomainGlue200JSONResponseBodyHosts2
+func (t GetDomainGlue200JSONResponseBody_Hosts) AsGetDomainGlue200JSONResponseBodyHosts2() (GetDomainGlue200JSONResponseBodyHosts2, error) {
+	var body GetDomainGlue200JSONResponseBodyHosts2
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromGetDomainGlue200JSONResponseBodyHosts2 overwrites any union data inside the GetDomainGlue200JSONResponseBody_Hosts as the provided GetDomainGlue200JSONResponseBodyHosts2
+func (t *GetDomainGlue200JSONResponseBody_Hosts) FromGetDomainGlue200JSONResponseBodyHosts2(v GetDomainGlue200JSONResponseBodyHosts2) error {
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeGetDomainGlue200JSONResponseBodyHosts2 performs a merge with any union data inside the GetDomainGlue200JSONResponseBody_Hosts, using the provided GetDomainGlue200JSONResponseBodyHosts2
+func (t *GetDomainGlue200JSONResponseBody_Hosts) MergeGetDomainGlue200JSONResponseBodyHosts2(v GetDomainGlue200JSONResponseBodyHosts2) error {
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
+func (t GetDomainGlue200JSONResponseBody_Hosts) MarshalJSON() ([]byte, error) {
+	b, err := t.union.MarshalJSON()
+	return b, err
+}
+
+func (t *GetDomainGlue200JSONResponseBody_Hosts) UnmarshalJSON(b []byte) error {
 	err := t.union.UnmarshalJSON(b)
 	return err
 }
