@@ -1,0 +1,3 @@
+terraform import porkbun_domain_auto_renew_setting.example <domain>
+
+terraform import porkbun_domain_auto_renew_setting.example jiancodes.com
