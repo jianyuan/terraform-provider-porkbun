@@ -123,7 +123,7 @@ func (r *DnsRecordResource) Create(ctx context.Context, req resource.CreateReque
 		return
 	}
 
-	params := apiclient.DnsCreateJSONRequestBody{
+	body := apiclient.DnsCreateJSONRequestBody{
 		Name:    data.Subdomain.ValueStringPointer(),
 		Type:    apiclient.CreateDnsRequestType(data.Type.ValueString()),
 		Content: data.Content.ValueString(),
@@ -131,40 +131,22 @@ func (r *DnsRecordResource) Create(ctx context.Context, req resource.CreateReque
 		Ttl:     data.Ttl.ValueInt64Pointer(),
 	}
 
-	createHttpResp, err := r.client.DnsCreateWithResponse(
+	httpResp, err := r.client.DnsCreateWithResponse(
 		ctx,
 		data.Domain.ValueString(),
-		params,
+		body,
 	)
-
 	if err != nil {
 		resp.Diagnostics.Append(fwdiag.NewClientCreateError(err))
 		return
-	} else if createHttpResp.StatusCode() != http.StatusOK || createHttpResp.JSON200 == nil || createHttpResp.JSON200.Status == nil || *createHttpResp.JSON200.Status != "SUCCESS" {
-		resp.Diagnostics.Append(fwdiag.NewClientCreateHTTPResponseError(createHttpResp))
+	} else if httpResp.StatusCode() != http.StatusOK || httpResp.JSON200 == nil || httpResp.JSON200.Status == nil || *httpResp.JSON200.Status != "SUCCESS" {
+		resp.Diagnostics.Append(fwdiag.NewClientCreateHTTPResponseError(httpResp))
 		return
 	}
 
-	data.Id = porkbuntypes.StringIDPointerValue(createHttpResp.JSON200.Id)
+	data.Id = porkbuntypes.StringIDPointerValue(httpResp.JSON200.Id)
 
-	readHttpResp, err := r.client.GetDnsRecordByIdWithResponse(
-		ctx,
-		data.Domain.ValueString(),
-		data.Id.ValueString(),
-		nil,
-	)
-	if err != nil {
-		resp.Diagnostics.Append(fwdiag.NewClientReadError(err))
-		return
-	} else if readHttpResp.StatusCode() != http.StatusOK || readHttpResp.JSON200 == nil || readHttpResp.JSON200.Status != "SUCCESS" {
-		resp.Diagnostics.Append(fwdiag.NewClientReadHTTPResponseError(readHttpResp))
-		return
-	} else if len(readHttpResp.JSON200.Records) != 1 {
-		resp.Diagnostics.AddError("Client error", fmt.Sprintf("Expected exactly one record, got %d", len(readHttpResp.JSON200.Records)))
-		return
-	}
-
-	resp.Diagnostics.Append(data.Fill(ctx, readHttpResp.JSON200.Records[0])...)
+	resp.Diagnostics.Append(r.read(ctx, &data)...)
 	if resp.Diagnostics.HasError() {
 		return
 	}
@@ -180,27 +162,7 @@ func (r *DnsRecordResource) Read(ctx context.Context, req resource.ReadRequest, 
 		return
 	}
 
-	httpResp, err := r.client.GetDnsRecordByIdWithResponse(
-		ctx,
-		data.Domain.ValueString(),
-		data.Id.ValueString(),
-		nil,
-	)
-	if err != nil {
-		resp.Diagnostics.Append(fwdiag.NewClientReadError(err))
-		return
-	} else if httpResp.StatusCode() == http.StatusNotFound {
-		resp.State.RemoveResource(ctx)
-		return
-	} else if httpResp.StatusCode() != http.StatusOK || httpResp.JSON200 == nil || httpResp.JSON200.Status != "SUCCESS" {
-		resp.Diagnostics.Append(fwdiag.NewClientReadHTTPResponseError(httpResp))
-		return
-	} else if len(httpResp.JSON200.Records) != 1 {
-		resp.Diagnostics.AddError("Client error", fmt.Sprintf("Expected exactly one record, got %d", len(httpResp.JSON200.Records)))
-		return
-	}
-
-	resp.Diagnostics.Append(data.Fill(ctx, httpResp.JSON200.Records[0])...)
+	resp.Diagnostics.Append(r.read(ctx, &data)...)
 	if resp.Diagnostics.HasError() {
 		return
 	}
@@ -216,7 +178,7 @@ func (r *DnsRecordResource) Update(ctx context.Context, req resource.UpdateReque
 		return
 	}
 
-	params := apiclient.DnsEditJSONRequestBody{
+	body := apiclient.DnsEditJSONRequestBody{
 		Name:    data.Name.ValueStringPointer(),
 		Type:    apiclient.EditDnsRequestType(data.Type.ValueString()),
 		Content: data.Content.ValueString(),
@@ -224,44 +186,49 @@ func (r *DnsRecordResource) Update(ctx context.Context, req resource.UpdateReque
 		Ttl:     data.Ttl.ValueInt64Pointer(),
 	}
 
-	updateHttpResp, err := r.client.DnsEditWithResponse(
+	httpResp, err := r.client.DnsEditWithResponse(
 		ctx,
 		data.Domain.ValueString(),
 		data.Id.ValueString(),
-		params,
+		body,
 	)
 
 	if err != nil {
 		resp.Diagnostics.Append(fwdiag.NewClientUpdateError(err))
 		return
-	} else if updateHttpResp.StatusCode() != http.StatusOK || updateHttpResp.JSON200 == nil || updateHttpResp.JSON200.Status != "SUCCESS" {
-		resp.Diagnostics.Append(fwdiag.NewClientUpdateHTTPResponseError(updateHttpResp))
+	} else if httpResp.StatusCode() != http.StatusOK || httpResp.JSON200 == nil || httpResp.JSON200.Status != "SUCCESS" {
+		resp.Diagnostics.Append(fwdiag.NewClientUpdateHTTPResponseError(httpResp))
 		return
 	}
 
-	readHttpResp, err := r.client.GetDnsRecordByIdWithResponse(
+	resp.Diagnostics.Append(r.read(ctx, &data)...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
+}
+
+func (r *DnsRecordResource) read(ctx context.Context, data *DnsRecordResourceModel) (diags diag.Diagnostics) {
+	httpResp, err := r.client.GetDnsRecordByIdWithResponse(
 		ctx,
 		data.Domain.ValueString(),
 		data.Id.ValueString(),
 		nil,
 	)
 	if err != nil {
-		resp.Diagnostics.Append(fwdiag.NewClientReadError(err))
+		diags.Append(fwdiag.NewClientReadError(err))
 		return
-	} else if readHttpResp.StatusCode() != http.StatusOK || readHttpResp.JSON200 == nil || readHttpResp.JSON200.Status != "SUCCESS" {
-		resp.Diagnostics.Append(fwdiag.NewClientReadHTTPResponseError(readHttpResp))
+	} else if httpResp.StatusCode() != http.StatusOK || httpResp.JSON200 == nil || httpResp.JSON200.Status != "SUCCESS" {
+		diags.Append(fwdiag.NewClientReadHTTPResponseError(httpResp))
 		return
-	} else if len(readHttpResp.JSON200.Records) != 1 {
-		resp.Diagnostics.AddError("Client error", fmt.Sprintf("Expected exactly one record, got %d", len(readHttpResp.JSON200.Records)))
-		return
-	}
-
-	resp.Diagnostics.Append(data.Fill(ctx, readHttpResp.JSON200.Records[0])...)
-	if resp.Diagnostics.HasError() {
+	} else if len(httpResp.JSON200.Records) != 1 {
+		diags.AddError("Client error", fmt.Sprintf("Expected exactly one record, got %d", len(httpResp.JSON200.Records)))
 		return
 	}
 
-	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
+	diags.Append(data.Fill(ctx, httpResp.JSON200.Records[0])...)
+	return
 }
 
 func (r *DnsRecordResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
