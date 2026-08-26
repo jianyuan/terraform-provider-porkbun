@@ -124,6 +124,7 @@ func (p *PorkbunProvider) Resources(ctx context.Context) []func() resource.Resou
 		NewDnssecRecordResource,
 		NewDomainAutoRenewSettingResource,
 		NewDomainNameserversResource,
+		NewGlueRecordResource,
 	}
 }
 
