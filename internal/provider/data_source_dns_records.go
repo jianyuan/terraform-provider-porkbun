@@ -13,7 +13,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/jianyuan/terraform-provider-porkbun/internal/apiclient"
 	"github.com/jianyuan/terraform-provider-porkbun/internal/fwdiag"
-	"github.com/jianyuan/terraform-provider-porkbun/internal/tfutils"
 	supertypes "github.com/orange-cloudavenue/terraform-plugin-framework-supertypes"
 	"github.com/samber/lo"
 )
@@ -126,7 +125,7 @@ func (d *DnsRecordsDataSource) Read(ctx context.Context, req datasource.ReadRequ
 
 	var records []apiclient.DnsRecordsResponse_Records
 	if data.Filter.IsKnown() {
-		filter := tfutils.MergeDiagnostics(data.Filter.Get(ctx))(&resp.Diagnostics)
+		filter := fwdiag.Merge(data.Filter.Get(ctx))(&resp.Diagnostics)
 		if resp.Diagnostics.HasError() {
 			return
 		}

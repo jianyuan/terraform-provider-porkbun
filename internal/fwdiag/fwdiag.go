@@ -4,7 +4,12 @@ import (
 	"fmt"
 
 	"github.com/hashicorp/terraform-plugin-framework/diag"
+	intfwdiag "github.com/jianyuan/terraform-plugin-framework-utils/fwdiag"
 )
+
+func Merge[T any](v T, sourceDiags diag.Diagnostics) func(targetDiags *diag.Diagnostics) T {
+	return intfwdiag.Merge(v, sourceDiags)
+}
 
 func NewClientError(action string, err error) diag.ErrorDiagnostic {
 	return diag.NewErrorDiagnostic("Client error", fmt.Sprintf("Unable to %s, got error: %s", action, err))

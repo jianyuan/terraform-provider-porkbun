@@ -15,7 +15,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/jianyuan/terraform-provider-porkbun/internal/apiclient"
 	"github.com/jianyuan/terraform-provider-porkbun/internal/fwdiag"
-	"github.com/jianyuan/terraform-provider-porkbun/internal/tfutils"
 	supertypes "github.com/orange-cloudavenue/terraform-plugin-framework-supertypes"
 )
 
@@ -83,7 +82,7 @@ func (r *GlueRecordResource) Create(ctx context.Context, req resource.CreateRequ
 	}
 
 	body := apiclient.DomainCreateGlueJSONRequestBody{}
-	body.Ips = tfutils.MergeDiagnostics(data.Ips.Get(ctx))(&resp.Diagnostics)
+	body.Ips = fwdiag.Merge(data.Ips.Get(ctx))(&resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
@@ -135,7 +134,7 @@ func (r *GlueRecordResource) Update(ctx context.Context, req resource.UpdateRequ
 	}
 
 	body := apiclient.DomainUpdateGlueJSONRequestBody{}
-	body.Ips = tfutils.MergeDiagnostics(data.Ips.Get(ctx))(&resp.Diagnostics)
+	body.Ips = fwdiag.Merge(data.Ips.Get(ctx))(&resp.Diagnostics)
 	if resp.Diagnostics.HasError() {
 		return
 	}
