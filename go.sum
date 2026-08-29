@@ -175,10 +175,8 @@ github.com/jbenet/go-context v0.0.0-20150711004518-d14ea06fba99 h1:BQSFePA1RWJOl
 github.com/jbenet/go-context v0.0.0-20150711004518-d14ea06fba99/go.mod h1:1lJo3i6rXxKeerYnT8Nvf0QmHCRC1n8sfWVwXF2Frvo=
 github.com/jhump/protoreflect v1.17.0 h1:qOEr613fac2lOuTgWN4tPAtLL7fUSbuJL5X5XumQh94=
 github.com/jhump/protoreflect v1.17.0/go.mod h1:h9+vUUL38jiBzck8ck+6G/aeMX8Z4QUY/NiJPwPNi+8=
-github.com/jianyuan/terraform-plugin-framework-utils v0.0.0-20260829100919-c722a8c92bdb h1:dLCSNpJtJopajjmAhBDt9++z7VR7emUgut/Axt1OveI=
-github.com/jianyuan/terraform-plugin-framework-utils v0.0.0-20260829100919-c722a8c92bdb/go.mod h1:neYc3J6cixNNLg6XR6fJZP4KbL16N5go2JZI2HoHpQw=
-github.com/jianyuan/terraform-plugin-framework-utils v0.0.0-20260829101111-302e41e64a33 h1:9s0GXPQ4untlNuVs8e40spXrcYDJeCB2sFMmp3ss0ZU=
-github.com/jianyuan/terraform-plugin-framework-utils v0.0.0-20260829101111-302e41e64a33/go.mod h1:neYc3J6cixNNLg6XR6fJZP4KbL16N5go2JZI2HoHpQw=
+github.com/jianyuan/terraform-plugin-framework-utils v0.0.0-20260829101527-cc5e83050d90 h1:TabNJ2Az7g1pm+KawykjEEkaj89ieHmrk7kJX9yoz/8=
+github.com/jianyuan/terraform-plugin-framework-utils v0.0.0-20260829101527-cc5e83050d90/go.mod h1:neYc3J6cixNNLg6XR6fJZP4KbL16N5go2JZI2HoHpQw=
 github.com/juju/gnuflag v0.0.0-20171113085948-2ce1bb71843d/go.mod h1:2PavIy+JPciBPrBUjwbNvtwB6RQlve+hkpll6QSNmOE=
 github.com/kevinburke/ssh_config v1.2.0 h1:x584FjTGwHzMwvHx18PXxbBVzfnxogHaAReU4gf13a4=
 github.com/kevinburke/ssh_config v1.2.0/go.mod h1:CT57kijsi8u/K/BOFA39wgDQJ9CxiF4nAY/ojJ6r6mM=
