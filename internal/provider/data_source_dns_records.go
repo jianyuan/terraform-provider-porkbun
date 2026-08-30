@@ -4,12 +4,8 @@ import (
 	"context"
 	"net/http"
 
-	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
-	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
-	"github.com/hashicorp/terraform-plugin-framework/path"
-	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/jianyuan/terraform-provider-porkbun/internal/apiclient"
 	"github.com/jianyuan/terraform-provider-porkbun/internal/fwdiag"
@@ -28,10 +24,10 @@ type DnsRecordsDataSourceModel struct {
 	Records supertypes.SetNestedObjectValueOf[DnsRecordModel]                     `tfsdk:"records"`
 }
 
-func (m *DnsRecordsDataSourceModel) Fill(ctx context.Context, records []apiclient.DnsRecordsResponse_Records) (diags diag.Diagnostics) {
+func (m *DnsRecordsDataSourceModel) FromAPI(ctx context.Context, records []apiclient.DnsRecordsResponse_Records) (diags diag.Diagnostics) {
 	m.Records = supertypes.NewSetNestedObjectValueOfValueSlice(ctx, lo.Map(records, func(record apiclient.DnsRecordsResponse_Records, _ int) DnsRecordModel {
 		var mm DnsRecordModel
-		diags.Append(mm.Fill(ctx, record)...)
+		diags.Append(mm.FromAPI(ctx, record)...)
 		return mm
 	}))
 	return
@@ -52,67 +48,7 @@ func (d *DnsRecordsDataSource) Metadata(ctx context.Context, req datasource.Meta
 }
 
 func (d *DnsRecordsDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
-	resp.Schema = schema.Schema{
-		MarkdownDescription: "Retrieve all editable DNS records associated with a domain.",
-
-		Attributes: map[string]schema.Attribute{
-			"domain": schema.StringAttribute{
-				MarkdownDescription: "The domain name.",
-				Required:            true,
-			},
-			"filter": schema.SingleNestedAttribute{
-				MarkdownDescription: "Record filter.",
-				Optional:            true,
-				CustomType:          supertypes.NewSingleNestedObjectTypeOf[DnsRecordsFilterDataSourceModel](ctx),
-				Attributes: map[string]schema.Attribute{
-					"type": schema.StringAttribute{
-						MarkdownDescription: "Record type. Valid types are: A, MX, CNAME, ALIAS, TXT, NS, AAAA, SRV, TLSA, CAA, HTTPS, SVCB.",
-						Optional:            true,
-						Validators: []validator.String{
-							stringvalidator.OneOf(DnsRecordTypes...),
-						},
-					},
-					"subdomain": schema.StringAttribute{
-						MarkdownDescription: "Record subdomain.",
-						Optional:            true,
-						Validators: []validator.String{
-							stringvalidator.AlsoRequires(path.MatchRelative().AtParent().AtName("type")),
-						},
-					},
-				},
-			},
-			"records": schema.SetNestedAttribute{
-				MarkdownDescription: "All editable DNS records.",
-				Computed:            true,
-				CustomType:          supertypes.NewSetNestedObjectTypeOf[DnsRecordModel](ctx),
-				NestedObject: schema.NestedAttributeObject{
-					Attributes: map[string]schema.Attribute{
-						"id": schema.StringAttribute{
-							Computed: true,
-						},
-						"name": schema.StringAttribute{
-							Computed: true,
-						},
-						"type": schema.StringAttribute{
-							Computed: true,
-						},
-						"content": schema.StringAttribute{
-							Computed: true,
-						},
-						"ttl": schema.Int64Attribute{
-							Computed: true,
-						},
-						"priority": schema.Int64Attribute{
-							Computed: true,
-						},
-						"notes": schema.StringAttribute{
-							Computed: true,
-						},
-					},
-				},
-			},
-		},
-	}
+	resp.Schema = dnsRecordsSchema().GetDataSource(ctx)
 }
 
 func (d *DnsRecordsDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
@@ -164,7 +100,7 @@ func (d *DnsRecordsDataSource) Read(ctx context.Context, req datasource.ReadRequ
 		records = httpResp.JSON200.Records
 	}
 
-	resp.Diagnostics.Append(data.Fill(ctx, records)...)
+	resp.Diagnostics.Append(data.FromAPI(ctx, records)...)
 	if resp.Diagnostics.HasError() {
 		return
 	}

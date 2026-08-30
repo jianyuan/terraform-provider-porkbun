@@ -6,14 +6,9 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
-	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/jianyuan/terraform-provider-porkbun/internal/apiclient"
 	"github.com/jianyuan/terraform-provider-porkbun/internal/fwdiag"
@@ -26,8 +21,8 @@ type DnsRecordResourceModel struct {
 	DnsRecordModel
 }
 
-func (m *DnsRecordResourceModel) Fill(ctx context.Context, record apiclient.DnsRecordsResponse_Records) (diags diag.Diagnostics) {
-	diags.Append(m.DnsRecordModel.Fill(ctx, record)...)
+func (m *DnsRecordResourceModel) FromAPI(ctx context.Context, record apiclient.DnsRecordsResponse_Records) (diags diag.Diagnostics) {
+	diags.Append(m.DnsRecordModel.FromAPI(ctx, record)...)
 	if diags.HasError() {
 		return
 	}
@@ -58,61 +53,7 @@ func (r *DnsRecordResource) Metadata(ctx context.Context, req resource.MetadataR
 }
 
 func (r *DnsRecordResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
-	resp.Schema = schema.Schema{
-		MarkdownDescription: "Manage a DNS record for a domain.",
-
-		Attributes: map[string]schema.Attribute{
-			"domain": schema.StringAttribute{
-				MarkdownDescription: "The domain for the record being created.",
-				Required:            true,
-				PlanModifiers: []planmodifier.String{
-					stringplanmodifier.RequiresReplace(),
-				},
-			},
-			"id": schema.StringAttribute{
-				MarkdownDescription: "The record ID.",
-				Computed:            true,
-				PlanModifiers: []planmodifier.String{
-					stringplanmodifier.UseStateForUnknown(),
-				},
-			},
-			"subdomain": schema.StringAttribute{
-				MarkdownDescription: "The subdomain for the record being created, not including the domain itself. Omit to create a record on the root domain. Use * to create a wildcard record.",
-				Optional:            true,
-				PlanModifiers: []planmodifier.String{
-					stringplanmodifier.RequiresReplace(),
-				},
-			},
-			"name": schema.StringAttribute{
-				MarkdownDescription: "The full name of the record being created, including the subdomain and the domain itself.",
-				Computed:            true,
-			},
-			"type": schema.StringAttribute{
-				MarkdownDescription: "The type of record being created. Valid types are: A, MX, CNAME, ALIAS, TXT, NS, AAAA, SRV, TLSA, CAA, HTTPS, SVCB.",
-				Required:            true,
-				Validators: []validator.String{
-					stringvalidator.OneOf(DnsRecordTypes...),
-				},
-			},
-			"content": schema.StringAttribute{
-				MarkdownDescription: "The answer content for the record. Please see the DNS management popup from the domain management console for proper formatting of each record type.",
-				Required:            true,
-			},
-			"ttl": schema.Int64Attribute{
-				MarkdownDescription: "The time to live in seconds for the record. The minimum and the default is 600 seconds.",
-				Optional:            true,
-				Computed:            true,
-			},
-			"priority": schema.Int64Attribute{
-				MarkdownDescription: "The priority of the record for those that support it.",
-				Optional:            true,
-				Computed:            true,
-			},
-			"notes": schema.StringAttribute{
-				Computed: true,
-			},
-		},
-	}
+	resp.Schema = dnsRecordSchema().GetResource(ctx)
 }
 
 func (r *DnsRecordResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
@@ -129,6 +70,7 @@ func (r *DnsRecordResource) Create(ctx context.Context, req resource.CreateReque
 		Content: data.Content.ValueString(),
 		Prio:    data.Priority.ValueInt64Pointer(),
 		Ttl:     data.Ttl.ValueInt64Pointer(),
+		Notes:   data.Notes.ValueStringPointer(),
 	}
 
 	httpResp, err := r.client.DnsCreateWithResponse(
@@ -184,6 +126,7 @@ func (r *DnsRecordResource) Update(ctx context.Context, req resource.UpdateReque
 		Content: data.Content.ValueString(),
 		Prio:    data.Priority.ValueInt64Pointer(),
 		Ttl:     data.Ttl.ValueInt64Pointer(),
+		Notes:   data.Notes.ValueStringPointer(),
 	}
 
 	httpResp, err := r.client.DnsEditWithResponse(
@@ -227,7 +170,7 @@ func (r *DnsRecordResource) read(ctx context.Context, data *DnsRecordResourceMod
 		return
 	}
 
-	diags.Append(data.Fill(ctx, httpResp.JSON200.Records[0])...)
+	diags.Append(data.FromAPI(ctx, httpResp.JSON200.Records[0])...)
 	return
 }
 

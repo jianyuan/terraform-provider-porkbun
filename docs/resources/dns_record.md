@@ -54,21 +54,21 @@ import {
 
 ### Required
 
-- `content` (String) The answer content for the record. Please see the DNS management popup from the domain management console for proper formatting of each record type.
-- `domain` (String) The domain for the record being created.
-- `type` (String) The type of record being created. Valid types are: A, MX, CNAME, ALIAS, TXT, NS, AAAA, SRV, TLSA, CAA, HTTPS, SVCB.
+- `content` (String) The record value.
+- `domain` (String) <i style="color:red;font-weight: bold">(ForceNew)</i>.
+- `type` (String) The DNS record type. Value must be one of : `A`, `MX`, `CNAME`, `ALIAS`, `TXT`, `NS`, `AAAA`, `SRV`, `TLSA`, `CAA`, `HTTPS`, `SVCB`.
 
 ### Optional
 
-- `priority` (Number) The priority of the record for those that support it.
-- `subdomain` (String) The subdomain for the record being created, not including the domain itself. Omit to create a record on the root domain. Use * to create a wildcard record.
-- `ttl` (Number) The time to live in seconds for the record. The minimum and the default is 600 seconds.
+- `notes` (String) Optional notes to store with the record. Not served in DNS.
+- `priority` (Number) The priority for `MX` and `SRV` records. Defaults to 0 if omitted..
+- `subdomain` (String) <i style="color:red;font-weight: bold">(ForceNew)</i> The subdomain for the record being created, not including the domain itself. Omit to create a record on the root domain. Use * to create a wildcard record.
+- `ttl` (Number) Time to live in seconds. Minimum is determined by account settings (typically 600). Defaults to the account minimum if omitted or 0.
 
 ### Read-Only
 
 - `id` (String) The record ID.
 - `name` (String) The full name of the record being created, including the subdomain and the domain itself.
-- `notes` (String)
 
 ## Import
 

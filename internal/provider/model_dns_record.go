@@ -19,7 +19,7 @@ type DnsRecordModel struct {
 	Notes    types.String `tfsdk:"notes"`
 }
 
-func (m *DnsRecordModel) Fill(ctx context.Context, record apiclient.DnsRecordsResponse_Records) (diags diag.Diagnostics) {
+func (m *DnsRecordModel) FromAPI(ctx context.Context, record apiclient.DnsRecordsResponse_Records) (diags diag.Diagnostics) {
 	m.Id = types.StringPointerValue(record.Id)
 	m.Name = types.StringPointerValue(record.Name)
 	m.Type = types.StringPointerValue(record.Type)
