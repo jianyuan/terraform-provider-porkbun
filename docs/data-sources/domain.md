@@ -27,12 +27,12 @@ data "porkbun_domain" "example" {
 
 ### Read-Only
 
-- `api_access` (Boolean)
-- `auto_renew` (Boolean)
-- `create_date` (String)
-- `expire_date` (String)
-- `not_local` (Boolean)
-- `security_lock` (Boolean)
-- `status` (String)
-- `tld` (String)
-- `whois_privacy` (Boolean)
+- `api_access` (Boolean) Indicates whether API access is enabled for the domain.
+- `auto_renew` (Boolean) Indicates whether the domain will automatically renew before its expiration date.
+- `create_date` (String) The creation date of the domain.
+- `expire_date` (String) The expiration date of the domain.
+- `not_local` (Boolean) Indicates if the domain is registered with an external, third-party registrar.
+- `security_lock` (Boolean) Indicates if the Registrar Lock/Transfer Lock is enabled to prevent unauthorized domain transfers.
+- `status` (String) The status of the domain.
+- `tld` (String) The TLD of the domain.
+- `whois_privacy` (Boolean) Indicates if WHOIS privacy protection is active to hide personal registrant details from the public WHOIS database.

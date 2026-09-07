@@ -32,25 +32,25 @@ resource "porkbun_domain" "example" {
 
 ### Required
 
-- `domain` (String) The fully qualified domain name to register.
+- `domain` (String) <i style="color:red;font-weight: bold">(ForceNew)</i> The fully qualified domain name to register.
 
 ### Optional
 
 - `max_cost` (Number) The most, in US cents, that this registration may cost. The apply fails before anything is charged if the live quote is higher. Omit to accept any price.
-- `whois_privacy` (Boolean) Whether to register with WHOIS privacy. Defaults to the account-level setting. A TLD that does not offer privacy ignores this.
+- `whois_privacy` (Boolean) <i style="color:red;font-weight: bold">(ForceNew)</i> Indicates if WHOIS privacy protection is active to hide personal registrant details from the public WHOIS database. Whether to register with WHOIS privacy. Defaults to the account-level setting. A TLD that does not offer privacy ignores this.
 
 ### Read-Only
 
-- `api_access` (Boolean)
-- `auto_renew` (Boolean)
+- `api_access` (Boolean) Indicates whether API access is enabled for the domain.
+- `auto_renew` (Boolean) Indicates whether the domain will automatically renew before its expiration date.
 - `cost` (Number) What the registration actually cost, in US cents.
-- `create_date` (String)
-- `expire_date` (String)
-- `not_local` (Boolean)
+- `create_date` (String) The creation date of the domain.
+- `expire_date` (String) The expiration date of the domain.
+- `not_local` (Boolean) Indicates if the domain is registered with an external, third-party registrar.
 - `order_id` (Number) Porkbun's internal order id for the registration.
-- `security_lock` (Boolean)
-- `status` (String)
-- `tld` (String)
+- `security_lock` (Boolean) Indicates if the Registrar Lock/Transfer Lock is enabled to prevent unauthorized domain transfers.
+- `status` (String) The status of the domain.
+- `tld` (String) The TLD of the domain.
 
 ## Import
 

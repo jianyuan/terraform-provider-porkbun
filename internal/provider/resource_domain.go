@@ -10,43 +10,20 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/boolplanmodifier"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/jianyuan/terraform-provider-porkbun/internal/apiclient"
 	"github.com/jianyuan/terraform-provider-porkbun/internal/fwdiag"
-	"github.com/jianyuan/terraform-provider-porkbun/internal/porkbuntypes"
 )
 
 type DomainResourceModel struct {
-	Domain       types.String `tfsdk:"domain"`
-	WhoisPrivacy types.Bool   `tfsdk:"whois_privacy"`
-	MaxCost      types.Int64  `tfsdk:"max_cost"`
-	Cost         types.Int64  `tfsdk:"cost"`
-	OrderId      types.Int64  `tfsdk:"order_id"`
-	Status       types.String `tfsdk:"status"`
-	Tld          types.String `tfsdk:"tld"`
-	CreateDate   types.String `tfsdk:"create_date"`
-	ExpireDate   types.String `tfsdk:"expire_date"`
-	SecurityLock types.Bool   `tfsdk:"security_lock"`
-	AutoRenew    types.Bool   `tfsdk:"auto_renew"`
-	ApiAccess    types.Bool   `tfsdk:"api_access"`
-	NotLocal     types.Bool   `tfsdk:"not_local"`
+	MaxCost types.Int64 `tfsdk:"max_cost"`
+	Cost    types.Int64 `tfsdk:"cost"`
+	OrderId types.Int64 `tfsdk:"order_id"`
+	DomainModel
 }
 
-func (m *DomainResourceModel) Fill(ctx context.Context, domain apiclient.GetDomain200JSONResponseBody_Domain) (diags diag.Diagnostics) {
-	m.Domain = types.StringPointerValue(domain.Domain)
-	m.Status = types.StringPointerValue(domain.Status)
-	m.Tld = types.StringPointerValue(domain.Tld)
-	m.CreateDate = types.StringPointerValue(domain.CreateDate)
-	m.ExpireDate = types.StringPointerValue(domain.ExpireDate)
-	m.SecurityLock = porkbuntypes.FlexibleBoolPointerValue(domain.SecurityLock)
-	m.WhoisPrivacy = porkbuntypes.FlexibleBoolPointerValue(domain.WhoisPrivacy)
-	m.AutoRenew = porkbuntypes.FlexibleBoolPointerValue(domain.AutoRenew)
-	m.ApiAccess = porkbuntypes.FlexibleBoolPointerValue(domain.ApiAccess)
-	m.NotLocal = porkbuntypes.FlexibleBoolPointerValue(domain.NotLocal)
+func (m *DomainResourceModel) FromAPI(ctx context.Context, domain apiclient.GetDomain200JSONResponseBody_Domain) (diags diag.Diagnostics) {
+	diags.Append(m.DomainModel.FromAPI(ctx, domain)...)
 	return
 }
 
@@ -67,72 +44,7 @@ func (r *DomainResource) Metadata(ctx context.Context, req resource.MetadataRequ
 }
 
 func (r *DomainResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
-	resp.Schema = schema.Schema{
-		MarkdownDescription: "Registers a domain and holds it in state.\n\n" +
-			"The price is not written in the configuration. On create the provider quotes the domain " +
-			"through `/domain/checkDomain`, converts the quote to the US cents the API demands, and " +
-			"sends that as `cost`. Set `max_cost` to put a ceiling on what an unattended apply may spend: " +
-			"a first-year promotional price that lapses would otherwise be paid silently at the standard rate.\n\n" +
-			"Porkbun exposes no endpoint that deletes a registration, so `terraform destroy` only drops the " +
-			"resource from state. The registration itself stands until it expires. Guard the resource with " +
-			"`prevent_destroy` if an accidental removal from state would be costly to reconcile.",
-
-		Attributes: map[string]schema.Attribute{
-			"domain": schema.StringAttribute{
-				MarkdownDescription: "The fully qualified domain name to register.",
-				Required:            true,
-				PlanModifiers: []planmodifier.String{
-					stringplanmodifier.RequiresReplace(),
-				},
-			},
-			"whois_privacy": schema.BoolAttribute{
-				MarkdownDescription: "Whether to register with WHOIS privacy. Defaults to the account-level setting. " +
-					"A TLD that does not offer privacy ignores this.",
-				Optional: true,
-				Computed: true,
-				PlanModifiers: []planmodifier.Bool{
-					boolplanmodifier.RequiresReplace(),
-				},
-			},
-			"max_cost": schema.Int64Attribute{
-				MarkdownDescription: "The most, in US cents, that this registration may cost. The apply fails " +
-					"before anything is charged if the live quote is higher. Omit to accept any price.",
-				Optional: true,
-			},
-			"cost": schema.Int64Attribute{
-				MarkdownDescription: "What the registration actually cost, in US cents.",
-				Computed:            true,
-			},
-			"order_id": schema.Int64Attribute{
-				MarkdownDescription: "Porkbun's internal order id for the registration.",
-				Computed:            true,
-			},
-			"status": schema.StringAttribute{
-				Computed: true,
-			},
-			"tld": schema.StringAttribute{
-				Computed: true,
-			},
-			"create_date": schema.StringAttribute{
-				Computed: true,
-			},
-			"expire_date": schema.StringAttribute{
-				Computed: true,
-			},
-			"security_lock": schema.BoolAttribute{
-				Computed: true,
-			},
-			"auto_renew": schema.BoolAttribute{
-				Computed: true,
-			},
-			"api_access": schema.BoolAttribute{
-				Computed: true,
-			},
-			"not_local": schema.BoolAttribute{
-				Computed: true,
-			},
-		},
-	}
+	resp.Schema = domainSchema().GetResource(ctx)
 }
 
 // quote asks the API what the domain costs right now and returns the total in US
@@ -320,7 +232,7 @@ func (r *DomainResource) read(ctx context.Context, data *DomainResourceModel) (f
 		return
 	}
 
-	diags.Append(data.Fill(ctx, *httpResp.JSON200.Domain)...)
+	diags.Append(data.FromAPI(ctx, *httpResp.JSON200.Domain)...)
 	found = true
 	return
 }

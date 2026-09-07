@@ -5,40 +5,8 @@ import (
 	"net/http"
 
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
-	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
-	"github.com/hashicorp/terraform-plugin-framework/diag"
-	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/jianyuan/terraform-provider-porkbun/internal/apiclient"
 	"github.com/jianyuan/terraform-provider-porkbun/internal/fwdiag"
-	"github.com/jianyuan/terraform-provider-porkbun/internal/porkbuntypes"
 )
-
-type DomainDataSourceModel struct {
-	Domain       types.String `tfsdk:"domain"`
-	Status       types.String `tfsdk:"status"`
-	Tld          types.String `tfsdk:"tld"`
-	CreateDate   types.String `tfsdk:"create_date"`
-	ExpireDate   types.String `tfsdk:"expire_date"`
-	SecurityLock types.Bool   `tfsdk:"security_lock"`
-	WhoisPrivacy types.Bool   `tfsdk:"whois_privacy"`
-	AutoRenew    types.Bool   `tfsdk:"auto_renew"`
-	ApiAccess    types.Bool   `tfsdk:"api_access"`
-	NotLocal     types.Bool   `tfsdk:"not_local"`
-}
-
-func (m *DomainDataSourceModel) Fill(ctx context.Context, domain apiclient.GetDomain200JSONResponseBody_Domain) (diags diag.Diagnostics) {
-	m.Domain = types.StringPointerValue(domain.Domain)
-	m.Status = types.StringPointerValue(domain.Status)
-	m.Tld = types.StringPointerValue(domain.Tld)
-	m.CreateDate = types.StringPointerValue(domain.CreateDate)
-	m.ExpireDate = types.StringPointerValue(domain.ExpireDate)
-	m.SecurityLock = porkbuntypes.FlexibleBoolPointerValue(domain.SecurityLock)
-	m.WhoisPrivacy = porkbuntypes.FlexibleBoolPointerValue(domain.WhoisPrivacy)
-	m.AutoRenew = porkbuntypes.FlexibleBoolPointerValue(domain.AutoRenew)
-	m.ApiAccess = porkbuntypes.FlexibleBoolPointerValue(domain.ApiAccess)
-	m.NotLocal = porkbuntypes.FlexibleBoolPointerValue(domain.NotLocal)
-	return
-}
 
 func NewDomainDataSource() datasource.DataSource {
 	return &DomainDataSource{}
@@ -56,47 +24,12 @@ func (d *DomainDataSource) Metadata(ctx context.Context, req datasource.Metadata
 }
 
 func (d *DomainDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
-	resp.Schema = schema.Schema{
-		MarkdownDescription: "Get the metadata for a single domain.",
+	resp.Schema = domainSchema().GetDataSource(ctx)
 
-		Attributes: map[string]schema.Attribute{
-			"domain": schema.StringAttribute{
-				MarkdownDescription: "Fully qualified domain name in the authenticated account.",
-				Required:            true,
-			},
-			"status": schema.StringAttribute{
-				Computed: true,
-			},
-			"tld": schema.StringAttribute{
-				Computed: true,
-			},
-			"create_date": schema.StringAttribute{
-				Computed: true,
-			},
-			"expire_date": schema.StringAttribute{
-				Computed: true,
-			},
-			"security_lock": schema.BoolAttribute{
-				Computed: true,
-			},
-			"whois_privacy": schema.BoolAttribute{
-				Computed: true,
-			},
-			"auto_renew": schema.BoolAttribute{
-				Computed: true,
-			},
-			"api_access": schema.BoolAttribute{
-				Computed: true,
-			},
-			"not_local": schema.BoolAttribute{
-				Computed: true,
-			},
-		},
-	}
 }
 
 func (d *DomainDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
-	var data DomainDataSourceModel
+	var data DomainModel
 
 	resp.Diagnostics.Append(req.Config.Get(ctx, &data)...)
 	if resp.Diagnostics.HasError() {
@@ -116,7 +49,7 @@ func (d *DomainDataSource) Read(ctx context.Context, req datasource.ReadRequest,
 		return
 	}
 
-	resp.Diagnostics.Append(data.Fill(ctx, *httpResp.JSON200.Domain)...)
+	resp.Diagnostics.Append(data.FromAPI(ctx, *httpResp.JSON200.Domain)...)
 	if resp.Diagnostics.HasError() {
 		return
 	}
