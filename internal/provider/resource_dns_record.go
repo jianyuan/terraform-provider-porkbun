@@ -121,7 +121,7 @@ func (r *DnsRecordResource) Update(ctx context.Context, req resource.UpdateReque
 	}
 
 	body := apiclient.DnsEditJSONRequestBody{
-		Name:    data.Name.ValueStringPointer(),
+		Name:    data.Subdomain.ValueStringPointer(),
 		Type:    apiclient.EditDnsRequestType(data.Type.ValueString()),
 		Content: data.Content.ValueString(),
 		Prio:    data.Priority.ValueInt64Pointer(),
