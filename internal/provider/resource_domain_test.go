@@ -8,6 +8,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-testing/knownvalue"
 	"github.com/hashicorp/terraform-plugin-testing/statecheck"
 	"github.com/hashicorp/terraform-plugin-testing/tfjsonpath"
+	"github.com/jianyuan/terraform-plugin-framework-utils/fwacctest"
 	"github.com/jianyuan/terraform-provider-porkbun/internal/acctest"
 )
 
@@ -27,7 +28,7 @@ func TestAccDomainResource(t *testing.T) {
 				Config: testAccDomainResourceConfig(domain, `
 					max_cost = 1
 				`),
-				ExpectError: acctest.ExpectLiteralError(`above the 1 permitted by max_cost. Nothing was charged.`),
+				ExpectError: fwacctest.ExpectLiteralError(`above the 1 permitted by max_cost. Nothing was charged.`),
 			},
 			{
 				Config: testAccDomainResourceConfig(domain, ``),
