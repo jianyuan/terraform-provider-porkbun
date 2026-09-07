@@ -6,7 +6,6 @@ import (
 	"net/http"
 
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
-	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/jianyuan/terraform-provider-porkbun/internal/apiclient"
@@ -18,8 +17,8 @@ type DnsRecordDataSourceModel struct {
 	DnsRecordModel
 }
 
-func (m *DnsRecordDataSourceModel) Fill(ctx context.Context, record apiclient.DnsRecordsResponse_Records) (diags diag.Diagnostics) {
-	diags.Append(m.DnsRecordModel.Fill(ctx, record)...)
+func (m *DnsRecordDataSourceModel) FromAPI(ctx context.Context, record apiclient.DnsRecordsResponse_Records) (diags diag.Diagnostics) {
+	diags.Append(m.DnsRecordModel.FromAPI(ctx, record)...)
 	return
 }
 
@@ -38,38 +37,7 @@ func (d *DnsRecordDataSource) Metadata(ctx context.Context, req datasource.Metad
 }
 
 func (d *DnsRecordDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
-	resp.Schema = schema.Schema{
-		MarkdownDescription: "Retrieve a single record for a particular record ID.",
-
-		Attributes: map[string]schema.Attribute{
-			"domain": schema.StringAttribute{
-				MarkdownDescription: "The domain name.",
-				Required:            true,
-			},
-			"id": schema.StringAttribute{
-				MarkdownDescription: "The record ID.",
-				Required:            true,
-			},
-			"name": schema.StringAttribute{
-				Computed: true,
-			},
-			"type": schema.StringAttribute{
-				Computed: true,
-			},
-			"content": schema.StringAttribute{
-				Computed: true,
-			},
-			"ttl": schema.Int64Attribute{
-				Computed: true,
-			},
-			"priority": schema.Int64Attribute{
-				Computed: true,
-			},
-			"notes": schema.StringAttribute{
-				Computed: true,
-			},
-		},
-	}
+	resp.Schema = dnsRecordSchema().GetDataSource(ctx)
 }
 
 func (d *DnsRecordDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
@@ -97,7 +65,7 @@ func (d *DnsRecordDataSource) Read(ctx context.Context, req datasource.ReadReque
 		return
 	}
 
-	resp.Diagnostics.Append(data.Fill(ctx, httpResp.JSON200.Records[0])...)
+	resp.Diagnostics.Append(data.FromAPI(ctx, httpResp.JSON200.Records[0])...)
 	if resp.Diagnostics.HasError() {
 		return
 	}

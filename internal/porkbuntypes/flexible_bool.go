@@ -58,9 +58,9 @@ func (fb FlexibleBool) MarshalJSON() ([]byte, error) {
 	return []byte("0"), nil
 }
 
-func FlexibleBoolPointerValue(v *FlexibleBool) types.Bool {
-	if v == nil {
+func FlexibleBoolPointerValue(value *FlexibleBool) types.Bool {
+	if value == nil {
 		return types.BoolNull()
 	}
-	return types.BoolValue(bool(*v))
+	return types.BoolValue(bool(*value))
 }

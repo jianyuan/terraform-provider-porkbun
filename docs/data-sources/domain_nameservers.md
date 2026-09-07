@@ -27,4 +27,4 @@ data "porkbun_domain_nameservers" "example" {
 
 ### Read-Only
 
-- `nameservers` (Set of String)
+- `nameservers` (Set of String) The authoritative name servers for the domain.
