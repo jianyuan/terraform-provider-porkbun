@@ -27,4 +27,5 @@ sweeper: ## Run sweepers with failures allowed
 
 .PHONY: generate
 generate: ## Generate code and documentation
-	$(GO_VER) generate ./...
+	$(GO_VER) generate ./internal/apiclient
+	$(GO_VER) generate ./

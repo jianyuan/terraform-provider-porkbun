@@ -25,11 +25,11 @@ data "porkbun_dns_record" "test" {
 ### Required
 
 - `domain` (String) The domain name.
+- `id` (String) The record ID.
 
 ### Read-Only
 
 - `content` (String) The record value.
-- `id` (String) The record ID.
 - `name` (String) The full name of the record being created, including the subdomain and the domain itself.
 - `notes` (String) Notes for the DNS record. Not served in DNS.
 - `priority` (Number) The priority for `MX` and `SRV` records. Defaults to 0 if omitted..
