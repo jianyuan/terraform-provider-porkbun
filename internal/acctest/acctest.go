@@ -10,7 +10,6 @@ import (
 	"strings"
 	"testing"
 
-	sdkacctest "github.com/hashicorp/terraform-plugin-testing/helper/acctest"
 	"github.com/jianyuan/terraform-provider-porkbun/internal/apiclient"
 )
 
@@ -22,10 +21,11 @@ const (
 )
 
 var (
-	TestBaseUrl   = os.Getenv("PORKBUN_BASE_URL")
-	TestApiKey    = os.Getenv("PORKBUN_API_KEY")
-	TestSecretKey = os.Getenv("PORKBUN_SECRET_KEY")
-	TestDomain    string
+	TestBaseUrl               = os.Getenv("PORKBUN_BASE_URL")
+	TestApiKey                = os.Getenv("PORKBUN_API_KEY")
+	TestSecretKey             = os.Getenv("PORKBUN_SECRET_KEY")
+	TestRunDomainRegistration = os.Getenv("PORKBUN_RUN_DOMAIN_REGISTRATION") == "1"
+	TestDomain                string
 
 	SharedClient *apiclient.ClientWithResponses
 )
@@ -109,7 +109,7 @@ func ensureTestDomain(ctx context.Context) error {
 		}
 	}
 
-	newDomain := fmt.Sprintf("%s.com", sdkacctest.RandomWithPrefix(domainPrefix))
+	newDomain := RandomDomain()
 	domainCheckHttpResp, err := SharedClient.DomainCheckDomainWithResponse(ctx, newDomain, apiclient.DomainCheckDomainJSONRequestBody{})
 	if err != nil {
 		return fmt.Errorf("failed to check domain availability: %w", err)
