@@ -25,7 +25,7 @@ func (m *DnsRecordModel) FromAPI(ctx context.Context, record apiclient.DnsRecord
 	m.Type = types.StringPointerValue(record.Type)
 	m.Content = types.StringPointerValue(record.Content)
 	m.Ttl = porkbuntypes.FlexibleInt64PointerValue(record.Ttl)
-	m.Priority = porkbuntypes.FlexibleInt64PointerValue(record.Prio)
-	m.Notes = types.StringPointerValue(record.Notes)
+	m.Priority = porkbuntypes.NullableFlexibleInt64Value(record.Prio)
+	m.Notes = porkbuntypes.NullableStringValue(record.Notes)
 	return
 }

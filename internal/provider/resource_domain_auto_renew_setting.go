@@ -72,9 +72,9 @@ func (r *DomainAutoRenewSettingResource) Create(ctx context.Context, req resourc
 
 	body := apiclient.DomainUpdateAutoRenewJSONRequestBody{}
 	if data.AutoRenew.ValueBool() {
-		body.Status = apiclient.On
+		body.Status = apiclient.UpdateAutoRenewRequestStatusOn
 	} else {
-		body.Status = apiclient.Off
+		body.Status = apiclient.UpdateAutoRenewRequestStatusOff
 	}
 
 	updateHttpResp, err := r.client.DomainUpdateAutoRenewWithResponse(
@@ -159,9 +159,9 @@ func (r *DomainAutoRenewSettingResource) Update(ctx context.Context, req resourc
 
 	body := apiclient.DomainUpdateAutoRenewJSONRequestBody{}
 	if data.AutoRenew.ValueBool() {
-		body.Status = apiclient.On
+		body.Status = apiclient.UpdateAutoRenewRequestStatusOn
 	} else {
-		body.Status = apiclient.Off
+		body.Status = apiclient.UpdateAutoRenewRequestStatusOff
 	}
 
 	updateHttpResp, err := r.client.DomainUpdateAutoRenewWithResponse(

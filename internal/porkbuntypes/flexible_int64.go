@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/hashicorp/terraform-plugin-framework/types"
+	"github.com/oapi-codegen/nullable"
 )
 
 // FlexibleInt64 handles int64 values represented as JSON numbers or strings (e.g., 123, "123").
@@ -39,9 +40,16 @@ func (fi FlexibleInt64) MarshalJSON() ([]byte, error) {
 	return json.Marshal(int64(fi))
 }
 
-func FlexibleInt64PointerValue(v *FlexibleInt64) types.Int64 {
-	if v == nil {
+func FlexibleInt64PointerValue(value *FlexibleInt64) types.Int64 {
+	if value == nil {
 		return types.Int64Null()
 	}
-	return types.Int64Value(int64(*v))
+	return types.Int64Value(int64(*value))
+}
+
+func NullableFlexibleInt64Value(value nullable.Nullable[FlexibleInt64]) types.Int64 {
+	if v, err := value.Get(); err == nil {
+		return types.Int64Value(int64(v))
+	}
+	return types.Int64Null()
 }

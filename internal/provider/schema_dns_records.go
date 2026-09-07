@@ -12,6 +12,10 @@ func dnsRecordsSchema() superschema.Schema {
 	dnsRecordAttributes := dnsRecordSchema().Attributes
 	delete(dnsRecordAttributes, "domain")
 	delete(dnsRecordAttributes, "subdomain")
+	//nolint:forcetypeassert
+	dnsRecordAttributes["id"].(superschema.StringAttribute).DataSource.Required = false
+	//nolint:forcetypeassert
+	dnsRecordAttributes["id"].(superschema.StringAttribute).DataSource.Computed = true
 
 	return superschema.Schema{
 		DataSource: superschema.SchemaDetails{
