@@ -13,6 +13,8 @@ import (
 )
 
 func TestAccDnsRecordDataSource(t *testing.T) {
+	t.Parallel()
+
 	rn := "data.porkbun_dns_record.test"
 	content := sdkacctest.RandomWithPrefix("tf")
 

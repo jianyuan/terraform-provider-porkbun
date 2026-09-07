@@ -12,6 +12,8 @@ import (
 )
 
 func TestAccDomainAutoRenewSettingResource(t *testing.T) {
+	t.Parallel()
+
 	rn := "porkbun_domain_auto_renew_setting.test"
 
 	resource.Test(t, resource.TestCase{

@@ -14,6 +14,8 @@ import (
 )
 
 func TestAccDnssecRecordsDataSource(t *testing.T) {
+	t.Parallel()
+
 	rn := "data.porkbun_dnssec_records.test"
 
 	flags := uint16(257) // 257 = KSK (Key Signing Key)

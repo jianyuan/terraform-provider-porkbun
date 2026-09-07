@@ -16,6 +16,8 @@ import (
 )
 
 func TestAccGlueRecordResource(t *testing.T) {
+	t.Parallel()
+
 	rn := "porkbun_glue_record.test"
 	subdomain := sdkacctest.RandomWithPrefix("tf")
 

@@ -12,6 +12,8 @@ import (
 )
 
 func TestAccDomainNameserversDataSource(t *testing.T) {
+	t.Parallel()
+
 	rn := "data.porkbun_domain_nameservers.test"
 
 	resource.Test(t, resource.TestCase{

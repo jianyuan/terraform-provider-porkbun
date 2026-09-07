@@ -12,6 +12,8 @@ import (
 )
 
 func TestAccDomainDataSource(t *testing.T) {
+	t.Parallel()
+
 	rn := "data.porkbun_domain.test"
 
 	resource.Test(t, resource.TestCase{

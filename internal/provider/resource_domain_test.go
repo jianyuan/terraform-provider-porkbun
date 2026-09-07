@@ -13,6 +13,8 @@ import (
 )
 
 func TestAccDomainResource(t *testing.T) {
+	t.Parallel()
+
 	if !acctest.TestRunDomainRegistration {
 		t.Skip("PORKBUN_RUN_DOMAIN_REGISTRATION is not set to 1")
 	}

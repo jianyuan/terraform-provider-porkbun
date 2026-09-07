@@ -14,6 +14,8 @@ import (
 )
 
 func TestAccDnsRecordsDataSource(t *testing.T) {
+	t.Parallel()
+
 	rn := "data.porkbun_dns_records.test"
 	content := sdkacctest.RandomWithPrefix("tf")
 
@@ -41,6 +43,8 @@ func TestAccDnsRecordsDataSource(t *testing.T) {
 }
 
 func TestAccDnsRecordsDataSource_filterByType(t *testing.T) {
+	t.Parallel()
+
 	rn := "data.porkbun_dns_records.test"
 	content := sdkacctest.RandomWithPrefix("tf")
 
@@ -78,6 +82,8 @@ func TestAccDnsRecordsDataSource_filterByType(t *testing.T) {
 }
 
 func TestAccDnsRecordsDataSource_filterByTypeAndSubdomain(t *testing.T) {
+	t.Parallel()
+
 	rn := "data.porkbun_dns_records.test"
 	content := sdkacctest.RandomWithPrefix("tf")
 	subdomain := sdkacctest.RandomWithPrefix("tf")
@@ -118,6 +124,8 @@ func TestAccDnsRecordsDataSource_filterByTypeAndSubdomain(t *testing.T) {
 }
 
 func TestAccDnsRecordsDataSource_validation(t *testing.T) {
+	t.Parallel()
+
 	content := sdkacctest.RandomWithPrefix("tf")
 	subdomain := sdkacctest.RandomWithPrefix("tf")
 
