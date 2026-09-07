@@ -3,14 +3,14 @@ package provider
 import (
 	"context"
 	"fmt"
-	"math"
+	"math/big"
 	"net/http"
-	"strconv"
 
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+	"github.com/jianyuan/terraform-plugin-framework-utils/fwtypes"
 	"github.com/jianyuan/terraform-provider-porkbun/internal/apiclient"
 	"github.com/jianyuan/terraform-provider-porkbun/internal/fwdiag"
 )
@@ -80,8 +80,9 @@ func (r *DomainResource) quote(ctx context.Context, domain string) (cents int64,
 		return
 	}
 
-	price, err := strconv.ParseFloat(*quoted.Price, 64)
-	if err != nil {
+	rat := new(big.Rat)
+	_, ok := rat.SetString(*quoted.Price)
+	if !ok {
 		diags.AddError(
 			"Client error",
 			fmt.Sprintf("The API quoted %q for %s, which is not a price.", *quoted.Price, domain),
@@ -89,13 +90,35 @@ func (r *DomainResource) quote(ctx context.Context, domain string) (cents int64,
 		return
 	}
 
+	// Multiply by 100 to convert to cents
+	hundred := big.NewRat(100, 1)
+	rat.Mul(rat, hundred)
+
+	centsBig := new(big.Int).Div(rat.Num(), rat.Denom())
+	if !centsBig.IsInt64() {
+		diags.AddError(
+			"Client error",
+			fmt.Sprintf("The API quoted %q for %s, which is not a price.", *quoted.Price, domain),
+		)
+		return 0, diags
+	}
+
+	// Optionally, multiply by the minimum duration
 	years := int64(1)
 	if quoted.MinDuration != nil && *quoted.MinDuration > 1 {
 		years = *quoted.MinDuration
 	}
 
-	cents = int64(math.Round(price*100)) * years
-	return
+	centsBig.Mul(centsBig, big.NewInt(years))
+	if !centsBig.IsInt64() {
+		diags.AddError(
+			"Client error",
+			fmt.Sprintf("The API quoted %q for %s, which is not a price.", *quoted.Price, domain),
+		)
+		return 0, diags
+	}
+
+	return centsBig.Int64(), diags
 }
 
 func (r *DomainResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
@@ -117,7 +140,7 @@ func (r *DomainResource) Create(ctx context.Context, req resource.CreateRequest,
 	// Refuse before the charge rather than reporting it afterwards. A lapsed
 	// first-year promotion is the case this exists for: the apply still
 	// succeeds, at ten times the price nobody was watching for.
-	if !data.MaxCost.IsNull() && cost > data.MaxCost.ValueInt64() {
+	if fwtypes.IsKnown(data.MaxCost) && cost > data.MaxCost.ValueInt64() {
 		resp.Diagnostics.AddError(
 			"Registration costs more than max_cost",
 			fmt.Sprintf(
@@ -132,7 +155,7 @@ func (r *DomainResource) Create(ctx context.Context, req resource.CreateRequest,
 		AgreeToTerms: "yes",
 		Cost:         cost,
 	}
-	if !data.WhoisPrivacy.IsNull() && !data.WhoisPrivacy.IsUnknown() {
+	if fwtypes.IsKnown(data.WhoisPrivacy) {
 		body.WhoisPrivacy = data.WhoisPrivacy.ValueBoolPointer()
 	}
 
