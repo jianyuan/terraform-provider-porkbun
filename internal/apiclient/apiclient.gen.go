@@ -15,6 +15,7 @@ import (
 	"time"
 
 	"github.com/jianyuan/terraform-provider-porkbun/internal/porkbuntypes"
+	"github.com/oapi-codegen/nullable"
 	"github.com/oapi-codegen/runtime"
 	openapi_types "github.com/oapi-codegen/runtime/types"
 )
@@ -741,16 +742,16 @@ func (e TransferDomainResponseStatus) Valid() bool {
 
 // Defines values for UpdateAutoRenewRequestStatus.
 const (
-	Off UpdateAutoRenewRequestStatus = "off"
-	On  UpdateAutoRenewRequestStatus = "on"
+	UpdateAutoRenewRequestStatusOff UpdateAutoRenewRequestStatus = "off"
+	UpdateAutoRenewRequestStatusOn  UpdateAutoRenewRequestStatus = "on"
 )
 
 // Valid indicates whether the value is a known member of the UpdateAutoRenewRequestStatus enum.
 func (e UpdateAutoRenewRequestStatus) Valid() bool {
 	switch e {
-	case Off:
+	case UpdateAutoRenewRequestStatusOff:
 		return true
-	case On:
+	case UpdateAutoRenewRequestStatusOn:
 		return true
 	default:
 		return false
@@ -886,6 +887,129 @@ func (e ApikeyRetrieve200JSONResponseBodyStatus) Valid() bool {
 	case ApikeyRetrieve200JSONResponseBodyStatusPENDING:
 		return true
 	case ApikeyRetrieve200JSONResponseBodyStatusSUCCESS:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for CloudflareSetZoneSettingsJSONBodyAlwaysUseHttps.
+const (
+	CloudflareSetZoneSettingsJSONBodyAlwaysUseHttpsOff CloudflareSetZoneSettingsJSONBodyAlwaysUseHttps = "off"
+	CloudflareSetZoneSettingsJSONBodyAlwaysUseHttpsOn  CloudflareSetZoneSettingsJSONBodyAlwaysUseHttps = "on"
+)
+
+// Valid indicates whether the value is a known member of the CloudflareSetZoneSettingsJSONBodyAlwaysUseHttps enum.
+func (e CloudflareSetZoneSettingsJSONBodyAlwaysUseHttps) Valid() bool {
+	switch e {
+	case CloudflareSetZoneSettingsJSONBodyAlwaysUseHttpsOff:
+		return true
+	case CloudflareSetZoneSettingsJSONBodyAlwaysUseHttpsOn:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for CloudflareSetZoneSettingsJSONBodyAutomaticHttpsRewrites.
+const (
+	CloudflareSetZoneSettingsJSONBodyAutomaticHttpsRewritesOff CloudflareSetZoneSettingsJSONBodyAutomaticHttpsRewrites = "off"
+	CloudflareSetZoneSettingsJSONBodyAutomaticHttpsRewritesOn  CloudflareSetZoneSettingsJSONBodyAutomaticHttpsRewrites = "on"
+)
+
+// Valid indicates whether the value is a known member of the CloudflareSetZoneSettingsJSONBodyAutomaticHttpsRewrites enum.
+func (e CloudflareSetZoneSettingsJSONBodyAutomaticHttpsRewrites) Valid() bool {
+	switch e {
+	case CloudflareSetZoneSettingsJSONBodyAutomaticHttpsRewritesOff:
+		return true
+	case CloudflareSetZoneSettingsJSONBodyAutomaticHttpsRewritesOn:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for CloudflareSetZoneSettingsJSONBodyCacheLevel.
+const (
+	Aggressive CloudflareSetZoneSettingsJSONBodyCacheLevel = "aggressive"
+	Basic      CloudflareSetZoneSettingsJSONBodyCacheLevel = "basic"
+	Simplified CloudflareSetZoneSettingsJSONBodyCacheLevel = "simplified"
+)
+
+// Valid indicates whether the value is a known member of the CloudflareSetZoneSettingsJSONBodyCacheLevel enum.
+func (e CloudflareSetZoneSettingsJSONBodyCacheLevel) Valid() bool {
+	switch e {
+	case Aggressive:
+		return true
+	case Basic:
+		return true
+	case Simplified:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for CloudflareSetZoneSettingsJSONBodyDevelopmentMode.
+const (
+	CloudflareSetZoneSettingsJSONBodyDevelopmentModeOff CloudflareSetZoneSettingsJSONBodyDevelopmentMode = "off"
+	CloudflareSetZoneSettingsJSONBodyDevelopmentModeOn  CloudflareSetZoneSettingsJSONBodyDevelopmentMode = "on"
+)
+
+// Valid indicates whether the value is a known member of the CloudflareSetZoneSettingsJSONBodyDevelopmentMode enum.
+func (e CloudflareSetZoneSettingsJSONBodyDevelopmentMode) Valid() bool {
+	switch e {
+	case CloudflareSetZoneSettingsJSONBodyDevelopmentModeOff:
+		return true
+	case CloudflareSetZoneSettingsJSONBodyDevelopmentModeOn:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for CloudflareSetZoneSettingsJSONBodyMinTlsVersion.
+const (
+	N10 CloudflareSetZoneSettingsJSONBodyMinTlsVersion = "1.0"
+	N11 CloudflareSetZoneSettingsJSONBodyMinTlsVersion = "1.1"
+	N12 CloudflareSetZoneSettingsJSONBodyMinTlsVersion = "1.2"
+	N13 CloudflareSetZoneSettingsJSONBodyMinTlsVersion = "1.3"
+)
+
+// Valid indicates whether the value is a known member of the CloudflareSetZoneSettingsJSONBodyMinTlsVersion enum.
+func (e CloudflareSetZoneSettingsJSONBodyMinTlsVersion) Valid() bool {
+	switch e {
+	case N10:
+		return true
+	case N11:
+		return true
+	case N12:
+		return true
+	case N13:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for CloudflareSetZoneSettingsJSONBodySsl.
+const (
+	CloudflareSetZoneSettingsJSONBodySslFlexible CloudflareSetZoneSettingsJSONBodySsl = "flexible"
+	CloudflareSetZoneSettingsJSONBodySslFull     CloudflareSetZoneSettingsJSONBodySsl = "full"
+	CloudflareSetZoneSettingsJSONBodySslOff      CloudflareSetZoneSettingsJSONBodySsl = "off"
+	CloudflareSetZoneSettingsJSONBodySslStrict   CloudflareSetZoneSettingsJSONBodySsl = "strict"
+)
+
+// Valid indicates whether the value is a known member of the CloudflareSetZoneSettingsJSONBodySsl enum.
+func (e CloudflareSetZoneSettingsJSONBodySsl) Valid() bool {
+	switch e {
+	case CloudflareSetZoneSettingsJSONBodySslFlexible:
+		return true
+	case CloudflareSetZoneSettingsJSONBodySslFull:
+		return true
+	case CloudflareSetZoneSettingsJSONBodySslOff:
+		return true
+	case CloudflareSetZoneSettingsJSONBodySslStrict:
 		return true
 	default:
 		return false
@@ -1069,6 +1193,24 @@ func (e HostingCreate200JSONResponseBodyHostingStatus) Valid() bool {
 	case HostingCreate200JSONResponseBodyHostingStatusACTIVE:
 		return true
 	case HostingCreate200JSONResponseBodyHostingStatusPENDING:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for HostingCreateWpCredentialsJSONBodyRole.
+const (
+	Administrator HostingCreateWpCredentialsJSONBodyRole = "administrator"
+	Editor        HostingCreateWpCredentialsJSONBodyRole = "editor"
+)
+
+// Valid indicates whether the value is a known member of the HostingCreateWpCredentialsJSONBodyRole enum.
+func (e HostingCreateWpCredentialsJSONBodyRole) Valid() bool {
+	switch e {
+	case Administrator:
+		return true
+	case Editor:
 		return true
 	default:
 		return false
@@ -1325,16 +1467,16 @@ type ApiSettingsResponse_Settings struct {
 	AutoTopup *bool `json:"autoTopup,omitempty"`
 
 	// LowBalanceAlert Send an alert email when balance drops below this amount (cents). `null` = disabled.
-	LowBalanceAlert *int64 `json:"lowBalanceAlert,omitempty"`
+	LowBalanceAlert nullable.Nullable[int64] `json:"lowBalanceAlert,omitempty"`
 
 	// MonthlySpendLimit Maximum API spend per calendar month in cents. `null` means no limit.
-	MonthlySpendLimit *int64 `json:"monthlySpendLimit,omitempty"`
+	MonthlySpendLimit nullable.Nullable[int64] `json:"monthlySpendLimit,omitempty"`
 
 	// TopupAmount Amount to add during an auto top-up (cents).
-	TopupAmount *int64 `json:"topupAmount,omitempty"`
+	TopupAmount nullable.Nullable[int64] `json:"topupAmount,omitempty"`
 
 	// TopupThreshold Trigger auto top-up when balance falls below this amount (cents). `null` = disabled.
-	TopupThreshold *int64 `json:"topupThreshold,omitempty"`
+	TopupThreshold nullable.Nullable[int64] `json:"topupThreshold,omitempty"`
 }
 
 // ApiSettingsResponseStatus defines model for ApiSettingsResponse.Status.
@@ -1653,7 +1795,7 @@ type CreateWebhookRequest struct {
 	Events       *[]string `json:"events,omitempty"`
 	Secretapikey string    `json:"secretapikey"`
 
-	// Url HTTPS URL to deliver events to.
+	// Url HTTPS endpoint that receives the signed POST. Port 443 only, and the hostname must resolve to a public internet address — private/loopback/reserved targets are refused.
 	//
 	// Example: https://example.com/porkbun/webhook
 	Url string `json:"url"`
@@ -1688,12 +1830,12 @@ type DnsRecordsResponse_Records struct {
 	Name *string `json:"name,omitempty"`
 
 	// Notes Optional notes attached to the record. Null if not set.
-	Notes *string `json:"notes,omitempty"`
+	Notes nullable.Nullable[string] `json:"notes,omitempty"`
 
 	// Prio Priority (used for MX, SRV records). Null if not applicable.
 	//
 	// Example: 10
-	Prio *porkbuntypes.FlexibleInt64 `json:"prio,omitempty"`
+	Prio nullable.Nullable[porkbuntypes.FlexibleInt64] `json:"prio,omitempty"`
 
 	// Ttl Time to live in seconds
 	//
@@ -2334,7 +2476,7 @@ type UpdateWebhookRequest struct {
 	// Example: ACTIVE
 	Status *UpdateWebhookRequestStatus `json:"status,omitempty"`
 
-	// Url New HTTPS URL (optional).
+	// Url HTTPS endpoint that receives the signed POST. Port 443 only, and the hostname must resolve to a public internet address — private/loopback/reserved targets are refused.
 	//
 	// Example: https://example.com/hook
 	Url *string `json:"url,omitempty"`
@@ -2358,7 +2500,7 @@ type WebhookDelivery struct {
 	CreateDate *string `json:"createDate,omitempty"`
 
 	// DeliveredDate When it was successfully delivered, or null.
-	DeliveredDate *string `json:"deliveredDate,omitempty"`
+	DeliveredDate nullable.Nullable[string] `json:"deliveredDate,omitempty"`
 
 	// EndpointId Endpoint this delivery targets.
 	//
@@ -2376,7 +2518,7 @@ type WebhookDelivery struct {
 	// HttpStatus HTTP status from the last attempt, or null if not yet attempted / connection error.
 	//
 	// Example: 200
-	HttpStatus *int64 `json:"httpStatus,omitempty"`
+	HttpStatus nullable.Nullable[int64] `json:"httpStatus,omitempty"`
 
 	// Id Delivery id.
 	//
@@ -2384,7 +2526,7 @@ type WebhookDelivery struct {
 	Id *int64 `json:"id,omitempty"`
 
 	// LastError Last delivery error, or null.
-	LastError *string `json:"lastError,omitempty"`
+	LastError nullable.Nullable[string] `json:"lastError,omitempty"`
 
 	// MaxAttempts Attempt cap before the delivery is marked FAILED.
 	//
@@ -2468,15 +2610,15 @@ type WebhookEndpoint struct {
 	Id *int64 `json:"id,omitempty"`
 
 	// LastError Last delivery error, or null.
-	LastError *string `json:"lastError,omitempty"`
+	LastError nullable.Nullable[string] `json:"lastError,omitempty"`
 
 	// LastFailureDate Timestamp of the last failed delivery, or null.
-	LastFailureDate *string `json:"lastFailureDate,omitempty"`
+	LastFailureDate nullable.Nullable[string] `json:"lastFailureDate,omitempty"`
 
 	// LastSuccessDate Timestamp of the last successful delivery, or null.
 	//
 	// Example: 2026-06-17 18:30:00
-	LastSuccessDate *string `json:"lastSuccessDate,omitempty"`
+	LastSuccessDate nullable.Nullable[string] `json:"lastSuccessDate,omitempty"`
 
 	// Secret Signing secret used to verify the X-Porkbun-Signature header (HMAC-SHA256 key). Returned only to the authenticated owner.
 	//
@@ -2728,6 +2870,140 @@ type ApikeyRetrieve200JSONResponseBody struct {
 	Status *ApikeyRetrieve200JSONResponseBodyStatus `json:"status,omitempty"`
 }
 
+// CloudflareConnectJSONBody defines parameters for CloudflareConnect.
+type CloudflareConnectJSONBody struct {
+	// Domains Domain names to move. A comma-separated string is also accepted.
+	//
+	// Example: ["example.com","example.net"]
+	Domains []string `json:"domains"`
+
+	// DryRun Validate and return per-domain verdicts without queueing.
+	DryRun *bool `json:"dryRun,omitempty"`
+}
+
+// CloudflareCreateRecordJSONBody defines parameters for CloudflareCreateRecord.
+type CloudflareCreateRecordJSONBody struct {
+	// Comment Free-text note stored on the record (100 chars).
+	Comment *string `json:"comment,omitempty"`
+
+	// Content The value the record points at.
+	//
+	// Example: 192.0.2.1
+	Content *string `json:"content,omitempty"`
+
+	// Data Structured value for record types Cloudflare models as an object (SRV, CAA…), passed through as given.
+	Data   *map[string]interface{} `json:"data,omitempty"`
+	DryRun *bool                   `json:"dryRun,omitempty"`
+
+	// Name `@` for the apex, a bare label (`www`) is expanded, or a full hostname.
+	//
+	// Example: www
+	Name *string `json:"name,omitempty"`
+
+	// Priority Required for MX; lower is preferred.
+	//
+	// Example: 10
+	Priority *int64 `json:"priority,omitempty"`
+
+	// Proxied Orange cloud. A/AAAA/CNAME only.
+	Proxied *bool `json:"proxied,omitempty"`
+
+	// Ttl 1 = automatic (Cloudflare's default), otherwise 60–86400.
+	//
+	// Example: 1
+	Ttl *int64 `json:"ttl,omitempty"`
+
+	// Type A, AAAA, CNAME, TXT, MX, NS, PTR or SPF for a plain `content` value. Structured types (SRV, CAA, TLSA…) need `data` instead.
+	//
+	// Example: TXT
+	Type string `json:"type"`
+}
+
+// CloudflareDeleteRecordJSONBody defines parameters for CloudflareDeleteRecord.
+type CloudflareDeleteRecordJSONBody struct {
+	DryRun *bool `json:"dryRun,omitempty"`
+}
+
+// CloudflareEditRecordJSONBody defines parameters for CloudflareEditRecord.
+type CloudflareEditRecordJSONBody struct {
+	// Comment Free-text note stored on the record (100 chars).
+	Comment *string `json:"comment,omitempty"`
+
+	// Content The value the record points at.
+	//
+	// Example: 192.0.2.1
+	Content *string `json:"content,omitempty"`
+
+	// Data Structured value for record types Cloudflare models as an object (SRV, CAA…), passed through as given.
+	Data   *map[string]interface{} `json:"data,omitempty"`
+	DryRun *bool                   `json:"dryRun,omitempty"`
+
+	// Name `@` for the apex, a bare label (`www`) is expanded, or a full hostname.
+	//
+	// Example: www
+	Name *string `json:"name,omitempty"`
+
+	// Priority Required for MX; lower is preferred.
+	//
+	// Example: 10
+	Priority *int64 `json:"priority,omitempty"`
+
+	// Proxied Orange cloud. A/AAAA/CNAME only.
+	Proxied *bool `json:"proxied,omitempty"`
+
+	// Ttl 1 = automatic (Cloudflare's default), otherwise 60–86400.
+	//
+	// Example: 1
+	Ttl *int64 `json:"ttl,omitempty"`
+
+	// Type A, AAAA, CNAME, TXT, MX, NS, PTR or SPF for a plain `content` value. Structured types (SRV, CAA, TLSA…) need `data` instead.
+	//
+	// Example: TXT
+	Type *string `json:"type,omitempty"`
+}
+
+// CloudflareSetProxyJSONBody defines parameters for CloudflareSetProxy.
+type CloudflareSetProxyJSONBody struct {
+	DryRun *bool `json:"dryRun,omitempty"`
+
+	// Enabled true = proxy through Cloudflare (orange cloud); false = DNS-only (grey cloud).
+	Enabled bool `json:"enabled"`
+
+	// Records Optional. Limit to these names; "@" = apex, bare labels are expanded.
+	//
+	// Example: ["@","www"]
+	Records *[]string `json:"records,omitempty"`
+}
+
+// CloudflareSetZoneSettingsJSONBody defines parameters for CloudflareSetZoneSettings.
+type CloudflareSetZoneSettingsJSONBody struct {
+	AlwaysUseHttps         *CloudflareSetZoneSettingsJSONBodyAlwaysUseHttps         `json:"always_use_https,omitempty"`
+	AutomaticHttpsRewrites *CloudflareSetZoneSettingsJSONBodyAutomaticHttpsRewrites `json:"automatic_https_rewrites,omitempty"`
+	CacheLevel             *CloudflareSetZoneSettingsJSONBodyCacheLevel             `json:"cache_level,omitempty"`
+	DevelopmentMode        *CloudflareSetZoneSettingsJSONBodyDevelopmentMode        `json:"development_mode,omitempty"`
+	DryRun                 *bool                                                    `json:"dryRun,omitempty"`
+	MinTlsVersion          *CloudflareSetZoneSettingsJSONBodyMinTlsVersion          `json:"min_tls_version,omitempty"`
+	Ssl                    *CloudflareSetZoneSettingsJSONBodySsl                    `json:"ssl,omitempty"`
+}
+
+// CloudflareSetZoneSettingsJSONBodyAlwaysUseHttps defines parameters for CloudflareSetZoneSettings.
+type CloudflareSetZoneSettingsJSONBodyAlwaysUseHttps string
+
+// CloudflareSetZoneSettingsJSONBodyAutomaticHttpsRewrites defines parameters for CloudflareSetZoneSettings.
+type CloudflareSetZoneSettingsJSONBodyAutomaticHttpsRewrites string
+
+// CloudflareSetZoneSettingsJSONBodyCacheLevel defines parameters for CloudflareSetZoneSettings.
+type CloudflareSetZoneSettingsJSONBodyCacheLevel string
+
+// CloudflareSetZoneSettingsJSONBodyDevelopmentMode defines parameters for CloudflareSetZoneSettings.
+type CloudflareSetZoneSettingsJSONBodyDevelopmentMode string
+
+// CloudflareSetZoneSettingsJSONBodyMinTlsVersion defines parameters for CloudflareSetZoneSettings.
+type CloudflareSetZoneSettingsJSONBodyMinTlsVersion string
+
+// CloudflareSetZoneSettingsJSONBodySsl defines parameters for CloudflareSetZoneSettings.
+type CloudflareSetZoneSettingsJSONBodySsl string
+
 // DnsCreate200JSONResponseBody defines parameters for DnsCreate.
 type DnsCreate200JSONResponseBody struct {
 	// Id The numeric ID of the newly created record
@@ -2977,7 +3253,7 @@ type DomainGetRegistrationRequirements200JSONResponseBody struct {
 	ApiRegisterable *bool `json:"apiRegisterable,omitempty"`
 
 	// MaxRegistrationYears Maximum years the registry allows, or null if unspecified.
-	MaxRegistrationYears *int64 `json:"maxRegistrationYears,omitempty"`
+	MaxRegistrationYears nullable.Nullable[int64] `json:"maxRegistrationYears,omitempty"`
 
 	// NotApiRegisterableReason Present only when apiRegisterable is false.
 	NotApiRegisterableReason *string `json:"notApiRegisterableReason,omitempty"`
@@ -2995,7 +3271,7 @@ type DomainGetRegistrationRequirements200JSONResponseBody struct {
 	// RegistryRequirements JSON Schema of extra registry/eligibility fields the TLD requires (e.g. .us purpose+category, .ca legal type) with enums and human labels, plus an x-policyNote. Null when the TLD has no structured extra data. These fields are documented for eligibility; they are not accepted by /domain/create today.
 	//
 	// Example: {"$schema":"https://json-schema.org/draft/2020-12/schema","description":"Extra registrant data the registry requires for this TLD. These fields are not accepted by /domain/create today (such TLDs are website-only); this schema documents the requirements.","properties":{"category":{"enum":["C11","C12","C21","C31","C32"],"title":"Category","type":"string","x-appliesTo":"registrant contact","x-enumDescriptions":{"C11":"A US citizen.","C12":"A permanent resident of the US.","C21":"A US-based organization or company.","C31":"A foreign entity with a bona fide US presence.","C32":"An entity with a US office or facility."}},"purpose":{"enum":["P1","P2","P3","P4","P5"],"title":"Purpose","type":"string","x-appliesTo":"registrant contact","x-enumDescriptions":{"P1":"Business use for profit.","P2":"Non-profit organization.","P3":"Personal use.","P4":"Education purposes.","P5":"Government purposes."}}},"title":"Registry eligibility data for .us","type":"object","x-policyNote":"To register a .us domain you must accurately complete the Purpose and Category fields; inaccurate information can lead to seizure without refund."}
-	RegistryRequirements *map[string]interface{} `json:"registryRequirements,omitempty"`
+	RegistryRequirements nullable.Nullable[map[string]interface{}] `json:"registryRequirements,omitempty"`
 
 	// RequestSchema JSON Schema (Draft 2020-12) for the /domain/create request body this TLD accepts (cost, agreeToTerms, whoisPrivacy, credentials), including the fixed registration term.
 	//
@@ -3246,7 +3522,7 @@ type HostingCreate200JSONResponseBody_Hosting struct {
 	Sku         *string                                        `json:"sku,omitempty"`
 	Status      *HostingCreate200JSONResponseBodyHostingStatus `json:"status,omitempty"`
 	Trial       *bool                                          `json:"trial,omitempty"`
-	TrialEndsAt *string                                        `json:"trialEndsAt,omitempty"`
+	TrialEndsAt nullable.Nullable[string]                      `json:"trialEndsAt,omitempty"`
 }
 
 // HostingCreate200JSONResponseBody defines parameters for HostingCreate.
@@ -3260,6 +3536,64 @@ type HostingCreate200JSONResponseBody struct {
 
 	// Status Example: SUCCESS
 	Status *string `json:"status,omitempty"`
+}
+
+// HostingCreateWpCredentialsJSONBody defines parameters for HostingCreateWpCredentials.
+type HostingCreateWpCredentialsJSONBody struct {
+	// AcknowledgeFullAccess Required when role=administrator: confirms you understand the credential can run arbitrary code on the site.
+	AcknowledgeFullAccess *bool `json:"acknowledgeFullAccess,omitempty"`
+
+	// Apikey Your API key. Required in body when not using header auth.
+	//
+	// Example: pk1_...
+	Apikey *string `json:"apikey,omitempty"`
+
+	// DryRun Validate without creating anything.
+	DryRun *bool `json:"dryRun,omitempty"`
+
+	// Name Label shown in wp-admin (sanitized to letters, digits and dashes).
+	//
+	// Example: Acme-Agent
+	Name *string `json:"name,omitempty"`
+
+	// Role Least privilege by default. `editor` = content only (recommended for agents). `administrator` = full control incl. plugin install; requires acknowledgeFullAccess.
+	Role *HostingCreateWpCredentialsJSONBodyRole `json:"role,omitempty"`
+
+	// Secretapikey Your secret API key. Required in body when providing apikey.
+	//
+	// Example: sk1_...
+	Secretapikey *string `json:"secretapikey,omitempty"`
+}
+
+// HostingCreateWpCredentialsJSONBodyRole defines parameters for HostingCreateWpCredentials.
+type HostingCreateWpCredentialsJSONBodyRole string
+
+// HostingCreateWpCredentials200JSONResponseBody_Credentials defines parameters for HostingCreateWpCredentials.
+type HostingCreateWpCredentials200JSONResponseBody_Credentials struct {
+	// ApplicationPassword Example: abcd EFGH ijkl MNOP qrst UVWX
+	ApplicationPassword *string `json:"applicationPassword,omitempty"`
+
+	// Authorization Ready-to-use HTTP Basic header value.
+	Authorization *string `json:"authorization,omitempty"`
+
+	// Name Example: Porkbun-API
+	Name *string `json:"name,omitempty"`
+
+	// RestUrl Example: https://example.com/wp-json/
+	RestUrl *string `json:"restUrl,omitempty"`
+
+	// Role Example: editor
+	Role *string `json:"role,omitempty"`
+
+	// Username Example: porkbun-agent
+	Username *string `json:"username,omitempty"`
+}
+
+// HostingCreateWpCredentials200JSONResponseBody defines parameters for HostingCreateWpCredentials.
+type HostingCreateWpCredentials200JSONResponseBody struct {
+	Credentials *HostingCreateWpCredentials200JSONResponseBody_Credentials `json:"credentials,omitempty"`
+	Message     *string                                                    `json:"message,omitempty"`
+	Status      *string                                                    `json:"status,omitempty"`
 }
 
 // HostingDeleteFileJSONBody defines parameters for HostingDeleteFile.
@@ -3281,6 +3615,34 @@ type HostingDeleteFileJSONBody struct {
 // HostingDeleteFile200JSONResponseBody defines parameters for HostingDeleteFile.
 type HostingDeleteFile200JSONResponseBody struct {
 	Deleted *string `json:"deleted,omitempty"`
+	Status  *string `json:"status,omitempty"`
+}
+
+// HostingDeleteWpCredentialsJSONBody defines parameters for HostingDeleteWpCredentials.
+type HostingDeleteWpCredentialsJSONBody struct {
+	// All Revoke every application password for the user.
+	All *bool `json:"all,omitempty"`
+
+	// Apikey Your API key. Required in body when not using header auth.
+	//
+	// Example: pk1_...
+	Apikey *string `json:"apikey,omitempty"`
+	DryRun *bool   `json:"dryRun,omitempty"`
+
+	// Secretapikey Your secret API key. Required in body when providing apikey.
+	//
+	// Example: sk1_...
+	Secretapikey *string `json:"secretapikey,omitempty"`
+
+	// Uuid The application password uuid to revoke.
+	Uuid   *string `json:"uuid,omitempty"`
+	WpUser *string `json:"wpUser,omitempty"`
+}
+
+// HostingDeleteWpCredentials200JSONResponseBody defines parameters for HostingDeleteWpCredentials.
+type HostingDeleteWpCredentials200JSONResponseBody struct {
+	Message *string `json:"message,omitempty"`
+	Revoked *string `json:"revoked,omitempty"`
 	Status  *string `json:"status,omitempty"`
 }
 
@@ -3345,8 +3707,20 @@ type HostingGet200JSONResponseBody_Hosting struct {
 
 // HostingGet200JSONResponseBody defines parameters for HostingGet.
 type HostingGet200JSONResponseBody struct {
-	Hosting *HostingGet200JSONResponseBody_Hosting `json:"hosting,omitempty"`
-	Status  *string                                `json:"status,omitempty"`
+	Hosting nullable.Nullable[HostingGet200JSONResponseBody_Hosting] `json:"hosting,omitempty"`
+	Status  *string                                                  `json:"status,omitempty"`
+}
+
+// HostingGetWpCredentialsParams defines parameters for HostingGetWpCredentials.
+type HostingGetWpCredentialsParams struct {
+	WpUser *string `form:"wpUser,omitempty" json:"wpUser,omitempty"`
+}
+
+// HostingGetWpCredentials200JSONResponseBody defines parameters for HostingGetWpCredentials.
+type HostingGetWpCredentials200JSONResponseBody struct {
+	Credentials *[]map[string]interface{} `json:"credentials,omitempty"`
+	Status      *string                   `json:"status,omitempty"`
+	WpUser      *string                   `json:"wpUser,omitempty"`
 }
 
 // HostingMakeDirJSONBody defines parameters for HostingMakeDir.
@@ -3890,6 +4264,24 @@ type ApikeyRequestJSONRequestBody ApikeyRequestJSONBody
 // ApikeyRetrieveJSONRequestBody defines body for ApikeyRetrieve for application/json ContentType.
 type ApikeyRetrieveJSONRequestBody ApikeyRetrieveJSONBody
 
+// CloudflareConnectJSONRequestBody defines body for CloudflareConnect for application/json ContentType.
+type CloudflareConnectJSONRequestBody CloudflareConnectJSONBody
+
+// CloudflareCreateRecordJSONRequestBody defines body for CloudflareCreateRecord for application/json ContentType.
+type CloudflareCreateRecordJSONRequestBody CloudflareCreateRecordJSONBody
+
+// CloudflareDeleteRecordJSONRequestBody defines body for CloudflareDeleteRecord for application/json ContentType.
+type CloudflareDeleteRecordJSONRequestBody CloudflareDeleteRecordJSONBody
+
+// CloudflareEditRecordJSONRequestBody defines body for CloudflareEditRecord for application/json ContentType.
+type CloudflareEditRecordJSONRequestBody CloudflareEditRecordJSONBody
+
+// CloudflareSetProxyJSONRequestBody defines body for CloudflareSetProxy for application/json ContentType.
+type CloudflareSetProxyJSONRequestBody CloudflareSetProxyJSONBody
+
+// CloudflareSetZoneSettingsJSONRequestBody defines body for CloudflareSetZoneSettings for application/json ContentType.
+type CloudflareSetZoneSettingsJSONRequestBody CloudflareSetZoneSettingsJSONBody
+
 // DnsCreateJSONRequestBody defines body for DnsCreate for application/json ContentType.
 type DnsCreateJSONRequestBody = CreateDnsRequest
 
@@ -3977,11 +4369,17 @@ type EmailSetPasswordJSONRequestBody EmailSetPasswordJSONBody
 // HostingCreateJSONRequestBody defines body for HostingCreate for application/json ContentType.
 type HostingCreateJSONRequestBody HostingCreateJSONBody
 
+// HostingCreateWpCredentialsJSONRequestBody defines body for HostingCreateWpCredentials for application/json ContentType.
+type HostingCreateWpCredentialsJSONRequestBody HostingCreateWpCredentialsJSONBody
+
 // HostingDeleteJSONRequestBody defines body for HostingDelete for application/json ContentType.
 type HostingDeleteJSONRequestBody = AuthRequest
 
 // HostingDeleteFileJSONRequestBody defines body for HostingDeleteFile for application/json ContentType.
 type HostingDeleteFileJSONRequestBody HostingDeleteFileJSONBody
+
+// HostingDeleteWpCredentialsJSONRequestBody defines body for HostingDeleteWpCredentials for application/json ContentType.
+type HostingDeleteWpCredentialsJSONRequestBody HostingDeleteWpCredentialsJSONBody
 
 // HostingDeployJSONRequestBody defines body for HostingDeploy for application/json ContentType.
 type HostingDeployJSONRequestBody HostingDeployJSONBody
@@ -4483,6 +4881,299 @@ type ClientInterface interface {
 	//
 	// Corresponds with POST /apikey/retrieve (the `ApikeyRetrieve` operationId).
 	ApikeyRetrieve(ctx context.Context, body ApikeyRetrieveJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// CloudflareConnectWithBody Queue domains to move to the customer's Cloudflare account
+	//
+	// Queue one or many domains. For each one we create the zone in the customer's own Cloudflare account, copy across the DNS records we hold, and repoint the registry nameservers at Cloudflare.
+	//
+	// **Asynchronous.** Work runs on a background job over the next few minutes, so a successful call means *queued*, never *connected* — poll `/cloudflare/getQueue` or `/cloudflare/get/{domain}`.
+	//
+	// **`skipped` is a normal outcome, not an error.** DNSSEC live, custom nameservers, already connected, already in progress: each domain comes back under `queued`, `skipped` or `alreadyQueued` with its own reason. Read the reasons rather than treating a non-empty `skipped` as failure.
+	//
+	// Eligibility, ownership and nameserver state are re-checked immediately before each domain is acted on, so a domain accepted here can still be skipped later.
+	//
+	// Re-submitting a domain is safe: the queue row is the unit of truth and is updated in place.
+	//
+	// Supports `dryRun: true`, which returns the same per-domain verdicts without queueing anything.
+	//
+	// Requires an active Cloudflare connection (`CLOUDFLARE_NOT_CONNECTED` otherwise). Limits: 500 domains per call, 2000 domains per account per hour.
+	//
+	// After queueing, poll `/cloudflare/get/{domain}`: the row moves `queued` → `working` → `activating` → `connected`. `activating` means the nameservers are already repointed and Cloudflare is confirming the zone, which can take a while as DNS propagates.
+	//
+	// Takes any type of body and a specified content type.
+	//
+	// Corresponds with POST /cloudflare/connect (the `CloudflareConnect` operationId).
+	CloudflareConnectWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// CloudflareConnect Queue domains to move to the customer's Cloudflare account
+	//
+	// Queue one or many domains. For each one we create the zone in the customer's own Cloudflare account, copy across the DNS records we hold, and repoint the registry nameservers at Cloudflare.
+	//
+	// **Asynchronous.** Work runs on a background job over the next few minutes, so a successful call means *queued*, never *connected* — poll `/cloudflare/getQueue` or `/cloudflare/get/{domain}`.
+	//
+	// **`skipped` is a normal outcome, not an error.** DNSSEC live, custom nameservers, already connected, already in progress: each domain comes back under `queued`, `skipped` or `alreadyQueued` with its own reason. Read the reasons rather than treating a non-empty `skipped` as failure.
+	//
+	// Eligibility, ownership and nameserver state are re-checked immediately before each domain is acted on, so a domain accepted here can still be skipped later.
+	//
+	// Re-submitting a domain is safe: the queue row is the unit of truth and is updated in place.
+	//
+	// Supports `dryRun: true`, which returns the same per-domain verdicts without queueing anything.
+	//
+	// Requires an active Cloudflare connection (`CLOUDFLARE_NOT_CONNECTED` otherwise). Limits: 500 domains per call, 2000 domains per account per hour.
+	//
+	// After queueing, poll `/cloudflare/get/{domain}`: the row moves `queued` → `working` → `activating` → `connected`. `activating` means the nameservers are already repointed and Cloudflare is confirming the zone, which can take a while as DNS propagates.
+	//
+	// Takes a body of the `application/json` content type.
+	//
+	// Corresponds with POST /cloudflare/connect (the `CloudflareConnect` operationId).
+	CloudflareConnect(ctx context.Context, body CloudflareConnectJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// CloudflareCreateRecordWithBody Create a DNS record in the domain's Cloudflare zone
+	//
+	// **This writes to the Cloudflare zone that actually answers for the domain**, unlike `/dns/*`, which manages Porkbun's nameservers and no longer affects resolution once a domain has moved.
+	//
+	// `name` accepts `@` for the apex or a bare label. MX requires `priority`. `proxied` applies to A/AAAA/CNAME only. Supports `dryRun`.
+	//
+	// Takes any type of body and a specified content type.
+	//
+	// Corresponds with POST /cloudflare/createRecord/{domain} (the `CloudflareCreateRecord` operationId).
+	CloudflareCreateRecordWithBody(ctx context.Context, domain string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// CloudflareCreateRecord Create a DNS record in the domain's Cloudflare zone
+	//
+	// **This writes to the Cloudflare zone that actually answers for the domain**, unlike `/dns/*`, which manages Porkbun's nameservers and no longer affects resolution once a domain has moved.
+	//
+	// `name` accepts `@` for the apex or a bare label. MX requires `priority`. `proxied` applies to A/AAAA/CNAME only. Supports `dryRun`.
+	//
+	// Takes a body of the `application/json` content type.
+	//
+	// Corresponds with POST /cloudflare/createRecord/{domain} (the `CloudflareCreateRecord` operationId).
+	CloudflareCreateRecord(ctx context.Context, domain string, body CloudflareCreateRecordJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// CloudflareDeleteRecordWithBody Delete a DNS record from the domain's Cloudflare zone
+	//
+	// **This writes to the Cloudflare zone that actually answers for the domain**, unlike `/dns/*`, which manages Porkbun's nameservers and no longer affects resolution once a domain has moved.
+	//
+	// The record is read before deletion, so the response reports exactly what was removed and a bad id fails before anything is destroyed. Supports `dryRun`.
+	//
+	// Takes any type of body and a specified content type.
+	//
+	// Corresponds with POST /cloudflare/deleteRecord/{domain}/{recordId} (the `CloudflareDeleteRecord` operationId).
+	CloudflareDeleteRecordWithBody(ctx context.Context, domain string, recordId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// CloudflareDeleteRecord Delete a DNS record from the domain's Cloudflare zone
+	//
+	// **This writes to the Cloudflare zone that actually answers for the domain**, unlike `/dns/*`, which manages Porkbun's nameservers and no longer affects resolution once a domain has moved.
+	//
+	// The record is read before deletion, so the response reports exactly what was removed and a bad id fails before anything is destroyed. Supports `dryRun`.
+	//
+	// Takes a body of the `application/json` content type.
+	//
+	// Corresponds with POST /cloudflare/deleteRecord/{domain}/{recordId} (the `CloudflareDeleteRecord` operationId).
+	CloudflareDeleteRecord(ctx context.Context, domain string, recordId string, body CloudflareDeleteRecordJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// CloudflareDisconnect Remove the stored Cloudflare connection
+	//
+	// Revoke and forget this account's Cloudflare grant. Domains already moved stay on Cloudflare and keep resolving; this only stops us making further changes on the customer's behalf. Reconnecting requires the browser authorization again. Supports `dryRun`.
+	//
+	// Corresponds with POST /cloudflare/disconnect (the `CloudflareDisconnect` operationId).
+	CloudflareDisconnect(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// CloudflareEditRecordWithBody Update a DNS record in the domain's Cloudflare zone
+	//
+	// **This writes to the Cloudflare zone that actually answers for the domain**, unlike `/dns/*`, which manages Porkbun's nameservers and no longer affects resolution once a domain has moved.
+	//
+	// Partial update: fields you omit keep their current value. The response carries both the new record and the `previous` one. Supports `dryRun`.
+	//
+	// Takes any type of body and a specified content type.
+	//
+	// Corresponds with POST /cloudflare/editRecord/{domain}/{recordId} (the `CloudflareEditRecord` operationId).
+	CloudflareEditRecordWithBody(ctx context.Context, domain string, recordId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// CloudflareEditRecord Update a DNS record in the domain's Cloudflare zone
+	//
+	// **This writes to the Cloudflare zone that actually answers for the domain**, unlike `/dns/*`, which manages Porkbun's nameservers and no longer affects resolution once a domain has moved.
+	//
+	// Partial update: fields you omit keep their current value. The response carries both the new record and the `previous` one. Supports `dryRun`.
+	//
+	// Takes a body of the `application/json` content type.
+	//
+	// Corresponds with POST /cloudflare/editRecord/{domain}/{recordId} (the `CloudflareEditRecord` operationId).
+	CloudflareEditRecord(ctx context.Context, domain string, recordId string, body CloudflareEditRecordJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// CloudflareGet Get the Cloudflare move status for one domain
+	//
+	// Status of a single domain's move, including the zone id once created and the nameservers we replaced (kept so the move can be undone). `NOT_QUEUED` if the domain has never been queued. Also available via POST.
+	//
+	// **Status values** (poll until one of the terminal ones):
+	//
+	// | status | meaning | terminal |
+	// |--------|---------|----------|
+	// | `queued` | accepted, waiting for the worker | no |
+	// | `working` | a run is touching this row right now | no |
+	// | `activating` | nameservers repointed; waiting for Cloudflare to mark the zone active. Legitimately slow (registry + resolver propagation) — allow up to 24h | no |
+	// | `connected` / `done` | the move finished | **yes** |
+	// | `skipped` | not moved, and `message` says why (DNSSEC live, custom nameservers, no longer in the account) | **yes** |
+	// | `failed` / `error` | the move did not complete; `message` says why. Re-queue with `/cloudflare/retry/{domain}` | **yes** |
+	//
+	// Poll on a sensible interval (a few seconds early on, then back off) — a zone typically leaves `queued` within seconds but can sit in `activating` while DNS propagates.
+	//
+	// Corresponds with GET /cloudflare/get/{domain} (the `CloudflareGet` operationId).
+	CloudflareGet(ctx context.Context, domain string, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// CloudflareGetConnection Check the Cloudflare account connection (poll target)
+	//
+	// Whether this account has an active Cloudflare grant, and which Cloudflare account it points at.
+	//
+	// **This is the poll target for the connect flow.** Minting the grant is a human action: Cloudflare's consent screen has to be completed in a browser, and the authorization is bound to the Porkbun web session that started it, so it cannot be driven over the API. When `connected` is `false` the response carries a `connectUrl` — send the account owner there, then poll this endpoint until `connected` is `true`.
+	//
+	// Also available via POST.
+	//
+	// Corresponds with GET /cloudflare/getConnection (the `CloudflareGetConnection` operationId).
+	CloudflareGetConnection(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// CloudflareGetQueue List every Cloudflare move for the account
+	//
+	// Every Cloudflare move this account has requested, with status and message. Queue rows are never deleted, so this doubles as the audit trail. Also available via POST.
+	//
+	// **Status values** (poll until one of the terminal ones):
+	//
+	// | status | meaning | terminal |
+	// |--------|---------|----------|
+	// | `queued` | accepted, waiting for the worker | no |
+	// | `working` | a run is touching this row right now | no |
+	// | `activating` | nameservers repointed; waiting for Cloudflare to mark the zone active. Legitimately slow (registry + resolver propagation) — allow up to 24h | no |
+	// | `connected` / `done` | the move finished | **yes** |
+	// | `skipped` | not moved, and `message` says why (DNSSEC live, custom nameservers, no longer in the account) | **yes** |
+	// | `failed` / `error` | the move did not complete; `message` says why. Re-queue with `/cloudflare/retry/{domain}` | **yes** |
+	//
+	// Poll on a sensible interval (a few seconds early on, then back off) — a zone typically leaves `queued` within seconds but can sit in `activating` while DNS propagates.
+	//
+	// Corresponds with GET /cloudflare/getQueue (the `CloudflareGetQueue` operationId).
+	CloudflareGetQueue(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// CloudflareGetRecords List the domain's live DNS records at Cloudflare
+	//
+	// The domain's DNS records **as Cloudflare currently holds them**, each with its `proxied` flag and whether it is `proxiable` at all.
+	//
+	// Once a domain has moved, this is the authoritative record set — `/dns/retrieve` reads the Porkbun zone, which is no longer the one answering queries. Requires the move to have finished (`ZONE_NOT_READY` otherwise). Also available via POST.
+	//
+	// Corresponds with GET /cloudflare/getRecords/{domain} (the `CloudflareGetRecords` operationId).
+	CloudflareGetRecords(ctx context.Context, domain string, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// CloudflareGetZone Get live zone state from Cloudflare (and detect nameserver drift)
+	//
+	// What **Cloudflare** says about the zone right now — status, paused, its nameservers, activation date — as opposed to what our queue row remembers.
+	//
+	// These drift: if the nameservers are repointed elsewhere after the move, our row still reads `done` while Cloudflare has stopped answering for the domain. The response includes the live public nameservers and a `nameserversDrifted` boolean so you don't have to diff them. Also available via POST.
+	//
+	// Corresponds with GET /cloudflare/getZone/{domain} (the `CloudflareGetZone` operationId).
+	CloudflareGetZone(ctx context.Context, domain string, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// CloudflareGetZoneSettings Read the zone settings that matter after a move
+	//
+	// The Cloudflare zone settings worth caring about post-migration: `ssl`, `always_use_https`, `automatic_https_rewrites`, `min_tls_version`, `development_mode`, `cache_level`.
+	//
+	// The important one is **`ssl`**: `flexible` means Cloudflare fetches your origin over plain HTTP while visitors see a padlock, so the response warns when it is `off` or `flexible`. Also available via POST.
+	//
+	// If the account's Cloudflare authorization predates this feature it will not carry the `zone-settings.write` scope, and this returns `CLOUDFLARE_REAUTHORIZE_REQUIRED` with a `connectUrl`. Reconnecting is the same one-click browser flow and does not disturb domains already moved.
+	//
+	// Corresponds with GET /cloudflare/getZoneSettings/{domain} (the `CloudflareGetZoneSettings` operationId).
+	CloudflareGetZoneSettings(ctx context.Context, domain string, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// CloudflareInventory List every domain with its Cloudflare eligibility
+	//
+	// Every domain in the account with a `state` (`eligible`, `warn`, `blocked`, `connected`, `inprogress`) and a human-readable `reason`.
+	//
+	// Read this **before** queueing to see what will be skipped and why. Works even with no Cloudflare connection yet, so an agent can plan while the owner is still authorizing. Also available via POST.
+	//
+	// Corresponds with GET /cloudflare/inventory (the `CloudflareInventory` operationId).
+	CloudflareInventory(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// CloudflarePreview Preview exactly which records a move would copy
+	//
+	// Which DNS records we would create in Cloudflare for this domain, and which we would drop, **without queueing anything**. The honest answer to "what will this do to my DNS" before committing.
+	//
+	// Records are always created DNS-only (grey cloud); use `/cloudflare/setProxy` afterwards to turn the proxy on. Also available via POST.
+	//
+	// Corresponds with GET /cloudflare/preview/{domain} (the `CloudflarePreview` operationId).
+	CloudflarePreview(ctx context.Context, domain string, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// CloudflareRetry Retry a failed or skipped domain
+	//
+	// Put a domain that failed or was skipped back in the queue. Fails with `RETRY_FAILED` if it is already connected, already in progress, or no longer in the account. Supports `dryRun`.
+	//
+	// Corresponds with POST /cloudflare/retry/{domain} (the `CloudflareRetry` operationId).
+	CloudflareRetry(ctx context.Context, domain string, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// CloudflareRollback Undo a completed move (restore Porkbun nameservers)
+	//
+	// Point the domain's nameservers back at Porkbun, restoring the DNS we still hold.
+	//
+	// The Cloudflare zone is deliberately left in place — deleting a zone in someone's own Cloudflare account is theirs to do. Fails with `ROLLBACK_FAILED` if we never moved the domain, it is already back on Porkbun nameservers, or it is being worked on right now. Supports `dryRun`.
+	//
+	// Corresponds with POST /cloudflare/rollback/{domain} (the `CloudflareRollback` operationId).
+	CloudflareRollback(ctx context.Context, domain string, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// CloudflareSetProxyWithBody Turn the Cloudflare proxy (orange cloud) on or off
+	//
+	// Set `proxied` on the domain's Cloudflare DNS records.
+	//
+	// **The move itself always imports records DNS-only (grey cloud), on purpose** — changing how traffic is served at the same time as changing who serves DNS gives you two variables to debug at once. Proxying is therefore a separate, explicit step, best done after you've confirmed the site still works.
+	//
+	// Defaults to every proxiable record; pass `records` to target specific names (`"@"` means the apex, a bare label like `"www"` is expanded). Only A, AAAA and CNAME can be proxied — anything else is reported under `skipped` with a reason rather than failing the call. Records already in the requested state are skipped too.
+	//
+	// Proxying hides the origin IP, so if the zone's MX points at a hostname you are proxying, mail to it breaks; that case comes back in `warnings`. Supports `dryRun`.
+	//
+	// Rate limit: 60 changes per account per hour (these calls go to Cloudflare under Porkbun's OAuth client).
+	//
+	// Takes any type of body and a specified content type.
+	//
+	// Corresponds with POST /cloudflare/setProxy/{domain} (the `CloudflareSetProxy` operationId).
+	CloudflareSetProxyWithBody(ctx context.Context, domain string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// CloudflareSetProxy Turn the Cloudflare proxy (orange cloud) on or off
+	//
+	// Set `proxied` on the domain's Cloudflare DNS records.
+	//
+	// **The move itself always imports records DNS-only (grey cloud), on purpose** — changing how traffic is served at the same time as changing who serves DNS gives you two variables to debug at once. Proxying is therefore a separate, explicit step, best done after you've confirmed the site still works.
+	//
+	// Defaults to every proxiable record; pass `records` to target specific names (`"@"` means the apex, a bare label like `"www"` is expanded). Only A, AAAA and CNAME can be proxied — anything else is reported under `skipped` with a reason rather than failing the call. Records already in the requested state are skipped too.
+	//
+	// Proxying hides the origin IP, so if the zone's MX points at a hostname you are proxying, mail to it breaks; that case comes back in `warnings`. Supports `dryRun`.
+	//
+	// Rate limit: 60 changes per account per hour (these calls go to Cloudflare under Porkbun's OAuth client).
+	//
+	// Takes a body of the `application/json` content type.
+	//
+	// Corresponds with POST /cloudflare/setProxy/{domain} (the `CloudflareSetProxy` operationId).
+	CloudflareSetProxy(ctx context.Context, domain string, body CloudflareSetProxyJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// CloudflareSetZoneSettingsWithBody Change zone settings (allowlisted)
+	//
+	// Set one or more of the allowlisted zone settings. This is an allowlist rather than a passthrough — Cloudflare exposes hundreds of settings and WAF/firewall/security controls are deliberately out of scope for this API.
+	//
+	// Prefer `ssl: "full"`; `flexible` is an invisible downgrade for visitors. Supports `dryRun`. Rate limit: shares the 60/hour Cloudflare-write budget.
+	//
+	// If the account's Cloudflare authorization predates this feature it will not carry the `zone-settings.write` scope, and this returns `CLOUDFLARE_REAUTHORIZE_REQUIRED` with a `connectUrl`. Reconnecting is the same one-click browser flow and does not disturb domains already moved.
+	//
+	// Takes any type of body and a specified content type.
+	//
+	// Corresponds with POST /cloudflare/setZoneSettings/{domain} (the `CloudflareSetZoneSettings` operationId).
+	CloudflareSetZoneSettingsWithBody(ctx context.Context, domain string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// CloudflareSetZoneSettings Change zone settings (allowlisted)
+	//
+	// Set one or more of the allowlisted zone settings. This is an allowlist rather than a passthrough — Cloudflare exposes hundreds of settings and WAF/firewall/security controls are deliberately out of scope for this API.
+	//
+	// Prefer `ssl: "full"`; `flexible` is an invisible downgrade for visitors. Supports `dryRun`. Rate limit: shares the 60/hour Cloudflare-write budget.
+	//
+	// If the account's Cloudflare authorization predates this feature it will not carry the `zone-settings.write` scope, and this returns `CLOUDFLARE_REAUTHORIZE_REQUIRED` with a `connectUrl`. Reconnecting is the same one-click browser flow and does not disturb domains already moved.
+	//
+	// Takes a body of the `application/json` content type.
+	//
+	// Corresponds with POST /cloudflare/setZoneSettings/{domain} (the `CloudflareSetZoneSettings` operationId).
+	CloudflareSetZoneSettings(ctx context.Context, domain string, body CloudflareSetZoneSettingsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// DnsCreateWithBody Create DNS record
 	//
@@ -5350,25 +6041,77 @@ type ClientInterface interface {
 	// Corresponds with POST /email/setPassword (the `EmailSetPassword` operationId).
 	EmailSetPassword(ctx context.Context, body EmailSetPasswordJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// HostingCreateWithBody Provision Secure Static Hosting
+	// HostingCreateWithBody Provision hosting — a static site or a WordPress site
 	//
-	// Provision Secure Static Hosting for a domain in the account. The FIRST provision for a domain starts a **15-day free trial** ($0 now) that **auto-renews** at the plan price when the trial ends; a re-provision after deprovision is charged immediately to account credit (one free trial per domain). Provisioning **switches the domain to Porkbun nameservers** if it isn't already — pass `agreeToNameserverChange: true` to allow that. Supports `dryRun`. Remote setup can be async: `status` may be `PENDING` — poll `/hosting/get` until `ACTIVE` before deploying.
+	// **Applies to:** Both products — the `sku` decides which.
+	//
+	// Provision hosting (Secure Static Hosting or Cloud for WordPress) for a domain in the account. The FIRST provision for a domain starts a **15-day free trial** ($0 now) that **auto-renews** at the plan price when the trial ends; a re-provision after deprovision is charged immediately to account credit (one free trial per domain). Provisioning **switches the domain to Porkbun nameservers** if it isn't already — pass `agreeToNameserverChange: true` to allow that. Supports `dryRun`. Remote setup can be async: `status` may be `PENDING` — poll `/hosting/get` until `ACTIVE` before deploying.
+	//
+	// **Cloud for WordPress:** pass a `CLOUDWORDPRESS…` sku to provision a managed WordPress site instead of static hosting. The file endpoints (deploy/files/deleteFile/makeDir) do not apply — manage the site through WordPress, using `/hosting/createWpCredentials/{domain}` for REST API credentials.
+	//
+	// **Rate limit:** 10 provisions per account per hour (`dryRun` calls are free).
 	//
 	// Takes any type of body and a specified content type.
 	//
 	// Corresponds with POST /hosting/create/{domain} (the `HostingCreate` operationId).
 	HostingCreateWithBody(ctx context.Context, domain string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// HostingCreate Provision Secure Static Hosting
+	// HostingCreate Provision hosting — a static site or a WordPress site
 	//
-	// Provision Secure Static Hosting for a domain in the account. The FIRST provision for a domain starts a **15-day free trial** ($0 now) that **auto-renews** at the plan price when the trial ends; a re-provision after deprovision is charged immediately to account credit (one free trial per domain). Provisioning **switches the domain to Porkbun nameservers** if it isn't already — pass `agreeToNameserverChange: true` to allow that. Supports `dryRun`. Remote setup can be async: `status` may be `PENDING` — poll `/hosting/get` until `ACTIVE` before deploying.
+	// **Applies to:** Both products — the `sku` decides which.
+	//
+	// Provision hosting (Secure Static Hosting or Cloud for WordPress) for a domain in the account. The FIRST provision for a domain starts a **15-day free trial** ($0 now) that **auto-renews** at the plan price when the trial ends; a re-provision after deprovision is charged immediately to account credit (one free trial per domain). Provisioning **switches the domain to Porkbun nameservers** if it isn't already — pass `agreeToNameserverChange: true` to allow that. Supports `dryRun`. Remote setup can be async: `status` may be `PENDING` — poll `/hosting/get` until `ACTIVE` before deploying.
+	//
+	// **Cloud for WordPress:** pass a `CLOUDWORDPRESS…` sku to provision a managed WordPress site instead of static hosting. The file endpoints (deploy/files/deleteFile/makeDir) do not apply — manage the site through WordPress, using `/hosting/createWpCredentials/{domain}` for REST API credentials.
+	//
+	// **Rate limit:** 10 provisions per account per hour (`dryRun` calls are free).
 	//
 	// Takes a body of the `application/json` content type.
 	//
 	// Corresponds with POST /hosting/create/{domain} (the `HostingCreate` operationId).
 	HostingCreate(ctx context.Context, domain string, body HostingCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// HostingDeleteWithBody Deprovision hosting
+	// HostingCreateWpCredentialsWithBody Mint WordPress REST API credentials (WordPress only)
+	//
+	// **Applies to:** Cloud for WordPress only.
+	//
+	// Creates a WordPress **Application Password** so an agent or integration can drive the site over the WP REST API at `https://{domain}/wp-json/` using HTTP Basic auth. The password is returned **once** — WordPress stores only a hash.
+	//
+	// Defaults to a dedicated least-privilege `porkbun-agent` user with the `editor` role (created on first use), which can manage content but not install code. `role: "administrator"` grants full site control **including plugin installation (arbitrary code execution on the site)** and therefore requires `acknowledgeFullAccess: true`.
+	//
+	// Revoke any time via `/hosting/deleteWpCredentials/{domain}` or in wp-admin under Users → Profile. Requires the site to be provisioned and ACTIVE (poll `/hosting/get/{domain}`).
+	//
+	// Free **preview** sites (the $0 parked plan) are excluded — they return `PREVIEW_SITE_NOT_SUPPORTED`; upgrade to a paid plan first. Works on any Cloud for WordPress site in the account regardless of whether it was provisioned via the API or the website, including sites migrated onto WP Cloud from the legacy WordPress product. For `role: "administrator"` the site's actual administrator account is looked up rather than assumed, so a renamed admin user is handled.
+	//
+	// **Rate limit:** 20 mints per account per hour (`dryRun` calls are free).
+	//
+	// Takes any type of body and a specified content type.
+	//
+	// Corresponds with POST /hosting/createWpCredentials/{domain} (the `HostingCreateWpCredentials` operationId).
+	HostingCreateWpCredentialsWithBody(ctx context.Context, domain string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// HostingCreateWpCredentials Mint WordPress REST API credentials (WordPress only)
+	//
+	// **Applies to:** Cloud for WordPress only.
+	//
+	// Creates a WordPress **Application Password** so an agent or integration can drive the site over the WP REST API at `https://{domain}/wp-json/` using HTTP Basic auth. The password is returned **once** — WordPress stores only a hash.
+	//
+	// Defaults to a dedicated least-privilege `porkbun-agent` user with the `editor` role (created on first use), which can manage content but not install code. `role: "administrator"` grants full site control **including plugin installation (arbitrary code execution on the site)** and therefore requires `acknowledgeFullAccess: true`.
+	//
+	// Revoke any time via `/hosting/deleteWpCredentials/{domain}` or in wp-admin under Users → Profile. Requires the site to be provisioned and ACTIVE (poll `/hosting/get/{domain}`).
+	//
+	// Free **preview** sites (the $0 parked plan) are excluded — they return `PREVIEW_SITE_NOT_SUPPORTED`; upgrade to a paid plan first. Works on any Cloud for WordPress site in the account regardless of whether it was provisioned via the API or the website, including sites migrated onto WP Cloud from the legacy WordPress product. For `role: "administrator"` the site's actual administrator account is looked up rather than assumed, so a renamed admin user is handled.
+	//
+	// **Rate limit:** 20 mints per account per hour (`dryRun` calls are free).
+	//
+	// Takes a body of the `application/json` content type.
+	//
+	// Corresponds with POST /hosting/createWpCredentials/{domain} (the `HostingCreateWpCredentials` operationId).
+	HostingCreateWpCredentials(ctx context.Context, domain string, body HostingCreateWpCredentialsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// HostingDeleteWithBody Deprovision hosting (either product)
+	//
+	// **Applies to:** Both products.
 	//
 	// Deprovision (cancel) Secure Static Hosting for a domain; teardown is scheduled and completed by Porkbun. Note: the domain has already used its one free trial, so provisioning it again later will be charged (no second free trial).
 	//
@@ -5377,7 +6120,9 @@ type ClientInterface interface {
 	// Corresponds with POST /hosting/delete/{domain} (the `HostingDelete` operationId).
 	HostingDeleteWithBody(ctx context.Context, domain string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// HostingDelete Deprovision hosting
+	// HostingDelete Deprovision hosting (either product)
+	//
+	// **Applies to:** Both products.
 	//
 	// Deprovision (cancel) Secure Static Hosting for a domain; teardown is scheduled and completed by Porkbun. Note: the domain has already used its one free trial, so provisioning it again later will be charged (no second free trial).
 	//
@@ -5386,7 +6131,9 @@ type ClientInterface interface {
 	// Corresponds with POST /hosting/delete/{domain} (the `HostingDelete` operationId).
 	HostingDelete(ctx context.Context, domain string, body HostingDeleteJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// HostingDeleteFileWithBody Delete a hosting file
+	// HostingDeleteFileWithBody Delete a site file (static hosting only)
+	//
+	// **Applies to:** Secure Static Hosting only — a WordPress site returns `NOT_SUPPORTED_FOR_PRODUCT`.
 	//
 	// Delete a file (or empty directory) at `path` in the domain's hosting space.
 	//
@@ -5395,7 +6142,9 @@ type ClientInterface interface {
 	// Corresponds with POST /hosting/deleteFile/{domain} (the `HostingDeleteFile` operationId).
 	HostingDeleteFileWithBody(ctx context.Context, domain string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// HostingDeleteFile Delete a hosting file
+	// HostingDeleteFile Delete a site file (static hosting only)
+	//
+	// **Applies to:** Secure Static Hosting only — a WordPress site returns `NOT_SUPPORTED_FOR_PRODUCT`.
 	//
 	// Delete a file (or empty directory) at `path` in the domain's hosting space.
 	//
@@ -5404,7 +6153,35 @@ type ClientInterface interface {
 	// Corresponds with POST /hosting/deleteFile/{domain} (the `HostingDeleteFile` operationId).
 	HostingDeleteFile(ctx context.Context, domain string, body HostingDeleteFileJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// HostingDeployWithBody Deploy files to hosting
+	// HostingDeleteWpCredentialsWithBody Revoke WordPress application passwords (WordPress only)
+	//
+	// **Applies to:** Cloud for WordPress only.
+	//
+	// Revokes an application password by `uuid` (from `/hosting/getWpCredentials`), or every one for the user with `all: true`. Any integration using it stops authenticating immediately.
+	//
+	// Free preview sites are excluded (`PREVIEW_SITE_NOT_SUPPORTED`).
+	//
+	// Takes any type of body and a specified content type.
+	//
+	// Corresponds with POST /hosting/deleteWpCredentials/{domain} (the `HostingDeleteWpCredentials` operationId).
+	HostingDeleteWpCredentialsWithBody(ctx context.Context, domain string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// HostingDeleteWpCredentials Revoke WordPress application passwords (WordPress only)
+	//
+	// **Applies to:** Cloud for WordPress only.
+	//
+	// Revokes an application password by `uuid` (from `/hosting/getWpCredentials`), or every one for the user with `all: true`. Any integration using it stops authenticating immediately.
+	//
+	// Free preview sites are excluded (`PREVIEW_SITE_NOT_SUPPORTED`).
+	//
+	// Takes a body of the `application/json` content type.
+	//
+	// Corresponds with POST /hosting/deleteWpCredentials/{domain} (the `HostingDeleteWpCredentials` operationId).
+	HostingDeleteWpCredentials(ctx context.Context, domain string, body HostingDeleteWpCredentialsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// HostingDeployWithBody Upload site files (static hosting only)
+	//
+	// **Applies to:** Secure Static Hosting only — a WordPress site returns `NOT_SUPPORTED_FOR_PRODUCT`; manage its content through WordPress instead.
 	//
 	// Upload static files to the domain's Secure Static Hosting space. Send `files` as an array of `{ path, content }` where `content` is base64. Total payload ≤ 10 MB per request (split larger sites across calls). Only static-web file types are accepted (html/css/js/images/fonts/…); server-executable types are rejected. Hosting must be ACTIVE. A file’s `path` may include directories (e.g. `assets/css/style.css`); any missing parent directories are created automatically. Paths are sanitized (no traversal/control chars) and the filename extension must be an allowed static-web type.
 	//
@@ -5413,7 +6190,9 @@ type ClientInterface interface {
 	// Corresponds with POST /hosting/deploy/{domain} (the `HostingDeploy` operationId).
 	HostingDeployWithBody(ctx context.Context, domain string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// HostingDeploy Deploy files to hosting
+	// HostingDeploy Upload site files (static hosting only)
+	//
+	// **Applies to:** Secure Static Hosting only — a WordPress site returns `NOT_SUPPORTED_FOR_PRODUCT`; manage its content through WordPress instead.
 	//
 	// Upload static files to the domain's Secure Static Hosting space. Send `files` as an array of `{ path, content }` where `content` is base64. Total payload ≤ 10 MB per request (split larger sites across calls). Only static-web file types are accepted (html/css/js/images/fonts/…); server-executable types are rejected. Hosting must be ACTIVE. A file’s `path` may include directories (e.g. `assets/css/style.css`); any missing parent directories are created automatically. Paths are sanitized (no traversal/control chars) and the filename extension must be an allowed static-web type.
 	//
@@ -5422,21 +6201,38 @@ type ClientInterface interface {
 	// Corresponds with POST /hosting/deploy/{domain} (the `HostingDeploy` operationId).
 	HostingDeploy(ctx context.Context, domain string, body HostingDeployJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// HostingFiles List hosting files
+	// HostingFiles List site files (static hosting only)
+	//
+	// **Applies to:** Secure Static Hosting only — a WordPress site returns `NOT_SUPPORTED_FOR_PRODUCT`.
 	//
 	// List file/directory names under an optional `path` in the domain's hosting space. Also available via POST (send `path` in the body).
 	//
 	// Corresponds with GET /hosting/files/{domain} (the `HostingFiles` operationId).
 	HostingFiles(ctx context.Context, domain string, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// HostingGet Get hosting status
+	// HostingGet Get hosting status (either product)
+	//
+	// **Applies to:** Both products.
 	//
 	// Return the Secure Static Hosting status for a domain (plan, server, trial, expiry, auto-renew), or `hosting: null` if none. Also available via POST.
 	//
 	// Corresponds with GET /hosting/get/{domain} (the `HostingGet` operationId).
 	HostingGet(ctx context.Context, domain string, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// HostingMakeDirWithBody Create a hosting directory
+	// HostingGetWpCredentials List WordPress application passwords (WordPress only)
+	//
+	// **Applies to:** Cloud for WordPress only.
+	//
+	// Lists the application passwords on the site (uuid, name, created, last used) so you can audit or pick one to revoke. Metadata only — WordPress stores just a hash, so a password can never be re-read. Optional `wpUser` (defaults to the dedicated `porkbun-agent` user).
+	//
+	// Free preview sites are excluded (`PREVIEW_SITE_NOT_SUPPORTED`).
+	//
+	// Corresponds with GET /hosting/getWpCredentials/{domain} (the `HostingGetWpCredentials` operationId).
+	HostingGetWpCredentials(ctx context.Context, domain string, params *HostingGetWpCredentialsParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// HostingMakeDirWithBody Create a directory (static hosting only)
+	//
+	// **Applies to:** Secure Static Hosting only — a WordPress site returns `NOT_SUPPORTED_FOR_PRODUCT`.
 	//
 	// Create a directory (and any missing parent directories) at `path` in the domain’s hosting space. Deploy already auto-creates directories in a file’s path, so use this to stand up an empty directory explicitly. Path is sanitized segment-by-segment (no traversal / control chars).
 	//
@@ -5445,7 +6241,9 @@ type ClientInterface interface {
 	// Corresponds with POST /hosting/makeDir/{domain} (the `HostingMakeDir` operationId).
 	HostingMakeDirWithBody(ctx context.Context, domain string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// HostingMakeDir Create a hosting directory
+	// HostingMakeDir Create a directory (static hosting only)
+	//
+	// **Applies to:** Secure Static Hosting only — a WordPress site returns `NOT_SUPPORTED_FOR_PRODUCT`.
 	//
 	// Create a directory (and any missing parent directories) at `path` in the domain’s hosting space. Deploy already auto-creates directories in a file’s path, so use this to stand up an empty directory explicitly. Path is sanitized segment-by-segment (no traversal / control chars).
 	//
@@ -5454,9 +6252,11 @@ type ClientInterface interface {
 	// Corresponds with POST /hosting/makeDir/{domain} (the `HostingMakeDir` operationId).
 	HostingMakeDir(ctx context.Context, domain string, body HostingMakeDirJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// HostingPlans List provisionable hosting plans
+	// HostingPlans List provisionable hosting plans (static + WordPress)
 	//
-	// List the hosting plans that can be provisioned via the API, with price, interval, trial length, and features. Pass a row's `plan` to `/hosting/create` and its `price` (cents) as `acknowledgedCost`. Currently Secure Static Hosting; more products are added over time. Also available via POST.
+	// **Applies to:** Both products.
+	//
+	// List the hosting plans that can be provisioned via the API, with price, interval, trial length, and features. Pass a row's `plan` to `/hosting/create` and its `price` (cents) as `acknowledgedCost`. Currently Secure Static Hosting; more products are added over time. Also available via POST. Includes both Secure Static Hosting and Cloud for WordPress (managed WordPress) plans; the `product` field distinguishes them.
 	//
 	// Corresponds with GET /hosting/plans (the `HostingPlans` operationId).
 	HostingPlans(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -5688,7 +6488,7 @@ type ClientInterface interface {
 
 	// WebhookCreateWithBody Create a webhook endpoint
 	//
-	// Register an HTTPS endpoint to receive signed event payloads. The response includes the generated `secret` — store it securely; it is the HMAC key used to verify the `X-Porkbun-Signature` header. Omit `events` (or pass `["*"]`) to subscribe to all event types. Maximum 20 endpoints per account.
+	// Register an HTTPS endpoint to receive signed event payloads. The response includes the generated `secret` — store it securely; it is the HMAC key used to verify the `X-Porkbun-Signature` header. Omit `events` (or pass `["*"]`) to subscribe to all event types. Maximum 20 endpoints per account. **URL requirements:** the endpoint must be an `https://` URL on the standard port 443, with a hostname that resolves to a public internet address. Private, loopback, link-local, CGNAT and other reserved ranges are refused (`INVALID_WEBHOOK_URL`) because Porkbun delivers from inside its own network. Credentials in the URL (`https://user:pass@host`) are also refused — authenticate the receiver by verifying the `X-Porkbun-Signature` HMAC instead. A hostname that does not resolve yet is accepted, so you can register the endpoint before the receiver is deployed, but delivery is re-checked against these rules immediately before each request.
 	//
 	// Takes any type of body and a specified content type.
 	//
@@ -5697,7 +6497,7 @@ type ClientInterface interface {
 
 	// WebhookCreate Create a webhook endpoint
 	//
-	// Register an HTTPS endpoint to receive signed event payloads. The response includes the generated `secret` — store it securely; it is the HMAC key used to verify the `X-Porkbun-Signature` header. Omit `events` (or pass `["*"]`) to subscribe to all event types. Maximum 20 endpoints per account.
+	// Register an HTTPS endpoint to receive signed event payloads. The response includes the generated `secret` — store it securely; it is the HMAC key used to verify the `X-Porkbun-Signature` header. Omit `events` (or pass `["*"]`) to subscribe to all event types. Maximum 20 endpoints per account. **URL requirements:** the endpoint must be an `https://` URL on the standard port 443, with a hostname that resolves to a public internet address. Private, loopback, link-local, CGNAT and other reserved ranges are refused (`INVALID_WEBHOOK_URL`) because Porkbun delivers from inside its own network. Credentials in the URL (`https://user:pass@host`) are also refused — authenticate the receiver by verifying the `X-Porkbun-Signature` HMAC instead. A hostname that does not resolve yet is accepted, so you can register the endpoint before the receiver is deployed, but delivery is re-checked against these rules immediately before each request.
 	//
 	// Takes a body of the `application/json` content type.
 	//
@@ -5813,7 +6613,7 @@ type ClientInterface interface {
 
 	// WebhookUpdateWithBody Update a webhook endpoint
 	//
-	// Update an endpoint's URL, event subscriptions, and/or status. Only the supplied fields change. Set `status` to `DISABLED` to pause deliveries or `ACTIVE` to resume (resuming also resets the consecutive-failure counter).
+	// Update an endpoint's URL, event subscriptions, and/or status. Only the supplied fields change. Set `status` to `DISABLED` to pause deliveries or `ACTIVE` to resume (resuming also resets the consecutive-failure counter). **URL requirements:** the endpoint must be an `https://` URL on the standard port 443, with a hostname that resolves to a public internet address. Private, loopback, link-local, CGNAT and other reserved ranges are refused (`INVALID_WEBHOOK_URL`) because Porkbun delivers from inside its own network. Credentials in the URL (`https://user:pass@host`) are also refused — authenticate the receiver by verifying the `X-Porkbun-Signature` HMAC instead. A hostname that does not resolve yet is accepted, so you can register the endpoint before the receiver is deployed, but delivery is re-checked against these rules immediately before each request.
 	//
 	// Takes any type of body and a specified content type.
 	//
@@ -5822,7 +6622,7 @@ type ClientInterface interface {
 
 	// WebhookUpdate Update a webhook endpoint
 	//
-	// Update an endpoint's URL, event subscriptions, and/or status. Only the supplied fields change. Set `status` to `DISABLED` to pause deliveries or `ACTIVE` to resume (resuming also resets the consecutive-failure counter).
+	// Update an endpoint's URL, event subscriptions, and/or status. Only the supplied fields change. Set `status` to `DISABLED` to pause deliveries or `ACTIVE` to resume (resuming also resets the consecutive-failure counter). **URL requirements:** the endpoint must be an `https://` URL on the standard port 443, with a hostname that resolves to a public internet address. Private, loopback, link-local, CGNAT and other reserved ranges are refused (`INVALID_WEBHOOK_URL`) because Porkbun delivers from inside its own network. Credentials in the URL (`https://user:pass@host`) are also refused — authenticate the receiver by verifying the `X-Porkbun-Signature` HMAC instead. A hostname that does not resolve yet is accepted, so you can register the endpoint before the receiver is deployed, but delivery is re-checked against these rules immediately before each request.
 	//
 	// Takes a body of the `application/json` content type.
 	//
@@ -6015,6 +6815,529 @@ func (c *Client) ApikeyRetrieveWithBody(ctx context.Context, contentType string,
 // Corresponds with POST /apikey/retrieve (the `ApikeyRetrieve` operationId).
 func (c *Client) ApikeyRetrieve(ctx context.Context, body ApikeyRetrieveJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewApikeyRetrieveRequest(c.Server, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// CloudflareConnectWithBody Queue domains to move to the customer's Cloudflare account
+//
+// Queue one or many domains. For each one we create the zone in the customer's own Cloudflare account, copy across the DNS records we hold, and repoint the registry nameservers at Cloudflare.
+//
+// **Asynchronous.** Work runs on a background job over the next few minutes, so a successful call means *queued*, never *connected* — poll `/cloudflare/getQueue` or `/cloudflare/get/{domain}`.
+//
+// **`skipped` is a normal outcome, not an error.** DNSSEC live, custom nameservers, already connected, already in progress: each domain comes back under `queued`, `skipped` or `alreadyQueued` with its own reason. Read the reasons rather than treating a non-empty `skipped` as failure.
+//
+// Eligibility, ownership and nameserver state are re-checked immediately before each domain is acted on, so a domain accepted here can still be skipped later.
+//
+// Re-submitting a domain is safe: the queue row is the unit of truth and is updated in place.
+//
+// Supports `dryRun: true`, which returns the same per-domain verdicts without queueing anything.
+//
+// Requires an active Cloudflare connection (`CLOUDFLARE_NOT_CONNECTED` otherwise). Limits: 500 domains per call, 2000 domains per account per hour.
+//
+// After queueing, poll `/cloudflare/get/{domain}`: the row moves `queued` → `working` → `activating` → `connected`. `activating` means the nameservers are already repointed and Cloudflare is confirming the zone, which can take a while as DNS propagates.
+//
+// Takes any type of body and a specified content type.
+//
+// Corresponds with POST /cloudflare/connect (the `CloudflareConnect` operationId).
+func (c *Client) CloudflareConnectWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCloudflareConnectRequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// CloudflareConnect Queue domains to move to the customer's Cloudflare account
+//
+// Queue one or many domains. For each one we create the zone in the customer's own Cloudflare account, copy across the DNS records we hold, and repoint the registry nameservers at Cloudflare.
+//
+// **Asynchronous.** Work runs on a background job over the next few minutes, so a successful call means *queued*, never *connected* — poll `/cloudflare/getQueue` or `/cloudflare/get/{domain}`.
+//
+// **`skipped` is a normal outcome, not an error.** DNSSEC live, custom nameservers, already connected, already in progress: each domain comes back under `queued`, `skipped` or `alreadyQueued` with its own reason. Read the reasons rather than treating a non-empty `skipped` as failure.
+//
+// Eligibility, ownership and nameserver state are re-checked immediately before each domain is acted on, so a domain accepted here can still be skipped later.
+//
+// Re-submitting a domain is safe: the queue row is the unit of truth and is updated in place.
+//
+// Supports `dryRun: true`, which returns the same per-domain verdicts without queueing anything.
+//
+// Requires an active Cloudflare connection (`CLOUDFLARE_NOT_CONNECTED` otherwise). Limits: 500 domains per call, 2000 domains per account per hour.
+//
+// After queueing, poll `/cloudflare/get/{domain}`: the row moves `queued` → `working` → `activating` → `connected`. `activating` means the nameservers are already repointed and Cloudflare is confirming the zone, which can take a while as DNS propagates.
+//
+// Takes a body of the `application/json` content type.
+//
+// Corresponds with POST /cloudflare/connect (the `CloudflareConnect` operationId).
+func (c *Client) CloudflareConnect(ctx context.Context, body CloudflareConnectJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCloudflareConnectRequest(c.Server, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// CloudflareCreateRecordWithBody Create a DNS record in the domain's Cloudflare zone
+//
+// **This writes to the Cloudflare zone that actually answers for the domain**, unlike `/dns/*`, which manages Porkbun's nameservers and no longer affects resolution once a domain has moved.
+//
+// `name` accepts `@` for the apex or a bare label. MX requires `priority`. `proxied` applies to A/AAAA/CNAME only. Supports `dryRun`.
+//
+// Takes any type of body and a specified content type.
+//
+// Corresponds with POST /cloudflare/createRecord/{domain} (the `CloudflareCreateRecord` operationId).
+func (c *Client) CloudflareCreateRecordWithBody(ctx context.Context, domain string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCloudflareCreateRecordRequestWithBody(c.Server, domain, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// CloudflareCreateRecord Create a DNS record in the domain's Cloudflare zone
+//
+// **This writes to the Cloudflare zone that actually answers for the domain**, unlike `/dns/*`, which manages Porkbun's nameservers and no longer affects resolution once a domain has moved.
+//
+// `name` accepts `@` for the apex or a bare label. MX requires `priority`. `proxied` applies to A/AAAA/CNAME only. Supports `dryRun`.
+//
+// Takes a body of the `application/json` content type.
+//
+// Corresponds with POST /cloudflare/createRecord/{domain} (the `CloudflareCreateRecord` operationId).
+func (c *Client) CloudflareCreateRecord(ctx context.Context, domain string, body CloudflareCreateRecordJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCloudflareCreateRecordRequest(c.Server, domain, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// CloudflareDeleteRecordWithBody Delete a DNS record from the domain's Cloudflare zone
+//
+// **This writes to the Cloudflare zone that actually answers for the domain**, unlike `/dns/*`, which manages Porkbun's nameservers and no longer affects resolution once a domain has moved.
+//
+// The record is read before deletion, so the response reports exactly what was removed and a bad id fails before anything is destroyed. Supports `dryRun`.
+//
+// Takes any type of body and a specified content type.
+//
+// Corresponds with POST /cloudflare/deleteRecord/{domain}/{recordId} (the `CloudflareDeleteRecord` operationId).
+func (c *Client) CloudflareDeleteRecordWithBody(ctx context.Context, domain string, recordId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCloudflareDeleteRecordRequestWithBody(c.Server, domain, recordId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// CloudflareDeleteRecord Delete a DNS record from the domain's Cloudflare zone
+//
+// **This writes to the Cloudflare zone that actually answers for the domain**, unlike `/dns/*`, which manages Porkbun's nameservers and no longer affects resolution once a domain has moved.
+//
+// The record is read before deletion, so the response reports exactly what was removed and a bad id fails before anything is destroyed. Supports `dryRun`.
+//
+// Takes a body of the `application/json` content type.
+//
+// Corresponds with POST /cloudflare/deleteRecord/{domain}/{recordId} (the `CloudflareDeleteRecord` operationId).
+func (c *Client) CloudflareDeleteRecord(ctx context.Context, domain string, recordId string, body CloudflareDeleteRecordJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCloudflareDeleteRecordRequest(c.Server, domain, recordId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// CloudflareDisconnect Remove the stored Cloudflare connection
+//
+// Revoke and forget this account's Cloudflare grant. Domains already moved stay on Cloudflare and keep resolving; this only stops us making further changes on the customer's behalf. Reconnecting requires the browser authorization again. Supports `dryRun`.
+//
+// Corresponds with POST /cloudflare/disconnect (the `CloudflareDisconnect` operationId).
+func (c *Client) CloudflareDisconnect(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCloudflareDisconnectRequest(c.Server)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// CloudflareEditRecordWithBody Update a DNS record in the domain's Cloudflare zone
+//
+// **This writes to the Cloudflare zone that actually answers for the domain**, unlike `/dns/*`, which manages Porkbun's nameservers and no longer affects resolution once a domain has moved.
+//
+// Partial update: fields you omit keep their current value. The response carries both the new record and the `previous` one. Supports `dryRun`.
+//
+// Takes any type of body and a specified content type.
+//
+// Corresponds with POST /cloudflare/editRecord/{domain}/{recordId} (the `CloudflareEditRecord` operationId).
+func (c *Client) CloudflareEditRecordWithBody(ctx context.Context, domain string, recordId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCloudflareEditRecordRequestWithBody(c.Server, domain, recordId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// CloudflareEditRecord Update a DNS record in the domain's Cloudflare zone
+//
+// **This writes to the Cloudflare zone that actually answers for the domain**, unlike `/dns/*`, which manages Porkbun's nameservers and no longer affects resolution once a domain has moved.
+//
+// Partial update: fields you omit keep their current value. The response carries both the new record and the `previous` one. Supports `dryRun`.
+//
+// Takes a body of the `application/json` content type.
+//
+// Corresponds with POST /cloudflare/editRecord/{domain}/{recordId} (the `CloudflareEditRecord` operationId).
+func (c *Client) CloudflareEditRecord(ctx context.Context, domain string, recordId string, body CloudflareEditRecordJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCloudflareEditRecordRequest(c.Server, domain, recordId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// CloudflareGet Get the Cloudflare move status for one domain
+//
+// Status of a single domain's move, including the zone id once created and the nameservers we replaced (kept so the move can be undone). `NOT_QUEUED` if the domain has never been queued. Also available via POST.
+//
+// **Status values** (poll until one of the terminal ones):
+//
+// | status | meaning | terminal |
+// |--------|---------|----------|
+// | `queued` | accepted, waiting for the worker | no |
+// | `working` | a run is touching this row right now | no |
+// | `activating` | nameservers repointed; waiting for Cloudflare to mark the zone active. Legitimately slow (registry + resolver propagation) — allow up to 24h | no |
+// | `connected` / `done` | the move finished | **yes** |
+// | `skipped` | not moved, and `message` says why (DNSSEC live, custom nameservers, no longer in the account) | **yes** |
+// | `failed` / `error` | the move did not complete; `message` says why. Re-queue with `/cloudflare/retry/{domain}` | **yes** |
+//
+// Poll on a sensible interval (a few seconds early on, then back off) — a zone typically leaves `queued` within seconds but can sit in `activating` while DNS propagates.
+//
+// Corresponds with GET /cloudflare/get/{domain} (the `CloudflareGet` operationId).
+func (c *Client) CloudflareGet(ctx context.Context, domain string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCloudflareGetRequest(c.Server, domain)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// CloudflareGetConnection Check the Cloudflare account connection (poll target)
+//
+// Whether this account has an active Cloudflare grant, and which Cloudflare account it points at.
+//
+// **This is the poll target for the connect flow.** Minting the grant is a human action: Cloudflare's consent screen has to be completed in a browser, and the authorization is bound to the Porkbun web session that started it, so it cannot be driven over the API. When `connected` is `false` the response carries a `connectUrl` — send the account owner there, then poll this endpoint until `connected` is `true`.
+//
+// Also available via POST.
+//
+// Corresponds with GET /cloudflare/getConnection (the `CloudflareGetConnection` operationId).
+func (c *Client) CloudflareGetConnection(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCloudflareGetConnectionRequest(c.Server)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// CloudflareGetQueue List every Cloudflare move for the account
+//
+// Every Cloudflare move this account has requested, with status and message. Queue rows are never deleted, so this doubles as the audit trail. Also available via POST.
+//
+// **Status values** (poll until one of the terminal ones):
+//
+// | status | meaning | terminal |
+// |--------|---------|----------|
+// | `queued` | accepted, waiting for the worker | no |
+// | `working` | a run is touching this row right now | no |
+// | `activating` | nameservers repointed; waiting for Cloudflare to mark the zone active. Legitimately slow (registry + resolver propagation) — allow up to 24h | no |
+// | `connected` / `done` | the move finished | **yes** |
+// | `skipped` | not moved, and `message` says why (DNSSEC live, custom nameservers, no longer in the account) | **yes** |
+// | `failed` / `error` | the move did not complete; `message` says why. Re-queue with `/cloudflare/retry/{domain}` | **yes** |
+//
+// Poll on a sensible interval (a few seconds early on, then back off) — a zone typically leaves `queued` within seconds but can sit in `activating` while DNS propagates.
+//
+// Corresponds with GET /cloudflare/getQueue (the `CloudflareGetQueue` operationId).
+func (c *Client) CloudflareGetQueue(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCloudflareGetQueueRequest(c.Server)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// CloudflareGetRecords List the domain's live DNS records at Cloudflare
+//
+// The domain's DNS records **as Cloudflare currently holds them**, each with its `proxied` flag and whether it is `proxiable` at all.
+//
+// Once a domain has moved, this is the authoritative record set — `/dns/retrieve` reads the Porkbun zone, which is no longer the one answering queries. Requires the move to have finished (`ZONE_NOT_READY` otherwise). Also available via POST.
+//
+// Corresponds with GET /cloudflare/getRecords/{domain} (the `CloudflareGetRecords` operationId).
+func (c *Client) CloudflareGetRecords(ctx context.Context, domain string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCloudflareGetRecordsRequest(c.Server, domain)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// CloudflareGetZone Get live zone state from Cloudflare (and detect nameserver drift)
+//
+// What **Cloudflare** says about the zone right now — status, paused, its nameservers, activation date — as opposed to what our queue row remembers.
+//
+// These drift: if the nameservers are repointed elsewhere after the move, our row still reads `done` while Cloudflare has stopped answering for the domain. The response includes the live public nameservers and a `nameserversDrifted` boolean so you don't have to diff them. Also available via POST.
+//
+// Corresponds with GET /cloudflare/getZone/{domain} (the `CloudflareGetZone` operationId).
+func (c *Client) CloudflareGetZone(ctx context.Context, domain string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCloudflareGetZoneRequest(c.Server, domain)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// CloudflareGetZoneSettings Read the zone settings that matter after a move
+//
+// The Cloudflare zone settings worth caring about post-migration: `ssl`, `always_use_https`, `automatic_https_rewrites`, `min_tls_version`, `development_mode`, `cache_level`.
+//
+// The important one is **`ssl`**: `flexible` means Cloudflare fetches your origin over plain HTTP while visitors see a padlock, so the response warns when it is `off` or `flexible`. Also available via POST.
+//
+// If the account's Cloudflare authorization predates this feature it will not carry the `zone-settings.write` scope, and this returns `CLOUDFLARE_REAUTHORIZE_REQUIRED` with a `connectUrl`. Reconnecting is the same one-click browser flow and does not disturb domains already moved.
+//
+// Corresponds with GET /cloudflare/getZoneSettings/{domain} (the `CloudflareGetZoneSettings` operationId).
+func (c *Client) CloudflareGetZoneSettings(ctx context.Context, domain string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCloudflareGetZoneSettingsRequest(c.Server, domain)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// CloudflareInventory List every domain with its Cloudflare eligibility
+//
+// Every domain in the account with a `state` (`eligible`, `warn`, `blocked`, `connected`, `inprogress`) and a human-readable `reason`.
+//
+// Read this **before** queueing to see what will be skipped and why. Works even with no Cloudflare connection yet, so an agent can plan while the owner is still authorizing. Also available via POST.
+//
+// Corresponds with GET /cloudflare/inventory (the `CloudflareInventory` operationId).
+func (c *Client) CloudflareInventory(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCloudflareInventoryRequest(c.Server)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// CloudflarePreview Preview exactly which records a move would copy
+//
+// Which DNS records we would create in Cloudflare for this domain, and which we would drop, **without queueing anything**. The honest answer to "what will this do to my DNS" before committing.
+//
+// Records are always created DNS-only (grey cloud); use `/cloudflare/setProxy` afterwards to turn the proxy on. Also available via POST.
+//
+// Corresponds with GET /cloudflare/preview/{domain} (the `CloudflarePreview` operationId).
+func (c *Client) CloudflarePreview(ctx context.Context, domain string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCloudflarePreviewRequest(c.Server, domain)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// CloudflareRetry Retry a failed or skipped domain
+//
+// Put a domain that failed or was skipped back in the queue. Fails with `RETRY_FAILED` if it is already connected, already in progress, or no longer in the account. Supports `dryRun`.
+//
+// Corresponds with POST /cloudflare/retry/{domain} (the `CloudflareRetry` operationId).
+func (c *Client) CloudflareRetry(ctx context.Context, domain string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCloudflareRetryRequest(c.Server, domain)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// CloudflareRollback Undo a completed move (restore Porkbun nameservers)
+//
+// Point the domain's nameservers back at Porkbun, restoring the DNS we still hold.
+//
+// The Cloudflare zone is deliberately left in place — deleting a zone in someone's own Cloudflare account is theirs to do. Fails with `ROLLBACK_FAILED` if we never moved the domain, it is already back on Porkbun nameservers, or it is being worked on right now. Supports `dryRun`.
+//
+// Corresponds with POST /cloudflare/rollback/{domain} (the `CloudflareRollback` operationId).
+func (c *Client) CloudflareRollback(ctx context.Context, domain string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCloudflareRollbackRequest(c.Server, domain)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// CloudflareSetProxyWithBody Turn the Cloudflare proxy (orange cloud) on or off
+//
+// Set `proxied` on the domain's Cloudflare DNS records.
+//
+// **The move itself always imports records DNS-only (grey cloud), on purpose** — changing how traffic is served at the same time as changing who serves DNS gives you two variables to debug at once. Proxying is therefore a separate, explicit step, best done after you've confirmed the site still works.
+//
+// Defaults to every proxiable record; pass `records` to target specific names (`"@"` means the apex, a bare label like `"www"` is expanded). Only A, AAAA and CNAME can be proxied — anything else is reported under `skipped` with a reason rather than failing the call. Records already in the requested state are skipped too.
+//
+// Proxying hides the origin IP, so if the zone's MX points at a hostname you are proxying, mail to it breaks; that case comes back in `warnings`. Supports `dryRun`.
+//
+// Rate limit: 60 changes per account per hour (these calls go to Cloudflare under Porkbun's OAuth client).
+//
+// Takes any type of body and a specified content type.
+//
+// Corresponds with POST /cloudflare/setProxy/{domain} (the `CloudflareSetProxy` operationId).
+func (c *Client) CloudflareSetProxyWithBody(ctx context.Context, domain string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCloudflareSetProxyRequestWithBody(c.Server, domain, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// CloudflareSetProxy Turn the Cloudflare proxy (orange cloud) on or off
+//
+// Set `proxied` on the domain's Cloudflare DNS records.
+//
+// **The move itself always imports records DNS-only (grey cloud), on purpose** — changing how traffic is served at the same time as changing who serves DNS gives you two variables to debug at once. Proxying is therefore a separate, explicit step, best done after you've confirmed the site still works.
+//
+// Defaults to every proxiable record; pass `records` to target specific names (`"@"` means the apex, a bare label like `"www"` is expanded). Only A, AAAA and CNAME can be proxied — anything else is reported under `skipped` with a reason rather than failing the call. Records already in the requested state are skipped too.
+//
+// Proxying hides the origin IP, so if the zone's MX points at a hostname you are proxying, mail to it breaks; that case comes back in `warnings`. Supports `dryRun`.
+//
+// Rate limit: 60 changes per account per hour (these calls go to Cloudflare under Porkbun's OAuth client).
+//
+// Takes a body of the `application/json` content type.
+//
+// Corresponds with POST /cloudflare/setProxy/{domain} (the `CloudflareSetProxy` operationId).
+func (c *Client) CloudflareSetProxy(ctx context.Context, domain string, body CloudflareSetProxyJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCloudflareSetProxyRequest(c.Server, domain, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// CloudflareSetZoneSettingsWithBody Change zone settings (allowlisted)
+//
+// Set one or more of the allowlisted zone settings. This is an allowlist rather than a passthrough — Cloudflare exposes hundreds of settings and WAF/firewall/security controls are deliberately out of scope for this API.
+//
+// Prefer `ssl: "full"`; `flexible` is an invisible downgrade for visitors. Supports `dryRun`. Rate limit: shares the 60/hour Cloudflare-write budget.
+//
+// If the account's Cloudflare authorization predates this feature it will not carry the `zone-settings.write` scope, and this returns `CLOUDFLARE_REAUTHORIZE_REQUIRED` with a `connectUrl`. Reconnecting is the same one-click browser flow and does not disturb domains already moved.
+//
+// Takes any type of body and a specified content type.
+//
+// Corresponds with POST /cloudflare/setZoneSettings/{domain} (the `CloudflareSetZoneSettings` operationId).
+func (c *Client) CloudflareSetZoneSettingsWithBody(ctx context.Context, domain string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCloudflareSetZoneSettingsRequestWithBody(c.Server, domain, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// CloudflareSetZoneSettings Change zone settings (allowlisted)
+//
+// Set one or more of the allowlisted zone settings. This is an allowlist rather than a passthrough — Cloudflare exposes hundreds of settings and WAF/firewall/security controls are deliberately out of scope for this API.
+//
+// Prefer `ssl: "full"`; `flexible` is an invisible downgrade for visitors. Supports `dryRun`. Rate limit: shares the 60/hour Cloudflare-write budget.
+//
+// If the account's Cloudflare authorization predates this feature it will not carry the `zone-settings.write` scope, and this returns `CLOUDFLARE_REAUTHORIZE_REQUIRED` with a `connectUrl`. Reconnecting is the same one-click browser flow and does not disturb domains already moved.
+//
+// Takes a body of the `application/json` content type.
+//
+// Corresponds with POST /cloudflare/setZoneSettings/{domain} (the `CloudflareSetZoneSettings` operationId).
+func (c *Client) CloudflareSetZoneSettings(ctx context.Context, domain string, body CloudflareSetZoneSettingsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCloudflareSetZoneSettingsRequest(c.Server, domain, body)
 	if err != nil {
 		return nil, err
 	}
@@ -7593,9 +8916,15 @@ func (c *Client) EmailSetPassword(ctx context.Context, body EmailSetPasswordJSON
 	return c.Client.Do(req)
 }
 
-// HostingCreateWithBody Provision Secure Static Hosting
+// HostingCreateWithBody Provision hosting — a static site or a WordPress site
 //
-// Provision Secure Static Hosting for a domain in the account. The FIRST provision for a domain starts a **15-day free trial** ($0 now) that **auto-renews** at the plan price when the trial ends; a re-provision after deprovision is charged immediately to account credit (one free trial per domain). Provisioning **switches the domain to Porkbun nameservers** if it isn't already — pass `agreeToNameserverChange: true` to allow that. Supports `dryRun`. Remote setup can be async: `status` may be `PENDING` — poll `/hosting/get` until `ACTIVE` before deploying.
+// **Applies to:** Both products — the `sku` decides which.
+//
+// Provision hosting (Secure Static Hosting or Cloud for WordPress) for a domain in the account. The FIRST provision for a domain starts a **15-day free trial** ($0 now) that **auto-renews** at the plan price when the trial ends; a re-provision after deprovision is charged immediately to account credit (one free trial per domain). Provisioning **switches the domain to Porkbun nameservers** if it isn't already — pass `agreeToNameserverChange: true` to allow that. Supports `dryRun`. Remote setup can be async: `status` may be `PENDING` — poll `/hosting/get` until `ACTIVE` before deploying.
+//
+// **Cloud for WordPress:** pass a `CLOUDWORDPRESS…` sku to provision a managed WordPress site instead of static hosting. The file endpoints (deploy/files/deleteFile/makeDir) do not apply — manage the site through WordPress, using `/hosting/createWpCredentials/{domain}` for REST API credentials.
+//
+// **Rate limit:** 10 provisions per account per hour (`dryRun` calls are free).
 //
 // Takes any type of body and a specified content type.
 //
@@ -7612,9 +8941,15 @@ func (c *Client) HostingCreateWithBody(ctx context.Context, domain string, conte
 	return c.Client.Do(req)
 }
 
-// HostingCreate Provision Secure Static Hosting
+// HostingCreate Provision hosting — a static site or a WordPress site
 //
-// Provision Secure Static Hosting for a domain in the account. The FIRST provision for a domain starts a **15-day free trial** ($0 now) that **auto-renews** at the plan price when the trial ends; a re-provision after deprovision is charged immediately to account credit (one free trial per domain). Provisioning **switches the domain to Porkbun nameservers** if it isn't already — pass `agreeToNameserverChange: true` to allow that. Supports `dryRun`. Remote setup can be async: `status` may be `PENDING` — poll `/hosting/get` until `ACTIVE` before deploying.
+// **Applies to:** Both products — the `sku` decides which.
+//
+// Provision hosting (Secure Static Hosting or Cloud for WordPress) for a domain in the account. The FIRST provision for a domain starts a **15-day free trial** ($0 now) that **auto-renews** at the plan price when the trial ends; a re-provision after deprovision is charged immediately to account credit (one free trial per domain). Provisioning **switches the domain to Porkbun nameservers** if it isn't already — pass `agreeToNameserverChange: true` to allow that. Supports `dryRun`. Remote setup can be async: `status` may be `PENDING` — poll `/hosting/get` until `ACTIVE` before deploying.
+//
+// **Cloud for WordPress:** pass a `CLOUDWORDPRESS…` sku to provision a managed WordPress site instead of static hosting. The file endpoints (deploy/files/deleteFile/makeDir) do not apply — manage the site through WordPress, using `/hosting/createWpCredentials/{domain}` for REST API credentials.
+//
+// **Rate limit:** 10 provisions per account per hour (`dryRun` calls are free).
 //
 // Takes a body of the `application/json` content type.
 //
@@ -7631,7 +8966,67 @@ func (c *Client) HostingCreate(ctx context.Context, domain string, body HostingC
 	return c.Client.Do(req)
 }
 
-// HostingDeleteWithBody Deprovision hosting
+// HostingCreateWpCredentialsWithBody Mint WordPress REST API credentials (WordPress only)
+//
+// **Applies to:** Cloud for WordPress only.
+//
+// Creates a WordPress **Application Password** so an agent or integration can drive the site over the WP REST API at `https://{domain}/wp-json/` using HTTP Basic auth. The password is returned **once** — WordPress stores only a hash.
+//
+// Defaults to a dedicated least-privilege `porkbun-agent` user with the `editor` role (created on first use), which can manage content but not install code. `role: "administrator"` grants full site control **including plugin installation (arbitrary code execution on the site)** and therefore requires `acknowledgeFullAccess: true`.
+//
+// Revoke any time via `/hosting/deleteWpCredentials/{domain}` or in wp-admin under Users → Profile. Requires the site to be provisioned and ACTIVE (poll `/hosting/get/{domain}`).
+//
+// Free **preview** sites (the $0 parked plan) are excluded — they return `PREVIEW_SITE_NOT_SUPPORTED`; upgrade to a paid plan first. Works on any Cloud for WordPress site in the account regardless of whether it was provisioned via the API or the website, including sites migrated onto WP Cloud from the legacy WordPress product. For `role: "administrator"` the site's actual administrator account is looked up rather than assumed, so a renamed admin user is handled.
+//
+// **Rate limit:** 20 mints per account per hour (`dryRun` calls are free).
+//
+// Takes any type of body and a specified content type.
+//
+// Corresponds with POST /hosting/createWpCredentials/{domain} (the `HostingCreateWpCredentials` operationId).
+func (c *Client) HostingCreateWpCredentialsWithBody(ctx context.Context, domain string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewHostingCreateWpCredentialsRequestWithBody(c.Server, domain, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// HostingCreateWpCredentials Mint WordPress REST API credentials (WordPress only)
+//
+// **Applies to:** Cloud for WordPress only.
+//
+// Creates a WordPress **Application Password** so an agent or integration can drive the site over the WP REST API at `https://{domain}/wp-json/` using HTTP Basic auth. The password is returned **once** — WordPress stores only a hash.
+//
+// Defaults to a dedicated least-privilege `porkbun-agent` user with the `editor` role (created on first use), which can manage content but not install code. `role: "administrator"` grants full site control **including plugin installation (arbitrary code execution on the site)** and therefore requires `acknowledgeFullAccess: true`.
+//
+// Revoke any time via `/hosting/deleteWpCredentials/{domain}` or in wp-admin under Users → Profile. Requires the site to be provisioned and ACTIVE (poll `/hosting/get/{domain}`).
+//
+// Free **preview** sites (the $0 parked plan) are excluded — they return `PREVIEW_SITE_NOT_SUPPORTED`; upgrade to a paid plan first. Works on any Cloud for WordPress site in the account regardless of whether it was provisioned via the API or the website, including sites migrated onto WP Cloud from the legacy WordPress product. For `role: "administrator"` the site's actual administrator account is looked up rather than assumed, so a renamed admin user is handled.
+//
+// **Rate limit:** 20 mints per account per hour (`dryRun` calls are free).
+//
+// Takes a body of the `application/json` content type.
+//
+// Corresponds with POST /hosting/createWpCredentials/{domain} (the `HostingCreateWpCredentials` operationId).
+func (c *Client) HostingCreateWpCredentials(ctx context.Context, domain string, body HostingCreateWpCredentialsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewHostingCreateWpCredentialsRequest(c.Server, domain, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// HostingDeleteWithBody Deprovision hosting (either product)
+//
+// **Applies to:** Both products.
 //
 // Deprovision (cancel) Secure Static Hosting for a domain; teardown is scheduled and completed by Porkbun. Note: the domain has already used its one free trial, so provisioning it again later will be charged (no second free trial).
 //
@@ -7650,7 +9045,9 @@ func (c *Client) HostingDeleteWithBody(ctx context.Context, domain string, conte
 	return c.Client.Do(req)
 }
 
-// HostingDelete Deprovision hosting
+// HostingDelete Deprovision hosting (either product)
+//
+// **Applies to:** Both products.
 //
 // Deprovision (cancel) Secure Static Hosting for a domain; teardown is scheduled and completed by Porkbun. Note: the domain has already used its one free trial, so provisioning it again later will be charged (no second free trial).
 //
@@ -7669,7 +9066,9 @@ func (c *Client) HostingDelete(ctx context.Context, domain string, body HostingD
 	return c.Client.Do(req)
 }
 
-// HostingDeleteFileWithBody Delete a hosting file
+// HostingDeleteFileWithBody Delete a site file (static hosting only)
+//
+// **Applies to:** Secure Static Hosting only — a WordPress site returns `NOT_SUPPORTED_FOR_PRODUCT`.
 //
 // Delete a file (or empty directory) at `path` in the domain's hosting space.
 //
@@ -7688,7 +9087,9 @@ func (c *Client) HostingDeleteFileWithBody(ctx context.Context, domain string, c
 	return c.Client.Do(req)
 }
 
-// HostingDeleteFile Delete a hosting file
+// HostingDeleteFile Delete a site file (static hosting only)
+//
+// **Applies to:** Secure Static Hosting only — a WordPress site returns `NOT_SUPPORTED_FOR_PRODUCT`.
 //
 // Delete a file (or empty directory) at `path` in the domain's hosting space.
 //
@@ -7707,7 +9108,55 @@ func (c *Client) HostingDeleteFile(ctx context.Context, domain string, body Host
 	return c.Client.Do(req)
 }
 
-// HostingDeployWithBody Deploy files to hosting
+// HostingDeleteWpCredentialsWithBody Revoke WordPress application passwords (WordPress only)
+//
+// **Applies to:** Cloud for WordPress only.
+//
+// Revokes an application password by `uuid` (from `/hosting/getWpCredentials`), or every one for the user with `all: true`. Any integration using it stops authenticating immediately.
+//
+// Free preview sites are excluded (`PREVIEW_SITE_NOT_SUPPORTED`).
+//
+// Takes any type of body and a specified content type.
+//
+// Corresponds with POST /hosting/deleteWpCredentials/{domain} (the `HostingDeleteWpCredentials` operationId).
+func (c *Client) HostingDeleteWpCredentialsWithBody(ctx context.Context, domain string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewHostingDeleteWpCredentialsRequestWithBody(c.Server, domain, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// HostingDeleteWpCredentials Revoke WordPress application passwords (WordPress only)
+//
+// **Applies to:** Cloud for WordPress only.
+//
+// Revokes an application password by `uuid` (from `/hosting/getWpCredentials`), or every one for the user with `all: true`. Any integration using it stops authenticating immediately.
+//
+// Free preview sites are excluded (`PREVIEW_SITE_NOT_SUPPORTED`).
+//
+// Takes a body of the `application/json` content type.
+//
+// Corresponds with POST /hosting/deleteWpCredentials/{domain} (the `HostingDeleteWpCredentials` operationId).
+func (c *Client) HostingDeleteWpCredentials(ctx context.Context, domain string, body HostingDeleteWpCredentialsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewHostingDeleteWpCredentialsRequest(c.Server, domain, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// HostingDeployWithBody Upload site files (static hosting only)
+//
+// **Applies to:** Secure Static Hosting only — a WordPress site returns `NOT_SUPPORTED_FOR_PRODUCT`; manage its content through WordPress instead.
 //
 // Upload static files to the domain's Secure Static Hosting space. Send `files` as an array of `{ path, content }` where `content` is base64. Total payload ≤ 10 MB per request (split larger sites across calls). Only static-web file types are accepted (html/css/js/images/fonts/…); server-executable types are rejected. Hosting must be ACTIVE. A file’s `path` may include directories (e.g. `assets/css/style.css`); any missing parent directories are created automatically. Paths are sanitized (no traversal/control chars) and the filename extension must be an allowed static-web type.
 //
@@ -7726,7 +9175,9 @@ func (c *Client) HostingDeployWithBody(ctx context.Context, domain string, conte
 	return c.Client.Do(req)
 }
 
-// HostingDeploy Deploy files to hosting
+// HostingDeploy Upload site files (static hosting only)
+//
+// **Applies to:** Secure Static Hosting only — a WordPress site returns `NOT_SUPPORTED_FOR_PRODUCT`; manage its content through WordPress instead.
 //
 // Upload static files to the domain's Secure Static Hosting space. Send `files` as an array of `{ path, content }` where `content` is base64. Total payload ≤ 10 MB per request (split larger sites across calls). Only static-web file types are accepted (html/css/js/images/fonts/…); server-executable types are rejected. Hosting must be ACTIVE. A file’s `path` may include directories (e.g. `assets/css/style.css`); any missing parent directories are created automatically. Paths are sanitized (no traversal/control chars) and the filename extension must be an allowed static-web type.
 //
@@ -7745,7 +9196,9 @@ func (c *Client) HostingDeploy(ctx context.Context, domain string, body HostingD
 	return c.Client.Do(req)
 }
 
-// HostingFiles List hosting files
+// HostingFiles List site files (static hosting only)
+//
+// **Applies to:** Secure Static Hosting only — a WordPress site returns `NOT_SUPPORTED_FOR_PRODUCT`.
 //
 // List file/directory names under an optional `path` in the domain's hosting space. Also available via POST (send `path` in the body).
 //
@@ -7762,7 +9215,9 @@ func (c *Client) HostingFiles(ctx context.Context, domain string, reqEditors ...
 	return c.Client.Do(req)
 }
 
-// HostingGet Get hosting status
+// HostingGet Get hosting status (either product)
+//
+// **Applies to:** Both products.
 //
 // Return the Secure Static Hosting status for a domain (plan, server, trial, expiry, auto-renew), or `hosting: null` if none. Also available via POST.
 //
@@ -7779,7 +9234,30 @@ func (c *Client) HostingGet(ctx context.Context, domain string, reqEditors ...Re
 	return c.Client.Do(req)
 }
 
-// HostingMakeDirWithBody Create a hosting directory
+// HostingGetWpCredentials List WordPress application passwords (WordPress only)
+//
+// **Applies to:** Cloud for WordPress only.
+//
+// Lists the application passwords on the site (uuid, name, created, last used) so you can audit or pick one to revoke. Metadata only — WordPress stores just a hash, so a password can never be re-read. Optional `wpUser` (defaults to the dedicated `porkbun-agent` user).
+//
+// Free preview sites are excluded (`PREVIEW_SITE_NOT_SUPPORTED`).
+//
+// Corresponds with GET /hosting/getWpCredentials/{domain} (the `HostingGetWpCredentials` operationId).
+func (c *Client) HostingGetWpCredentials(ctx context.Context, domain string, params *HostingGetWpCredentialsParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewHostingGetWpCredentialsRequest(c.Server, domain, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// HostingMakeDirWithBody Create a directory (static hosting only)
+//
+// **Applies to:** Secure Static Hosting only — a WordPress site returns `NOT_SUPPORTED_FOR_PRODUCT`.
 //
 // Create a directory (and any missing parent directories) at `path` in the domain’s hosting space. Deploy already auto-creates directories in a file’s path, so use this to stand up an empty directory explicitly. Path is sanitized segment-by-segment (no traversal / control chars).
 //
@@ -7798,7 +9276,9 @@ func (c *Client) HostingMakeDirWithBody(ctx context.Context, domain string, cont
 	return c.Client.Do(req)
 }
 
-// HostingMakeDir Create a hosting directory
+// HostingMakeDir Create a directory (static hosting only)
+//
+// **Applies to:** Secure Static Hosting only — a WordPress site returns `NOT_SUPPORTED_FOR_PRODUCT`.
 //
 // Create a directory (and any missing parent directories) at `path` in the domain’s hosting space. Deploy already auto-creates directories in a file’s path, so use this to stand up an empty directory explicitly. Path is sanitized segment-by-segment (no traversal / control chars).
 //
@@ -7817,9 +9297,11 @@ func (c *Client) HostingMakeDir(ctx context.Context, domain string, body Hosting
 	return c.Client.Do(req)
 }
 
-// HostingPlans List provisionable hosting plans
+// HostingPlans List provisionable hosting plans (static + WordPress)
 //
-// List the hosting plans that can be provisioned via the API, with price, interval, trial length, and features. Pass a row's `plan` to `/hosting/create` and its `price` (cents) as `acknowledgedCost`. Currently Secure Static Hosting; more products are added over time. Also available via POST.
+// **Applies to:** Both products.
+//
+// List the hosting plans that can be provisioned via the API, with price, interval, trial length, and features. Pass a row's `plan` to `/hosting/create` and its `price` (cents) as `acknowledgedCost`. Currently Secure Static Hosting; more products are added over time. Also available via POST. Includes both Secure Static Hosting and Cloud for WordPress (managed WordPress) plans; the `product` field distinguishes them.
 //
 // Corresponds with GET /hosting/plans (the `HostingPlans` operationId).
 func (c *Client) HostingPlans(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
@@ -8291,7 +9773,7 @@ func (c *Client) SslRetrieve(ctx context.Context, domain string, body SslRetriev
 
 // WebhookCreateWithBody Create a webhook endpoint
 //
-// Register an HTTPS endpoint to receive signed event payloads. The response includes the generated `secret` — store it securely; it is the HMAC key used to verify the `X-Porkbun-Signature` header. Omit `events` (or pass `["*"]`) to subscribe to all event types. Maximum 20 endpoints per account.
+// Register an HTTPS endpoint to receive signed event payloads. The response includes the generated `secret` — store it securely; it is the HMAC key used to verify the `X-Porkbun-Signature` header. Omit `events` (or pass `["*"]`) to subscribe to all event types. Maximum 20 endpoints per account. **URL requirements:** the endpoint must be an `https://` URL on the standard port 443, with a hostname that resolves to a public internet address. Private, loopback, link-local, CGNAT and other reserved ranges are refused (`INVALID_WEBHOOK_URL`) because Porkbun delivers from inside its own network. Credentials in the URL (`https://user:pass@host`) are also refused — authenticate the receiver by verifying the `X-Porkbun-Signature` HMAC instead. A hostname that does not resolve yet is accepted, so you can register the endpoint before the receiver is deployed, but delivery is re-checked against these rules immediately before each request.
 //
 // Takes any type of body and a specified content type.
 //
@@ -8310,7 +9792,7 @@ func (c *Client) WebhookCreateWithBody(ctx context.Context, contentType string, 
 
 // WebhookCreate Create a webhook endpoint
 //
-// Register an HTTPS endpoint to receive signed event payloads. The response includes the generated `secret` — store it securely; it is the HMAC key used to verify the `X-Porkbun-Signature` header. Omit `events` (or pass `["*"]`) to subscribe to all event types. Maximum 20 endpoints per account.
+// Register an HTTPS endpoint to receive signed event payloads. The response includes the generated `secret` — store it securely; it is the HMAC key used to verify the `X-Porkbun-Signature` header. Omit `events` (or pass `["*"]`) to subscribe to all event types. Maximum 20 endpoints per account. **URL requirements:** the endpoint must be an `https://` URL on the standard port 443, with a hostname that resolves to a public internet address. Private, loopback, link-local, CGNAT and other reserved ranges are refused (`INVALID_WEBHOOK_URL`) because Porkbun delivers from inside its own network. Credentials in the URL (`https://user:pass@host`) are also refused — authenticate the receiver by verifying the `X-Porkbun-Signature` HMAC instead. A hostname that does not resolve yet is accepted, so you can register the endpoint before the receiver is deployed, but delivery is re-checked against these rules immediately before each request.
 //
 // Takes a body of the `application/json` content type.
 //
@@ -8566,7 +10048,7 @@ func (c *Client) WebhookTest(ctx context.Context, body WebhookTestJSONRequestBod
 
 // WebhookUpdateWithBody Update a webhook endpoint
 //
-// Update an endpoint's URL, event subscriptions, and/or status. Only the supplied fields change. Set `status` to `DISABLED` to pause deliveries or `ACTIVE` to resume (resuming also resets the consecutive-failure counter).
+// Update an endpoint's URL, event subscriptions, and/or status. Only the supplied fields change. Set `status` to `DISABLED` to pause deliveries or `ACTIVE` to resume (resuming also resets the consecutive-failure counter). **URL requirements:** the endpoint must be an `https://` URL on the standard port 443, with a hostname that resolves to a public internet address. Private, loopback, link-local, CGNAT and other reserved ranges are refused (`INVALID_WEBHOOK_URL`) because Porkbun delivers from inside its own network. Credentials in the URL (`https://user:pass@host`) are also refused — authenticate the receiver by verifying the `X-Porkbun-Signature` HMAC instead. A hostname that does not resolve yet is accepted, so you can register the endpoint before the receiver is deployed, but delivery is re-checked against these rules immediately before each request.
 //
 // Takes any type of body and a specified content type.
 //
@@ -8585,7 +10067,7 @@ func (c *Client) WebhookUpdateWithBody(ctx context.Context, contentType string, 
 
 // WebhookUpdate Update a webhook endpoint
 //
-// Update an endpoint's URL, event subscriptions, and/or status. Only the supplied fields change. Set `status` to `DISABLED` to pause deliveries or `ACTIVE` to resume (resuming also resets the consecutive-failure counter).
+// Update an endpoint's URL, event subscriptions, and/or status. Only the supplied fields change. Set `status` to `DISABLED` to pause deliveries or `ACTIVE` to resume (resuming also resets the consecutive-failure counter). **URL requirements:** the endpoint must be an `https://` URL on the standard port 443, with a hostname that resolves to a public internet address. Private, loopback, link-local, CGNAT and other reserved ranges are refused (`INVALID_WEBHOOK_URL`) because Porkbun delivers from inside its own network. Credentials in the URL (`https://user:pass@host`) are also refused — authenticate the receiver by verifying the `X-Porkbun-Signature` HMAC instead. A hostname that does not resolve yet is accepted, so you can register the endpoint before the receiver is deployed, but delivery is re-checked against these rules immediately before each request.
 //
 // Takes a body of the `application/json` content type.
 //
@@ -8881,6 +10363,641 @@ func NewApikeyRetrieveRequestWithBody(server string, contentType string, body io
 	}
 
 	operationPath := fmt.Sprintf("/apikey/retrieve")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPost, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewCloudflareConnectRequest calls the generic CloudflareConnect builder with application/json body
+func NewCloudflareConnectRequest(server string, body CloudflareConnectJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewCloudflareConnectRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewCloudflareConnectRequestWithBody constructs an http.Request for the CloudflareConnect method, with any body, and a specified content type
+func NewCloudflareConnectRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/cloudflare/connect")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPost, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewCloudflareCreateRecordRequest calls the generic CloudflareCreateRecord builder with application/json body
+func NewCloudflareCreateRecordRequest(server string, domain string, body CloudflareCreateRecordJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewCloudflareCreateRecordRequestWithBody(server, domain, "application/json", bodyReader)
+}
+
+// NewCloudflareCreateRecordRequestWithBody constructs an http.Request for the CloudflareCreateRecord method, with any body, and a specified content type
+func NewCloudflareCreateRecordRequestWithBody(server string, domain string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "domain", domain, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/cloudflare/createRecord/%s", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPost, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewCloudflareDeleteRecordRequest calls the generic CloudflareDeleteRecord builder with application/json body
+func NewCloudflareDeleteRecordRequest(server string, domain string, recordId string, body CloudflareDeleteRecordJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewCloudflareDeleteRecordRequestWithBody(server, domain, recordId, "application/json", bodyReader)
+}
+
+// NewCloudflareDeleteRecordRequestWithBody constructs an http.Request for the CloudflareDeleteRecord method, with any body, and a specified content type
+func NewCloudflareDeleteRecordRequestWithBody(server string, domain string, recordId string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "domain", domain, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithOptions("simple", false, "recordId", recordId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/cloudflare/deleteRecord/%s/%s", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPost, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewCloudflareDisconnectRequest constructs an http.Request for the CloudflareDisconnect method
+func NewCloudflareDisconnectRequest(server string) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/cloudflare/disconnect")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPost, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewCloudflareEditRecordRequest calls the generic CloudflareEditRecord builder with application/json body
+func NewCloudflareEditRecordRequest(server string, domain string, recordId string, body CloudflareEditRecordJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewCloudflareEditRecordRequestWithBody(server, domain, recordId, "application/json", bodyReader)
+}
+
+// NewCloudflareEditRecordRequestWithBody constructs an http.Request for the CloudflareEditRecord method, with any body, and a specified content type
+func NewCloudflareEditRecordRequestWithBody(server string, domain string, recordId string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "domain", domain, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithOptions("simple", false, "recordId", recordId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/cloudflare/editRecord/%s/%s", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPost, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewCloudflareGetRequest constructs an http.Request for the CloudflareGet method
+func NewCloudflareGetRequest(server string, domain string) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "domain", domain, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/cloudflare/get/%s", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewCloudflareGetConnectionRequest constructs an http.Request for the CloudflareGetConnection method
+func NewCloudflareGetConnectionRequest(server string) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/cloudflare/getConnection")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewCloudflareGetQueueRequest constructs an http.Request for the CloudflareGetQueue method
+func NewCloudflareGetQueueRequest(server string) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/cloudflare/getQueue")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewCloudflareGetRecordsRequest constructs an http.Request for the CloudflareGetRecords method
+func NewCloudflareGetRecordsRequest(server string, domain string) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "domain", domain, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/cloudflare/getRecords/%s", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewCloudflareGetZoneRequest constructs an http.Request for the CloudflareGetZone method
+func NewCloudflareGetZoneRequest(server string, domain string) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "domain", domain, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/cloudflare/getZone/%s", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewCloudflareGetZoneSettingsRequest constructs an http.Request for the CloudflareGetZoneSettings method
+func NewCloudflareGetZoneSettingsRequest(server string, domain string) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "domain", domain, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/cloudflare/getZoneSettings/%s", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewCloudflareInventoryRequest constructs an http.Request for the CloudflareInventory method
+func NewCloudflareInventoryRequest(server string) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/cloudflare/inventory")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewCloudflarePreviewRequest constructs an http.Request for the CloudflarePreview method
+func NewCloudflarePreviewRequest(server string, domain string) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "domain", domain, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/cloudflare/preview/%s", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewCloudflareRetryRequest constructs an http.Request for the CloudflareRetry method
+func NewCloudflareRetryRequest(server string, domain string) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "domain", domain, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/cloudflare/retry/%s", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPost, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewCloudflareRollbackRequest constructs an http.Request for the CloudflareRollback method
+func NewCloudflareRollbackRequest(server string, domain string) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "domain", domain, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/cloudflare/rollback/%s", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPost, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewCloudflareSetProxyRequest calls the generic CloudflareSetProxy builder with application/json body
+func NewCloudflareSetProxyRequest(server string, domain string, body CloudflareSetProxyJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewCloudflareSetProxyRequestWithBody(server, domain, "application/json", bodyReader)
+}
+
+// NewCloudflareSetProxyRequestWithBody constructs an http.Request for the CloudflareSetProxy method, with any body, and a specified content type
+func NewCloudflareSetProxyRequestWithBody(server string, domain string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "domain", domain, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/cloudflare/setProxy/%s", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPost, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewCloudflareSetZoneSettingsRequest calls the generic CloudflareSetZoneSettings builder with application/json body
+func NewCloudflareSetZoneSettingsRequest(server string, domain string, body CloudflareSetZoneSettingsJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewCloudflareSetZoneSettingsRequestWithBody(server, domain, "application/json", bodyReader)
+}
+
+// NewCloudflareSetZoneSettingsRequestWithBody constructs an http.Request for the CloudflareSetZoneSettings method, with any body, and a specified content type
+func NewCloudflareSetZoneSettingsRequestWithBody(server string, domain string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "domain", domain, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/cloudflare/setZoneSettings/%s", pathParam0)
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -11270,6 +13387,53 @@ func NewHostingCreateRequestWithBody(server string, domain string, contentType s
 	return req, nil
 }
 
+// NewHostingCreateWpCredentialsRequest calls the generic HostingCreateWpCredentials builder with application/json body
+func NewHostingCreateWpCredentialsRequest(server string, domain string, body HostingCreateWpCredentialsJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewHostingCreateWpCredentialsRequestWithBody(server, domain, "application/json", bodyReader)
+}
+
+// NewHostingCreateWpCredentialsRequestWithBody constructs an http.Request for the HostingCreateWpCredentials method, with any body, and a specified content type
+func NewHostingCreateWpCredentialsRequestWithBody(server string, domain string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "domain", domain, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/hosting/createWpCredentials/%s", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPost, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
 // NewHostingDeleteRequest calls the generic HostingDelete builder with application/json body
 func NewHostingDeleteRequest(server string, domain string, body HostingDeleteJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
@@ -11345,6 +13509,53 @@ func NewHostingDeleteFileRequestWithBody(server string, domain string, contentTy
 	}
 
 	operationPath := fmt.Sprintf("/hosting/deleteFile/%s", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPost, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewHostingDeleteWpCredentialsRequest calls the generic HostingDeleteWpCredentials builder with application/json body
+func NewHostingDeleteWpCredentialsRequest(server string, domain string, body HostingDeleteWpCredentialsJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewHostingDeleteWpCredentialsRequestWithBody(server, domain, "application/json", bodyReader)
+}
+
+// NewHostingDeleteWpCredentialsRequestWithBody constructs an http.Request for the HostingDeleteWpCredentials method, with any body, and a specified content type
+func NewHostingDeleteWpCredentialsRequestWithBody(server string, domain string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "domain", domain, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/hosting/deleteWpCredentials/%s", pathParam0)
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -11469,6 +13680,67 @@ func NewHostingGetRequest(server string, domain string) (*http.Request, error) {
 	queryURL, err := serverURL.Parse(operationPath)
 	if err != nil {
 		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewHostingGetWpCredentialsRequest constructs an http.Request for the HostingGetWpCredentials method
+func NewHostingGetWpCredentialsRequest(server string, domain string, params *HostingGetWpCredentialsParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "domain", domain, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/hosting/getWpCredentials/%s", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		// queryValues collects non-styled parameters (passthrough, JSON)
+		// that are safe to round-trip through url.Values.Encode().
+		queryValues := queryURL.Query()
+		// rawQueryFragments collects pre-encoded query fragments from
+		// styled parameters, preserving literal commas as delimiters
+		// per the OpenAPI spec (e.g. "color=blue,black,brown").
+		var rawQueryFragments []string
+
+		if params.WpUser != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "wpUser", *params.WpUser, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if encoded := queryValues.Encode(); encoded != "" {
+			rawQueryFragments = append(rawQueryFragments, encoded)
+		}
+		queryURL.RawQuery = strings.Join(rawQueryFragments, "&")
 	}
 
 	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
@@ -13036,6 +15308,321 @@ type ClientWithResponsesInterface interface {
 	// Corresponds with POST /apikey/retrieve (the `ApikeyRetrieve` operationId).
 	ApikeyRetrieveWithResponse(ctx context.Context, body ApikeyRetrieveJSONRequestBody, reqEditors ...RequestEditorFn) (*ApikeyRetrieveResponse, error)
 
+	// CloudflareConnectWithBodyWithResponse Queue domains to move to the customer's Cloudflare account
+	//
+	// Queue one or many domains. For each one we create the zone in the customer's own Cloudflare account, copy across the DNS records we hold, and repoint the registry nameservers at Cloudflare.
+	//
+	// **Asynchronous.** Work runs on a background job over the next few minutes, so a successful call means *queued*, never *connected* — poll `/cloudflare/getQueue` or `/cloudflare/get/{domain}`.
+	//
+	// **`skipped` is a normal outcome, not an error.** DNSSEC live, custom nameservers, already connected, already in progress: each domain comes back under `queued`, `skipped` or `alreadyQueued` with its own reason. Read the reasons rather than treating a non-empty `skipped` as failure.
+	//
+	// Eligibility, ownership and nameserver state are re-checked immediately before each domain is acted on, so a domain accepted here can still be skipped later.
+	//
+	// Re-submitting a domain is safe: the queue row is the unit of truth and is updated in place.
+	//
+	// Supports `dryRun: true`, which returns the same per-domain verdicts without queueing anything.
+	//
+	// Requires an active Cloudflare connection (`CLOUDFLARE_NOT_CONNECTED` otherwise). Limits: 500 domains per call, 2000 domains per account per hour.
+	//
+	// After queueing, poll `/cloudflare/get/{domain}`: the row moves `queued` → `working` → `activating` → `connected`. `activating` means the nameservers are already repointed and Cloudflare is confirming the zone, which can take a while as DNS propagates.
+	//
+	// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with POST /cloudflare/connect (the `CloudflareConnect` operationId).
+	CloudflareConnectWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CloudflareConnectResponse, error)
+
+	// CloudflareConnectWithResponse Queue domains to move to the customer's Cloudflare account
+	//
+	// Queue one or many domains. For each one we create the zone in the customer's own Cloudflare account, copy across the DNS records we hold, and repoint the registry nameservers at Cloudflare.
+	//
+	// **Asynchronous.** Work runs on a background job over the next few minutes, so a successful call means *queued*, never *connected* — poll `/cloudflare/getQueue` or `/cloudflare/get/{domain}`.
+	//
+	// **`skipped` is a normal outcome, not an error.** DNSSEC live, custom nameservers, already connected, already in progress: each domain comes back under `queued`, `skipped` or `alreadyQueued` with its own reason. Read the reasons rather than treating a non-empty `skipped` as failure.
+	//
+	// Eligibility, ownership and nameserver state are re-checked immediately before each domain is acted on, so a domain accepted here can still be skipped later.
+	//
+	// Re-submitting a domain is safe: the queue row is the unit of truth and is updated in place.
+	//
+	// Supports `dryRun: true`, which returns the same per-domain verdicts without queueing anything.
+	//
+	// Requires an active Cloudflare connection (`CLOUDFLARE_NOT_CONNECTED` otherwise). Limits: 500 domains per call, 2000 domains per account per hour.
+	//
+	// After queueing, poll `/cloudflare/get/{domain}`: the row moves `queued` → `working` → `activating` → `connected`. `activating` means the nameservers are already repointed and Cloudflare is confirming the zone, which can take a while as DNS propagates.
+	//
+	// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with POST /cloudflare/connect (the `CloudflareConnect` operationId).
+	CloudflareConnectWithResponse(ctx context.Context, body CloudflareConnectJSONRequestBody, reqEditors ...RequestEditorFn) (*CloudflareConnectResponse, error)
+
+	// CloudflareCreateRecordWithBodyWithResponse Create a DNS record in the domain's Cloudflare zone
+	//
+	// **This writes to the Cloudflare zone that actually answers for the domain**, unlike `/dns/*`, which manages Porkbun's nameservers and no longer affects resolution once a domain has moved.
+	//
+	// `name` accepts `@` for the apex or a bare label. MX requires `priority`. `proxied` applies to A/AAAA/CNAME only. Supports `dryRun`.
+	//
+	// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with POST /cloudflare/createRecord/{domain} (the `CloudflareCreateRecord` operationId).
+	CloudflareCreateRecordWithBodyWithResponse(ctx context.Context, domain string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CloudflareCreateRecordResponse, error)
+
+	// CloudflareCreateRecordWithResponse Create a DNS record in the domain's Cloudflare zone
+	//
+	// **This writes to the Cloudflare zone that actually answers for the domain**, unlike `/dns/*`, which manages Porkbun's nameservers and no longer affects resolution once a domain has moved.
+	//
+	// `name` accepts `@` for the apex or a bare label. MX requires `priority`. `proxied` applies to A/AAAA/CNAME only. Supports `dryRun`.
+	//
+	// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with POST /cloudflare/createRecord/{domain} (the `CloudflareCreateRecord` operationId).
+	CloudflareCreateRecordWithResponse(ctx context.Context, domain string, body CloudflareCreateRecordJSONRequestBody, reqEditors ...RequestEditorFn) (*CloudflareCreateRecordResponse, error)
+
+	// CloudflareDeleteRecordWithBodyWithResponse Delete a DNS record from the domain's Cloudflare zone
+	//
+	// **This writes to the Cloudflare zone that actually answers for the domain**, unlike `/dns/*`, which manages Porkbun's nameservers and no longer affects resolution once a domain has moved.
+	//
+	// The record is read before deletion, so the response reports exactly what was removed and a bad id fails before anything is destroyed. Supports `dryRun`.
+	//
+	// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with POST /cloudflare/deleteRecord/{domain}/{recordId} (the `CloudflareDeleteRecord` operationId).
+	CloudflareDeleteRecordWithBodyWithResponse(ctx context.Context, domain string, recordId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CloudflareDeleteRecordResponse, error)
+
+	// CloudflareDeleteRecordWithResponse Delete a DNS record from the domain's Cloudflare zone
+	//
+	// **This writes to the Cloudflare zone that actually answers for the domain**, unlike `/dns/*`, which manages Porkbun's nameservers and no longer affects resolution once a domain has moved.
+	//
+	// The record is read before deletion, so the response reports exactly what was removed and a bad id fails before anything is destroyed. Supports `dryRun`.
+	//
+	// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with POST /cloudflare/deleteRecord/{domain}/{recordId} (the `CloudflareDeleteRecord` operationId).
+	CloudflareDeleteRecordWithResponse(ctx context.Context, domain string, recordId string, body CloudflareDeleteRecordJSONRequestBody, reqEditors ...RequestEditorFn) (*CloudflareDeleteRecordResponse, error)
+
+	// CloudflareDisconnectWithResponse Remove the stored Cloudflare connection
+	//
+	// Revoke and forget this account's Cloudflare grant. Domains already moved stay on Cloudflare and keep resolving; this only stops us making further changes on the customer's behalf. Reconnecting requires the browser authorization again. Supports `dryRun`.
+	//
+	// Returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with POST /cloudflare/disconnect (the `CloudflareDisconnect` operationId).
+	CloudflareDisconnectWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*CloudflareDisconnectResponse, error)
+
+	// CloudflareEditRecordWithBodyWithResponse Update a DNS record in the domain's Cloudflare zone
+	//
+	// **This writes to the Cloudflare zone that actually answers for the domain**, unlike `/dns/*`, which manages Porkbun's nameservers and no longer affects resolution once a domain has moved.
+	//
+	// Partial update: fields you omit keep their current value. The response carries both the new record and the `previous` one. Supports `dryRun`.
+	//
+	// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with POST /cloudflare/editRecord/{domain}/{recordId} (the `CloudflareEditRecord` operationId).
+	CloudflareEditRecordWithBodyWithResponse(ctx context.Context, domain string, recordId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CloudflareEditRecordResponse, error)
+
+	// CloudflareEditRecordWithResponse Update a DNS record in the domain's Cloudflare zone
+	//
+	// **This writes to the Cloudflare zone that actually answers for the domain**, unlike `/dns/*`, which manages Porkbun's nameservers and no longer affects resolution once a domain has moved.
+	//
+	// Partial update: fields you omit keep their current value. The response carries both the new record and the `previous` one. Supports `dryRun`.
+	//
+	// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with POST /cloudflare/editRecord/{domain}/{recordId} (the `CloudflareEditRecord` operationId).
+	CloudflareEditRecordWithResponse(ctx context.Context, domain string, recordId string, body CloudflareEditRecordJSONRequestBody, reqEditors ...RequestEditorFn) (*CloudflareEditRecordResponse, error)
+
+	// CloudflareGetWithResponse Get the Cloudflare move status for one domain
+	//
+	// Status of a single domain's move, including the zone id once created and the nameservers we replaced (kept so the move can be undone). `NOT_QUEUED` if the domain has never been queued. Also available via POST.
+	//
+	// **Status values** (poll until one of the terminal ones):
+	//
+	// | status | meaning | terminal |
+	// |--------|---------|----------|
+	// | `queued` | accepted, waiting for the worker | no |
+	// | `working` | a run is touching this row right now | no |
+	// | `activating` | nameservers repointed; waiting for Cloudflare to mark the zone active. Legitimately slow (registry + resolver propagation) — allow up to 24h | no |
+	// | `connected` / `done` | the move finished | **yes** |
+	// | `skipped` | not moved, and `message` says why (DNSSEC live, custom nameservers, no longer in the account) | **yes** |
+	// | `failed` / `error` | the move did not complete; `message` says why. Re-queue with `/cloudflare/retry/{domain}` | **yes** |
+	//
+	// Poll on a sensible interval (a few seconds early on, then back off) — a zone typically leaves `queued` within seconds but can sit in `activating` while DNS propagates.
+	//
+	// Returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with GET /cloudflare/get/{domain} (the `CloudflareGet` operationId).
+	CloudflareGetWithResponse(ctx context.Context, domain string, reqEditors ...RequestEditorFn) (*CloudflareGetResponse, error)
+
+	// CloudflareGetConnectionWithResponse Check the Cloudflare account connection (poll target)
+	//
+	// Whether this account has an active Cloudflare grant, and which Cloudflare account it points at.
+	//
+	// **This is the poll target for the connect flow.** Minting the grant is a human action: Cloudflare's consent screen has to be completed in a browser, and the authorization is bound to the Porkbun web session that started it, so it cannot be driven over the API. When `connected` is `false` the response carries a `connectUrl` — send the account owner there, then poll this endpoint until `connected` is `true`.
+	//
+	// Also available via POST.
+	//
+	// Returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with GET /cloudflare/getConnection (the `CloudflareGetConnection` operationId).
+	CloudflareGetConnectionWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*CloudflareGetConnectionResponse, error)
+
+	// CloudflareGetQueueWithResponse List every Cloudflare move for the account
+	//
+	// Every Cloudflare move this account has requested, with status and message. Queue rows are never deleted, so this doubles as the audit trail. Also available via POST.
+	//
+	// **Status values** (poll until one of the terminal ones):
+	//
+	// | status | meaning | terminal |
+	// |--------|---------|----------|
+	// | `queued` | accepted, waiting for the worker | no |
+	// | `working` | a run is touching this row right now | no |
+	// | `activating` | nameservers repointed; waiting for Cloudflare to mark the zone active. Legitimately slow (registry + resolver propagation) — allow up to 24h | no |
+	// | `connected` / `done` | the move finished | **yes** |
+	// | `skipped` | not moved, and `message` says why (DNSSEC live, custom nameservers, no longer in the account) | **yes** |
+	// | `failed` / `error` | the move did not complete; `message` says why. Re-queue with `/cloudflare/retry/{domain}` | **yes** |
+	//
+	// Poll on a sensible interval (a few seconds early on, then back off) — a zone typically leaves `queued` within seconds but can sit in `activating` while DNS propagates.
+	//
+	// Returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with GET /cloudflare/getQueue (the `CloudflareGetQueue` operationId).
+	CloudflareGetQueueWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*CloudflareGetQueueResponse, error)
+
+	// CloudflareGetRecordsWithResponse List the domain's live DNS records at Cloudflare
+	//
+	// The domain's DNS records **as Cloudflare currently holds them**, each with its `proxied` flag and whether it is `proxiable` at all.
+	//
+	// Once a domain has moved, this is the authoritative record set — `/dns/retrieve` reads the Porkbun zone, which is no longer the one answering queries. Requires the move to have finished (`ZONE_NOT_READY` otherwise). Also available via POST.
+	//
+	// Returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with GET /cloudflare/getRecords/{domain} (the `CloudflareGetRecords` operationId).
+	CloudflareGetRecordsWithResponse(ctx context.Context, domain string, reqEditors ...RequestEditorFn) (*CloudflareGetRecordsResponse, error)
+
+	// CloudflareGetZoneWithResponse Get live zone state from Cloudflare (and detect nameserver drift)
+	//
+	// What **Cloudflare** says about the zone right now — status, paused, its nameservers, activation date — as opposed to what our queue row remembers.
+	//
+	// These drift: if the nameservers are repointed elsewhere after the move, our row still reads `done` while Cloudflare has stopped answering for the domain. The response includes the live public nameservers and a `nameserversDrifted` boolean so you don't have to diff them. Also available via POST.
+	//
+	// Returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with GET /cloudflare/getZone/{domain} (the `CloudflareGetZone` operationId).
+	CloudflareGetZoneWithResponse(ctx context.Context, domain string, reqEditors ...RequestEditorFn) (*CloudflareGetZoneResponse, error)
+
+	// CloudflareGetZoneSettingsWithResponse Read the zone settings that matter after a move
+	//
+	// The Cloudflare zone settings worth caring about post-migration: `ssl`, `always_use_https`, `automatic_https_rewrites`, `min_tls_version`, `development_mode`, `cache_level`.
+	//
+	// The important one is **`ssl`**: `flexible` means Cloudflare fetches your origin over plain HTTP while visitors see a padlock, so the response warns when it is `off` or `flexible`. Also available via POST.
+	//
+	// If the account's Cloudflare authorization predates this feature it will not carry the `zone-settings.write` scope, and this returns `CLOUDFLARE_REAUTHORIZE_REQUIRED` with a `connectUrl`. Reconnecting is the same one-click browser flow and does not disturb domains already moved.
+	//
+	// Returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with GET /cloudflare/getZoneSettings/{domain} (the `CloudflareGetZoneSettings` operationId).
+	CloudflareGetZoneSettingsWithResponse(ctx context.Context, domain string, reqEditors ...RequestEditorFn) (*CloudflareGetZoneSettingsResponse, error)
+
+	// CloudflareInventoryWithResponse List every domain with its Cloudflare eligibility
+	//
+	// Every domain in the account with a `state` (`eligible`, `warn`, `blocked`, `connected`, `inprogress`) and a human-readable `reason`.
+	//
+	// Read this **before** queueing to see what will be skipped and why. Works even with no Cloudflare connection yet, so an agent can plan while the owner is still authorizing. Also available via POST.
+	//
+	// Returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with GET /cloudflare/inventory (the `CloudflareInventory` operationId).
+	CloudflareInventoryWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*CloudflareInventoryResponse, error)
+
+	// CloudflarePreviewWithResponse Preview exactly which records a move would copy
+	//
+	// Which DNS records we would create in Cloudflare for this domain, and which we would drop, **without queueing anything**. The honest answer to "what will this do to my DNS" before committing.
+	//
+	// Records are always created DNS-only (grey cloud); use `/cloudflare/setProxy` afterwards to turn the proxy on. Also available via POST.
+	//
+	// Returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with GET /cloudflare/preview/{domain} (the `CloudflarePreview` operationId).
+	CloudflarePreviewWithResponse(ctx context.Context, domain string, reqEditors ...RequestEditorFn) (*CloudflarePreviewResponse, error)
+
+	// CloudflareRetryWithResponse Retry a failed or skipped domain
+	//
+	// Put a domain that failed or was skipped back in the queue. Fails with `RETRY_FAILED` if it is already connected, already in progress, or no longer in the account. Supports `dryRun`.
+	//
+	// Returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with POST /cloudflare/retry/{domain} (the `CloudflareRetry` operationId).
+	CloudflareRetryWithResponse(ctx context.Context, domain string, reqEditors ...RequestEditorFn) (*CloudflareRetryResponse, error)
+
+	// CloudflareRollbackWithResponse Undo a completed move (restore Porkbun nameservers)
+	//
+	// Point the domain's nameservers back at Porkbun, restoring the DNS we still hold.
+	//
+	// The Cloudflare zone is deliberately left in place — deleting a zone in someone's own Cloudflare account is theirs to do. Fails with `ROLLBACK_FAILED` if we never moved the domain, it is already back on Porkbun nameservers, or it is being worked on right now. Supports `dryRun`.
+	//
+	// Returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with POST /cloudflare/rollback/{domain} (the `CloudflareRollback` operationId).
+	CloudflareRollbackWithResponse(ctx context.Context, domain string, reqEditors ...RequestEditorFn) (*CloudflareRollbackResponse, error)
+
+	// CloudflareSetProxyWithBodyWithResponse Turn the Cloudflare proxy (orange cloud) on or off
+	//
+	// Set `proxied` on the domain's Cloudflare DNS records.
+	//
+	// **The move itself always imports records DNS-only (grey cloud), on purpose** — changing how traffic is served at the same time as changing who serves DNS gives you two variables to debug at once. Proxying is therefore a separate, explicit step, best done after you've confirmed the site still works.
+	//
+	// Defaults to every proxiable record; pass `records` to target specific names (`"@"` means the apex, a bare label like `"www"` is expanded). Only A, AAAA and CNAME can be proxied — anything else is reported under `skipped` with a reason rather than failing the call. Records already in the requested state are skipped too.
+	//
+	// Proxying hides the origin IP, so if the zone's MX points at a hostname you are proxying, mail to it breaks; that case comes back in `warnings`. Supports `dryRun`.
+	//
+	// Rate limit: 60 changes per account per hour (these calls go to Cloudflare under Porkbun's OAuth client).
+	//
+	// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with POST /cloudflare/setProxy/{domain} (the `CloudflareSetProxy` operationId).
+	CloudflareSetProxyWithBodyWithResponse(ctx context.Context, domain string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CloudflareSetProxyResponse, error)
+
+	// CloudflareSetProxyWithResponse Turn the Cloudflare proxy (orange cloud) on or off
+	//
+	// Set `proxied` on the domain's Cloudflare DNS records.
+	//
+	// **The move itself always imports records DNS-only (grey cloud), on purpose** — changing how traffic is served at the same time as changing who serves DNS gives you two variables to debug at once. Proxying is therefore a separate, explicit step, best done after you've confirmed the site still works.
+	//
+	// Defaults to every proxiable record; pass `records` to target specific names (`"@"` means the apex, a bare label like `"www"` is expanded). Only A, AAAA and CNAME can be proxied — anything else is reported under `skipped` with a reason rather than failing the call. Records already in the requested state are skipped too.
+	//
+	// Proxying hides the origin IP, so if the zone's MX points at a hostname you are proxying, mail to it breaks; that case comes back in `warnings`. Supports `dryRun`.
+	//
+	// Rate limit: 60 changes per account per hour (these calls go to Cloudflare under Porkbun's OAuth client).
+	//
+	// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with POST /cloudflare/setProxy/{domain} (the `CloudflareSetProxy` operationId).
+	CloudflareSetProxyWithResponse(ctx context.Context, domain string, body CloudflareSetProxyJSONRequestBody, reqEditors ...RequestEditorFn) (*CloudflareSetProxyResponse, error)
+
+	// CloudflareSetZoneSettingsWithBodyWithResponse Change zone settings (allowlisted)
+	//
+	// Set one or more of the allowlisted zone settings. This is an allowlist rather than a passthrough — Cloudflare exposes hundreds of settings and WAF/firewall/security controls are deliberately out of scope for this API.
+	//
+	// Prefer `ssl: "full"`; `flexible` is an invisible downgrade for visitors. Supports `dryRun`. Rate limit: shares the 60/hour Cloudflare-write budget.
+	//
+	// If the account's Cloudflare authorization predates this feature it will not carry the `zone-settings.write` scope, and this returns `CLOUDFLARE_REAUTHORIZE_REQUIRED` with a `connectUrl`. Reconnecting is the same one-click browser flow and does not disturb domains already moved.
+	//
+	// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with POST /cloudflare/setZoneSettings/{domain} (the `CloudflareSetZoneSettings` operationId).
+	CloudflareSetZoneSettingsWithBodyWithResponse(ctx context.Context, domain string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CloudflareSetZoneSettingsResponse, error)
+
+	// CloudflareSetZoneSettingsWithResponse Change zone settings (allowlisted)
+	//
+	// Set one or more of the allowlisted zone settings. This is an allowlist rather than a passthrough — Cloudflare exposes hundreds of settings and WAF/firewall/security controls are deliberately out of scope for this API.
+	//
+	// Prefer `ssl: "full"`; `flexible` is an invisible downgrade for visitors. Supports `dryRun`. Rate limit: shares the 60/hour Cloudflare-write budget.
+	//
+	// If the account's Cloudflare authorization predates this feature it will not carry the `zone-settings.write` scope, and this returns `CLOUDFLARE_REAUTHORIZE_REQUIRED` with a `connectUrl`. Reconnecting is the same one-click browser flow and does not disturb domains already moved.
+	//
+	// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with POST /cloudflare/setZoneSettings/{domain} (the `CloudflareSetZoneSettings` operationId).
+	CloudflareSetZoneSettingsWithResponse(ctx context.Context, domain string, body CloudflareSetZoneSettingsJSONRequestBody, reqEditors ...RequestEditorFn) (*CloudflareSetZoneSettingsResponse, error)
+
 	// DnsCreateWithBodyWithResponse Create DNS record
 	//
 	// Create a new DNS record for a domain. The record ID is returned in the response.
@@ -13928,25 +16515,77 @@ type ClientWithResponsesInterface interface {
 	// Corresponds with POST /email/setPassword (the `EmailSetPassword` operationId).
 	EmailSetPasswordWithResponse(ctx context.Context, body EmailSetPasswordJSONRequestBody, reqEditors ...RequestEditorFn) (*EmailSetPasswordResponse, error)
 
-	// HostingCreateWithBodyWithResponse Provision Secure Static Hosting
+	// HostingCreateWithBodyWithResponse Provision hosting — a static site or a WordPress site
 	//
-	// Provision Secure Static Hosting for a domain in the account. The FIRST provision for a domain starts a **15-day free trial** ($0 now) that **auto-renews** at the plan price when the trial ends; a re-provision after deprovision is charged immediately to account credit (one free trial per domain). Provisioning **switches the domain to Porkbun nameservers** if it isn't already — pass `agreeToNameserverChange: true` to allow that. Supports `dryRun`. Remote setup can be async: `status` may be `PENDING` — poll `/hosting/get` until `ACTIVE` before deploying.
+	// **Applies to:** Both products — the `sku` decides which.
+	//
+	// Provision hosting (Secure Static Hosting or Cloud for WordPress) for a domain in the account. The FIRST provision for a domain starts a **15-day free trial** ($0 now) that **auto-renews** at the plan price when the trial ends; a re-provision after deprovision is charged immediately to account credit (one free trial per domain). Provisioning **switches the domain to Porkbun nameservers** if it isn't already — pass `agreeToNameserverChange: true` to allow that. Supports `dryRun`. Remote setup can be async: `status` may be `PENDING` — poll `/hosting/get` until `ACTIVE` before deploying.
+	//
+	// **Cloud for WordPress:** pass a `CLOUDWORDPRESS…` sku to provision a managed WordPress site instead of static hosting. The file endpoints (deploy/files/deleteFile/makeDir) do not apply — manage the site through WordPress, using `/hosting/createWpCredentials/{domain}` for REST API credentials.
+	//
+	// **Rate limit:** 10 provisions per account per hour (`dryRun` calls are free).
 	//
 	// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
 	//
 	// Corresponds with POST /hosting/create/{domain} (the `HostingCreate` operationId).
 	HostingCreateWithBodyWithResponse(ctx context.Context, domain string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*HostingCreateResponse, error)
 
-	// HostingCreateWithResponse Provision Secure Static Hosting
+	// HostingCreateWithResponse Provision hosting — a static site or a WordPress site
 	//
-	// Provision Secure Static Hosting for a domain in the account. The FIRST provision for a domain starts a **15-day free trial** ($0 now) that **auto-renews** at the plan price when the trial ends; a re-provision after deprovision is charged immediately to account credit (one free trial per domain). Provisioning **switches the domain to Porkbun nameservers** if it isn't already — pass `agreeToNameserverChange: true` to allow that. Supports `dryRun`. Remote setup can be async: `status` may be `PENDING` — poll `/hosting/get` until `ACTIVE` before deploying.
+	// **Applies to:** Both products — the `sku` decides which.
+	//
+	// Provision hosting (Secure Static Hosting or Cloud for WordPress) for a domain in the account. The FIRST provision for a domain starts a **15-day free trial** ($0 now) that **auto-renews** at the plan price when the trial ends; a re-provision after deprovision is charged immediately to account credit (one free trial per domain). Provisioning **switches the domain to Porkbun nameservers** if it isn't already — pass `agreeToNameserverChange: true` to allow that. Supports `dryRun`. Remote setup can be async: `status` may be `PENDING` — poll `/hosting/get` until `ACTIVE` before deploying.
+	//
+	// **Cloud for WordPress:** pass a `CLOUDWORDPRESS…` sku to provision a managed WordPress site instead of static hosting. The file endpoints (deploy/files/deleteFile/makeDir) do not apply — manage the site through WordPress, using `/hosting/createWpCredentials/{domain}` for REST API credentials.
+	//
+	// **Rate limit:** 10 provisions per account per hour (`dryRun` calls are free).
 	//
 	// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
 	//
 	// Corresponds with POST /hosting/create/{domain} (the `HostingCreate` operationId).
 	HostingCreateWithResponse(ctx context.Context, domain string, body HostingCreateJSONRequestBody, reqEditors ...RequestEditorFn) (*HostingCreateResponse, error)
 
-	// HostingDeleteWithBodyWithResponse Deprovision hosting
+	// HostingCreateWpCredentialsWithBodyWithResponse Mint WordPress REST API credentials (WordPress only)
+	//
+	// **Applies to:** Cloud for WordPress only.
+	//
+	// Creates a WordPress **Application Password** so an agent or integration can drive the site over the WP REST API at `https://{domain}/wp-json/` using HTTP Basic auth. The password is returned **once** — WordPress stores only a hash.
+	//
+	// Defaults to a dedicated least-privilege `porkbun-agent` user with the `editor` role (created on first use), which can manage content but not install code. `role: "administrator"` grants full site control **including plugin installation (arbitrary code execution on the site)** and therefore requires `acknowledgeFullAccess: true`.
+	//
+	// Revoke any time via `/hosting/deleteWpCredentials/{domain}` or in wp-admin under Users → Profile. Requires the site to be provisioned and ACTIVE (poll `/hosting/get/{domain}`).
+	//
+	// Free **preview** sites (the $0 parked plan) are excluded — they return `PREVIEW_SITE_NOT_SUPPORTED`; upgrade to a paid plan first. Works on any Cloud for WordPress site in the account regardless of whether it was provisioned via the API or the website, including sites migrated onto WP Cloud from the legacy WordPress product. For `role: "administrator"` the site's actual administrator account is looked up rather than assumed, so a renamed admin user is handled.
+	//
+	// **Rate limit:** 20 mints per account per hour (`dryRun` calls are free).
+	//
+	// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with POST /hosting/createWpCredentials/{domain} (the `HostingCreateWpCredentials` operationId).
+	HostingCreateWpCredentialsWithBodyWithResponse(ctx context.Context, domain string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*HostingCreateWpCredentialsResponse, error)
+
+	// HostingCreateWpCredentialsWithResponse Mint WordPress REST API credentials (WordPress only)
+	//
+	// **Applies to:** Cloud for WordPress only.
+	//
+	// Creates a WordPress **Application Password** so an agent or integration can drive the site over the WP REST API at `https://{domain}/wp-json/` using HTTP Basic auth. The password is returned **once** — WordPress stores only a hash.
+	//
+	// Defaults to a dedicated least-privilege `porkbun-agent` user with the `editor` role (created on first use), which can manage content but not install code. `role: "administrator"` grants full site control **including plugin installation (arbitrary code execution on the site)** and therefore requires `acknowledgeFullAccess: true`.
+	//
+	// Revoke any time via `/hosting/deleteWpCredentials/{domain}` or in wp-admin under Users → Profile. Requires the site to be provisioned and ACTIVE (poll `/hosting/get/{domain}`).
+	//
+	// Free **preview** sites (the $0 parked plan) are excluded — they return `PREVIEW_SITE_NOT_SUPPORTED`; upgrade to a paid plan first. Works on any Cloud for WordPress site in the account regardless of whether it was provisioned via the API or the website, including sites migrated onto WP Cloud from the legacy WordPress product. For `role: "administrator"` the site's actual administrator account is looked up rather than assumed, so a renamed admin user is handled.
+	//
+	// **Rate limit:** 20 mints per account per hour (`dryRun` calls are free).
+	//
+	// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with POST /hosting/createWpCredentials/{domain} (the `HostingCreateWpCredentials` operationId).
+	HostingCreateWpCredentialsWithResponse(ctx context.Context, domain string, body HostingCreateWpCredentialsJSONRequestBody, reqEditors ...RequestEditorFn) (*HostingCreateWpCredentialsResponse, error)
+
+	// HostingDeleteWithBodyWithResponse Deprovision hosting (either product)
+	//
+	// **Applies to:** Both products.
 	//
 	// Deprovision (cancel) Secure Static Hosting for a domain; teardown is scheduled and completed by Porkbun. Note: the domain has already used its one free trial, so provisioning it again later will be charged (no second free trial).
 	//
@@ -13955,7 +16594,9 @@ type ClientWithResponsesInterface interface {
 	// Corresponds with POST /hosting/delete/{domain} (the `HostingDelete` operationId).
 	HostingDeleteWithBodyWithResponse(ctx context.Context, domain string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*HostingDeleteResponse, error)
 
-	// HostingDeleteWithResponse Deprovision hosting
+	// HostingDeleteWithResponse Deprovision hosting (either product)
+	//
+	// **Applies to:** Both products.
 	//
 	// Deprovision (cancel) Secure Static Hosting for a domain; teardown is scheduled and completed by Porkbun. Note: the domain has already used its one free trial, so provisioning it again later will be charged (no second free trial).
 	//
@@ -13964,7 +16605,9 @@ type ClientWithResponsesInterface interface {
 	// Corresponds with POST /hosting/delete/{domain} (the `HostingDelete` operationId).
 	HostingDeleteWithResponse(ctx context.Context, domain string, body HostingDeleteJSONRequestBody, reqEditors ...RequestEditorFn) (*HostingDeleteResponse, error)
 
-	// HostingDeleteFileWithBodyWithResponse Delete a hosting file
+	// HostingDeleteFileWithBodyWithResponse Delete a site file (static hosting only)
+	//
+	// **Applies to:** Secure Static Hosting only — a WordPress site returns `NOT_SUPPORTED_FOR_PRODUCT`.
 	//
 	// Delete a file (or empty directory) at `path` in the domain's hosting space.
 	//
@@ -13973,7 +16616,9 @@ type ClientWithResponsesInterface interface {
 	// Corresponds with POST /hosting/deleteFile/{domain} (the `HostingDeleteFile` operationId).
 	HostingDeleteFileWithBodyWithResponse(ctx context.Context, domain string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*HostingDeleteFileResponse, error)
 
-	// HostingDeleteFileWithResponse Delete a hosting file
+	// HostingDeleteFileWithResponse Delete a site file (static hosting only)
+	//
+	// **Applies to:** Secure Static Hosting only — a WordPress site returns `NOT_SUPPORTED_FOR_PRODUCT`.
 	//
 	// Delete a file (or empty directory) at `path` in the domain's hosting space.
 	//
@@ -13982,7 +16627,35 @@ type ClientWithResponsesInterface interface {
 	// Corresponds with POST /hosting/deleteFile/{domain} (the `HostingDeleteFile` operationId).
 	HostingDeleteFileWithResponse(ctx context.Context, domain string, body HostingDeleteFileJSONRequestBody, reqEditors ...RequestEditorFn) (*HostingDeleteFileResponse, error)
 
-	// HostingDeployWithBodyWithResponse Deploy files to hosting
+	// HostingDeleteWpCredentialsWithBodyWithResponse Revoke WordPress application passwords (WordPress only)
+	//
+	// **Applies to:** Cloud for WordPress only.
+	//
+	// Revokes an application password by `uuid` (from `/hosting/getWpCredentials`), or every one for the user with `all: true`. Any integration using it stops authenticating immediately.
+	//
+	// Free preview sites are excluded (`PREVIEW_SITE_NOT_SUPPORTED`).
+	//
+	// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with POST /hosting/deleteWpCredentials/{domain} (the `HostingDeleteWpCredentials` operationId).
+	HostingDeleteWpCredentialsWithBodyWithResponse(ctx context.Context, domain string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*HostingDeleteWpCredentialsResponse, error)
+
+	// HostingDeleteWpCredentialsWithResponse Revoke WordPress application passwords (WordPress only)
+	//
+	// **Applies to:** Cloud for WordPress only.
+	//
+	// Revokes an application password by `uuid` (from `/hosting/getWpCredentials`), or every one for the user with `all: true`. Any integration using it stops authenticating immediately.
+	//
+	// Free preview sites are excluded (`PREVIEW_SITE_NOT_SUPPORTED`).
+	//
+	// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with POST /hosting/deleteWpCredentials/{domain} (the `HostingDeleteWpCredentials` operationId).
+	HostingDeleteWpCredentialsWithResponse(ctx context.Context, domain string, body HostingDeleteWpCredentialsJSONRequestBody, reqEditors ...RequestEditorFn) (*HostingDeleteWpCredentialsResponse, error)
+
+	// HostingDeployWithBodyWithResponse Upload site files (static hosting only)
+	//
+	// **Applies to:** Secure Static Hosting only — a WordPress site returns `NOT_SUPPORTED_FOR_PRODUCT`; manage its content through WordPress instead.
 	//
 	// Upload static files to the domain's Secure Static Hosting space. Send `files` as an array of `{ path, content }` where `content` is base64. Total payload ≤ 10 MB per request (split larger sites across calls). Only static-web file types are accepted (html/css/js/images/fonts/…); server-executable types are rejected. Hosting must be ACTIVE. A file’s `path` may include directories (e.g. `assets/css/style.css`); any missing parent directories are created automatically. Paths are sanitized (no traversal/control chars) and the filename extension must be an allowed static-web type.
 	//
@@ -13991,7 +16664,9 @@ type ClientWithResponsesInterface interface {
 	// Corresponds with POST /hosting/deploy/{domain} (the `HostingDeploy` operationId).
 	HostingDeployWithBodyWithResponse(ctx context.Context, domain string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*HostingDeployResponse, error)
 
-	// HostingDeployWithResponse Deploy files to hosting
+	// HostingDeployWithResponse Upload site files (static hosting only)
+	//
+	// **Applies to:** Secure Static Hosting only — a WordPress site returns `NOT_SUPPORTED_FOR_PRODUCT`; manage its content through WordPress instead.
 	//
 	// Upload static files to the domain's Secure Static Hosting space. Send `files` as an array of `{ path, content }` where `content` is base64. Total payload ≤ 10 MB per request (split larger sites across calls). Only static-web file types are accepted (html/css/js/images/fonts/…); server-executable types are rejected. Hosting must be ACTIVE. A file’s `path` may include directories (e.g. `assets/css/style.css`); any missing parent directories are created automatically. Paths are sanitized (no traversal/control chars) and the filename extension must be an allowed static-web type.
 	//
@@ -14000,7 +16675,9 @@ type ClientWithResponsesInterface interface {
 	// Corresponds with POST /hosting/deploy/{domain} (the `HostingDeploy` operationId).
 	HostingDeployWithResponse(ctx context.Context, domain string, body HostingDeployJSONRequestBody, reqEditors ...RequestEditorFn) (*HostingDeployResponse, error)
 
-	// HostingFilesWithResponse List hosting files
+	// HostingFilesWithResponse List site files (static hosting only)
+	//
+	// **Applies to:** Secure Static Hosting only — a WordPress site returns `NOT_SUPPORTED_FOR_PRODUCT`.
 	//
 	// List file/directory names under an optional `path` in the domain's hosting space. Also available via POST (send `path` in the body).
 	//
@@ -14009,7 +16686,9 @@ type ClientWithResponsesInterface interface {
 	// Corresponds with GET /hosting/files/{domain} (the `HostingFiles` operationId).
 	HostingFilesWithResponse(ctx context.Context, domain string, reqEditors ...RequestEditorFn) (*HostingFilesResponse, error)
 
-	// HostingGetWithResponse Get hosting status
+	// HostingGetWithResponse Get hosting status (either product)
+	//
+	// **Applies to:** Both products.
 	//
 	// Return the Secure Static Hosting status for a domain (plan, server, trial, expiry, auto-renew), or `hosting: null` if none. Also available via POST.
 	//
@@ -14018,7 +16697,22 @@ type ClientWithResponsesInterface interface {
 	// Corresponds with GET /hosting/get/{domain} (the `HostingGet` operationId).
 	HostingGetWithResponse(ctx context.Context, domain string, reqEditors ...RequestEditorFn) (*HostingGetResponse, error)
 
-	// HostingMakeDirWithBodyWithResponse Create a hosting directory
+	// HostingGetWpCredentialsWithResponse List WordPress application passwords (WordPress only)
+	//
+	// **Applies to:** Cloud for WordPress only.
+	//
+	// Lists the application passwords on the site (uuid, name, created, last used) so you can audit or pick one to revoke. Metadata only — WordPress stores just a hash, so a password can never be re-read. Optional `wpUser` (defaults to the dedicated `porkbun-agent` user).
+	//
+	// Free preview sites are excluded (`PREVIEW_SITE_NOT_SUPPORTED`).
+	//
+	// Returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with GET /hosting/getWpCredentials/{domain} (the `HostingGetWpCredentials` operationId).
+	HostingGetWpCredentialsWithResponse(ctx context.Context, domain string, params *HostingGetWpCredentialsParams, reqEditors ...RequestEditorFn) (*HostingGetWpCredentialsResponse, error)
+
+	// HostingMakeDirWithBodyWithResponse Create a directory (static hosting only)
+	//
+	// **Applies to:** Secure Static Hosting only — a WordPress site returns `NOT_SUPPORTED_FOR_PRODUCT`.
 	//
 	// Create a directory (and any missing parent directories) at `path` in the domain’s hosting space. Deploy already auto-creates directories in a file’s path, so use this to stand up an empty directory explicitly. Path is sanitized segment-by-segment (no traversal / control chars).
 	//
@@ -14027,7 +16721,9 @@ type ClientWithResponsesInterface interface {
 	// Corresponds with POST /hosting/makeDir/{domain} (the `HostingMakeDir` operationId).
 	HostingMakeDirWithBodyWithResponse(ctx context.Context, domain string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*HostingMakeDirResponse, error)
 
-	// HostingMakeDirWithResponse Create a hosting directory
+	// HostingMakeDirWithResponse Create a directory (static hosting only)
+	//
+	// **Applies to:** Secure Static Hosting only — a WordPress site returns `NOT_SUPPORTED_FOR_PRODUCT`.
 	//
 	// Create a directory (and any missing parent directories) at `path` in the domain’s hosting space. Deploy already auto-creates directories in a file’s path, so use this to stand up an empty directory explicitly. Path is sanitized segment-by-segment (no traversal / control chars).
 	//
@@ -14036,9 +16732,11 @@ type ClientWithResponsesInterface interface {
 	// Corresponds with POST /hosting/makeDir/{domain} (the `HostingMakeDir` operationId).
 	HostingMakeDirWithResponse(ctx context.Context, domain string, body HostingMakeDirJSONRequestBody, reqEditors ...RequestEditorFn) (*HostingMakeDirResponse, error)
 
-	// HostingPlansWithResponse List provisionable hosting plans
+	// HostingPlansWithResponse List provisionable hosting plans (static + WordPress)
 	//
-	// List the hosting plans that can be provisioned via the API, with price, interval, trial length, and features. Pass a row's `plan` to `/hosting/create` and its `price` (cents) as `acknowledgedCost`. Currently Secure Static Hosting; more products are added over time. Also available via POST.
+	// **Applies to:** Both products.
+	//
+	// List the hosting plans that can be provisioned via the API, with price, interval, trial length, and features. Pass a row's `plan` to `/hosting/create` and its `price` (cents) as `acknowledgedCost`. Currently Secure Static Hosting; more products are added over time. Also available via POST. Includes both Secure Static Hosting and Cloud for WordPress (managed WordPress) plans; the `product` field distinguishes them.
 	//
 	// Returns a wrapper object for the known response body format(s).
 	//
@@ -14286,7 +16984,7 @@ type ClientWithResponsesInterface interface {
 
 	// WebhookCreateWithBodyWithResponse Create a webhook endpoint
 	//
-	// Register an HTTPS endpoint to receive signed event payloads. The response includes the generated `secret` — store it securely; it is the HMAC key used to verify the `X-Porkbun-Signature` header. Omit `events` (or pass `["*"]`) to subscribe to all event types. Maximum 20 endpoints per account.
+	// Register an HTTPS endpoint to receive signed event payloads. The response includes the generated `secret` — store it securely; it is the HMAC key used to verify the `X-Porkbun-Signature` header. Omit `events` (or pass `["*"]`) to subscribe to all event types. Maximum 20 endpoints per account. **URL requirements:** the endpoint must be an `https://` URL on the standard port 443, with a hostname that resolves to a public internet address. Private, loopback, link-local, CGNAT and other reserved ranges are refused (`INVALID_WEBHOOK_URL`) because Porkbun delivers from inside its own network. Credentials in the URL (`https://user:pass@host`) are also refused — authenticate the receiver by verifying the `X-Porkbun-Signature` HMAC instead. A hostname that does not resolve yet is accepted, so you can register the endpoint before the receiver is deployed, but delivery is re-checked against these rules immediately before each request.
 	//
 	// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
 	//
@@ -14295,7 +16993,7 @@ type ClientWithResponsesInterface interface {
 
 	// WebhookCreateWithResponse Create a webhook endpoint
 	//
-	// Register an HTTPS endpoint to receive signed event payloads. The response includes the generated `secret` — store it securely; it is the HMAC key used to verify the `X-Porkbun-Signature` header. Omit `events` (or pass `["*"]`) to subscribe to all event types. Maximum 20 endpoints per account.
+	// Register an HTTPS endpoint to receive signed event payloads. The response includes the generated `secret` — store it securely; it is the HMAC key used to verify the `X-Porkbun-Signature` header. Omit `events` (or pass `["*"]`) to subscribe to all event types. Maximum 20 endpoints per account. **URL requirements:** the endpoint must be an `https://` URL on the standard port 443, with a hostname that resolves to a public internet address. Private, loopback, link-local, CGNAT and other reserved ranges are refused (`INVALID_WEBHOOK_URL`) because Porkbun delivers from inside its own network. Credentials in the URL (`https://user:pass@host`) are also refused — authenticate the receiver by verifying the `X-Porkbun-Signature` HMAC instead. A hostname that does not resolve yet is accepted, so you can register the endpoint before the receiver is deployed, but delivery is re-checked against these rules immediately before each request.
 	//
 	// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
 	//
@@ -14421,7 +17119,7 @@ type ClientWithResponsesInterface interface {
 
 	// WebhookUpdateWithBodyWithResponse Update a webhook endpoint
 	//
-	// Update an endpoint's URL, event subscriptions, and/or status. Only the supplied fields change. Set `status` to `DISABLED` to pause deliveries or `ACTIVE` to resume (resuming also resets the consecutive-failure counter).
+	// Update an endpoint's URL, event subscriptions, and/or status. Only the supplied fields change. Set `status` to `DISABLED` to pause deliveries or `ACTIVE` to resume (resuming also resets the consecutive-failure counter). **URL requirements:** the endpoint must be an `https://` URL on the standard port 443, with a hostname that resolves to a public internet address. Private, loopback, link-local, CGNAT and other reserved ranges are refused (`INVALID_WEBHOOK_URL`) because Porkbun delivers from inside its own network. Credentials in the URL (`https://user:pass@host`) are also refused — authenticate the receiver by verifying the `X-Porkbun-Signature` HMAC instead. A hostname that does not resolve yet is accepted, so you can register the endpoint before the receiver is deployed, but delivery is re-checked against these rules immediately before each request.
 	//
 	// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
 	//
@@ -14430,7 +17128,7 @@ type ClientWithResponsesInterface interface {
 
 	// WebhookUpdateWithResponse Update a webhook endpoint
 	//
-	// Update an endpoint's URL, event subscriptions, and/or status. Only the supplied fields change. Set `status` to `DISABLED` to pause deliveries or `ACTIVE` to resume (resuming also resets the consecutive-failure counter).
+	// Update an endpoint's URL, event subscriptions, and/or status. Only the supplied fields change. Set `status` to `DISABLED` to pause deliveries or `ACTIVE` to resume (resuming also resets the consecutive-failure counter). **URL requirements:** the endpoint must be an `https://` URL on the standard port 443, with a hostname that resolves to a public internet address. Private, loopback, link-local, CGNAT and other reserved ranges are refused (`INVALID_WEBHOOK_URL`) because Porkbun delivers from inside its own network. Credentials in the URL (`https://user:pass@host`) are also refused — authenticate the receiver by verifying the `X-Porkbun-Signature` HMAC instead. A hostname that does not resolve yet is accepted, so you can register the endpoint before the receiver is deployed, but delivery is re-checked against these rules immediately before each request.
 	//
 	// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
 	//
@@ -14752,6 +17450,703 @@ func (r ApikeyRetrieveResponse) StatusCode() int {
 
 // ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
 func (r ApikeyRetrieveResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type CloudflareConnectResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *map[string]interface{}
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r CloudflareConnectResponse) GetJSON200() *map[string]interface{} {
+	return r.JSON200
+}
+
+// GetBody returns the raw response body bytes
+func (r CloudflareConnectResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r CloudflareConnectResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r CloudflareConnectResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r CloudflareConnectResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type CloudflareCreateRecordResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *map[string]interface{}
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r CloudflareCreateRecordResponse) GetJSON200() *map[string]interface{} {
+	return r.JSON200
+}
+
+// GetBody returns the raw response body bytes
+func (r CloudflareCreateRecordResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r CloudflareCreateRecordResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r CloudflareCreateRecordResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r CloudflareCreateRecordResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type CloudflareDeleteRecordResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *map[string]interface{}
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r CloudflareDeleteRecordResponse) GetJSON200() *map[string]interface{} {
+	return r.JSON200
+}
+
+// GetBody returns the raw response body bytes
+func (r CloudflareDeleteRecordResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r CloudflareDeleteRecordResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r CloudflareDeleteRecordResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r CloudflareDeleteRecordResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type CloudflareDisconnectResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *map[string]interface{}
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r CloudflareDisconnectResponse) GetJSON200() *map[string]interface{} {
+	return r.JSON200
+}
+
+// GetBody returns the raw response body bytes
+func (r CloudflareDisconnectResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r CloudflareDisconnectResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r CloudflareDisconnectResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r CloudflareDisconnectResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type CloudflareEditRecordResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *map[string]interface{}
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r CloudflareEditRecordResponse) GetJSON200() *map[string]interface{} {
+	return r.JSON200
+}
+
+// GetBody returns the raw response body bytes
+func (r CloudflareEditRecordResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r CloudflareEditRecordResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r CloudflareEditRecordResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r CloudflareEditRecordResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type CloudflareGetResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *map[string]interface{}
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r CloudflareGetResponse) GetJSON200() *map[string]interface{} {
+	return r.JSON200
+}
+
+// GetBody returns the raw response body bytes
+func (r CloudflareGetResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r CloudflareGetResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r CloudflareGetResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r CloudflareGetResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type CloudflareGetConnectionResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *map[string]interface{}
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r CloudflareGetConnectionResponse) GetJSON200() *map[string]interface{} {
+	return r.JSON200
+}
+
+// GetBody returns the raw response body bytes
+func (r CloudflareGetConnectionResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r CloudflareGetConnectionResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r CloudflareGetConnectionResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r CloudflareGetConnectionResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type CloudflareGetQueueResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *map[string]interface{}
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r CloudflareGetQueueResponse) GetJSON200() *map[string]interface{} {
+	return r.JSON200
+}
+
+// GetBody returns the raw response body bytes
+func (r CloudflareGetQueueResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r CloudflareGetQueueResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r CloudflareGetQueueResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r CloudflareGetQueueResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type CloudflareGetRecordsResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *map[string]interface{}
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r CloudflareGetRecordsResponse) GetJSON200() *map[string]interface{} {
+	return r.JSON200
+}
+
+// GetBody returns the raw response body bytes
+func (r CloudflareGetRecordsResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r CloudflareGetRecordsResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r CloudflareGetRecordsResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r CloudflareGetRecordsResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type CloudflareGetZoneResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *map[string]interface{}
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r CloudflareGetZoneResponse) GetJSON200() *map[string]interface{} {
+	return r.JSON200
+}
+
+// GetBody returns the raw response body bytes
+func (r CloudflareGetZoneResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r CloudflareGetZoneResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r CloudflareGetZoneResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r CloudflareGetZoneResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type CloudflareGetZoneSettingsResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *map[string]interface{}
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r CloudflareGetZoneSettingsResponse) GetJSON200() *map[string]interface{} {
+	return r.JSON200
+}
+
+// GetBody returns the raw response body bytes
+func (r CloudflareGetZoneSettingsResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r CloudflareGetZoneSettingsResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r CloudflareGetZoneSettingsResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r CloudflareGetZoneSettingsResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type CloudflareInventoryResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *map[string]interface{}
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r CloudflareInventoryResponse) GetJSON200() *map[string]interface{} {
+	return r.JSON200
+}
+
+// GetBody returns the raw response body bytes
+func (r CloudflareInventoryResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r CloudflareInventoryResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r CloudflareInventoryResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r CloudflareInventoryResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type CloudflarePreviewResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *map[string]interface{}
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r CloudflarePreviewResponse) GetJSON200() *map[string]interface{} {
+	return r.JSON200
+}
+
+// GetBody returns the raw response body bytes
+func (r CloudflarePreviewResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r CloudflarePreviewResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r CloudflarePreviewResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r CloudflarePreviewResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type CloudflareRetryResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *map[string]interface{}
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r CloudflareRetryResponse) GetJSON200() *map[string]interface{} {
+	return r.JSON200
+}
+
+// GetBody returns the raw response body bytes
+func (r CloudflareRetryResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r CloudflareRetryResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r CloudflareRetryResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r CloudflareRetryResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type CloudflareRollbackResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *map[string]interface{}
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r CloudflareRollbackResponse) GetJSON200() *map[string]interface{} {
+	return r.JSON200
+}
+
+// GetBody returns the raw response body bytes
+func (r CloudflareRollbackResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r CloudflareRollbackResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r CloudflareRollbackResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r CloudflareRollbackResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type CloudflareSetProxyResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *map[string]interface{}
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r CloudflareSetProxyResponse) GetJSON200() *map[string]interface{} {
+	return r.JSON200
+}
+
+// GetBody returns the raw response body bytes
+func (r CloudflareSetProxyResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r CloudflareSetProxyResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r CloudflareSetProxyResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r CloudflareSetProxyResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type CloudflareSetZoneSettingsResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *map[string]interface{}
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r CloudflareSetZoneSettingsResponse) GetJSON200() *map[string]interface{} {
+	return r.JSON200
+}
+
+// GetBody returns the raw response body bytes
+func (r CloudflareSetZoneSettingsResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r CloudflareSetZoneSettingsResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r CloudflareSetZoneSettingsResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r CloudflareSetZoneSettingsResponse) ContentType() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Header.Get("Content-Type")
 	}
@@ -16774,6 +20169,54 @@ func (r HostingCreateResponse) ContentType() string {
 	return ""
 }
 
+type HostingCreateWpCredentialsResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *HostingCreateWpCredentials200JSONResponseBody
+	// JSON400 the response for an HTTP 400 `application/json` response
+	JSON400 *ErrorResponse
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r HostingCreateWpCredentialsResponse) GetJSON200() *HostingCreateWpCredentials200JSONResponseBody {
+	return r.JSON200
+}
+
+// GetJSON400 returns the response for an HTTP 400 `application/json` response
+func (r HostingCreateWpCredentialsResponse) GetJSON400() *ErrorResponse {
+	return r.JSON400
+}
+
+// GetBody returns the raw response body bytes
+func (r HostingCreateWpCredentialsResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r HostingCreateWpCredentialsResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r HostingCreateWpCredentialsResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r HostingCreateWpCredentialsResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
 type HostingDeleteResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -16864,6 +20307,54 @@ func (r HostingDeleteFileResponse) StatusCode() int {
 
 // ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
 func (r HostingDeleteFileResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type HostingDeleteWpCredentialsResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *HostingDeleteWpCredentials200JSONResponseBody
+	// JSON400 the response for an HTTP 400 `application/json` response
+	JSON400 *ErrorResponse
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r HostingDeleteWpCredentialsResponse) GetJSON200() *HostingDeleteWpCredentials200JSONResponseBody {
+	return r.JSON200
+}
+
+// GetJSON400 returns the response for an HTTP 400 `application/json` response
+func (r HostingDeleteWpCredentialsResponse) GetJSON400() *ErrorResponse {
+	return r.JSON400
+}
+
+// GetBody returns the raw response body bytes
+func (r HostingDeleteWpCredentialsResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r HostingDeleteWpCredentialsResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r HostingDeleteWpCredentialsResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r HostingDeleteWpCredentialsResponse) ContentType() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Header.Get("Content-Type")
 	}
@@ -17008,6 +20499,54 @@ func (r HostingGetResponse) StatusCode() int {
 
 // ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
 func (r HostingGetResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type HostingGetWpCredentialsResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *HostingGetWpCredentials200JSONResponseBody
+	// JSON400 the response for an HTTP 400 `application/json` response
+	JSON400 *ErrorResponse
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r HostingGetWpCredentialsResponse) GetJSON200() *HostingGetWpCredentials200JSONResponseBody {
+	return r.JSON200
+}
+
+// GetJSON400 returns the response for an HTTP 400 `application/json` response
+func (r HostingGetWpCredentialsResponse) GetJSON400() *ErrorResponse {
+	return r.JSON400
+}
+
+// GetBody returns the raw response body bytes
+func (r HostingGetWpCredentialsResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r HostingGetWpCredentialsResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r HostingGetWpCredentialsResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r HostingGetWpCredentialsResponse) ContentType() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Header.Get("Content-Type")
 	}
@@ -18481,6 +22020,459 @@ func (c *ClientWithResponses) ApikeyRetrieveWithResponse(ctx context.Context, bo
 	return ParseApikeyRetrieveResponse(rsp)
 }
 
+// CloudflareConnectWithBodyWithResponse Queue domains to move to the customer's Cloudflare account
+//
+// Queue one or many domains. For each one we create the zone in the customer's own Cloudflare account, copy across the DNS records we hold, and repoint the registry nameservers at Cloudflare.
+//
+// **Asynchronous.** Work runs on a background job over the next few minutes, so a successful call means *queued*, never *connected* — poll `/cloudflare/getQueue` or `/cloudflare/get/{domain}`.
+//
+// **`skipped` is a normal outcome, not an error.** DNSSEC live, custom nameservers, already connected, already in progress: each domain comes back under `queued`, `skipped` or `alreadyQueued` with its own reason. Read the reasons rather than treating a non-empty `skipped` as failure.
+//
+// Eligibility, ownership and nameserver state are re-checked immediately before each domain is acted on, so a domain accepted here can still be skipped later.
+//
+// Re-submitting a domain is safe: the queue row is the unit of truth and is updated in place.
+//
+// Supports `dryRun: true`, which returns the same per-domain verdicts without queueing anything.
+//
+// Requires an active Cloudflare connection (`CLOUDFLARE_NOT_CONNECTED` otherwise). Limits: 500 domains per call, 2000 domains per account per hour.
+//
+// After queueing, poll `/cloudflare/get/{domain}`: the row moves `queued` → `working` → `activating` → `connected`. `activating` means the nameservers are already repointed and Cloudflare is confirming the zone, which can take a while as DNS propagates.
+//
+// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
+//
+// Corresponds with POST /cloudflare/connect (the `CloudflareConnect` operationId).
+func (c *ClientWithResponses) CloudflareConnectWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CloudflareConnectResponse, error) {
+	rsp, err := c.CloudflareConnectWithBody(ctx, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCloudflareConnectResponse(rsp)
+}
+
+// CloudflareConnectWithResponse Queue domains to move to the customer's Cloudflare account
+//
+// Queue one or many domains. For each one we create the zone in the customer's own Cloudflare account, copy across the DNS records we hold, and repoint the registry nameservers at Cloudflare.
+//
+// **Asynchronous.** Work runs on a background job over the next few minutes, so a successful call means *queued*, never *connected* — poll `/cloudflare/getQueue` or `/cloudflare/get/{domain}`.
+//
+// **`skipped` is a normal outcome, not an error.** DNSSEC live, custom nameservers, already connected, already in progress: each domain comes back under `queued`, `skipped` or `alreadyQueued` with its own reason. Read the reasons rather than treating a non-empty `skipped` as failure.
+//
+// Eligibility, ownership and nameserver state are re-checked immediately before each domain is acted on, so a domain accepted here can still be skipped later.
+//
+// Re-submitting a domain is safe: the queue row is the unit of truth and is updated in place.
+//
+// Supports `dryRun: true`, which returns the same per-domain verdicts without queueing anything.
+//
+// Requires an active Cloudflare connection (`CLOUDFLARE_NOT_CONNECTED` otherwise). Limits: 500 domains per call, 2000 domains per account per hour.
+//
+// After queueing, poll `/cloudflare/get/{domain}`: the row moves `queued` → `working` → `activating` → `connected`. `activating` means the nameservers are already repointed and Cloudflare is confirming the zone, which can take a while as DNS propagates.
+//
+// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+//
+// Corresponds with POST /cloudflare/connect (the `CloudflareConnect` operationId).
+func (c *ClientWithResponses) CloudflareConnectWithResponse(ctx context.Context, body CloudflareConnectJSONRequestBody, reqEditors ...RequestEditorFn) (*CloudflareConnectResponse, error) {
+	rsp, err := c.CloudflareConnect(ctx, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCloudflareConnectResponse(rsp)
+}
+
+// CloudflareCreateRecordWithBodyWithResponse Create a DNS record in the domain's Cloudflare zone
+//
+// **This writes to the Cloudflare zone that actually answers for the domain**, unlike `/dns/*`, which manages Porkbun's nameservers and no longer affects resolution once a domain has moved.
+//
+// `name` accepts `@` for the apex or a bare label. MX requires `priority`. `proxied` applies to A/AAAA/CNAME only. Supports `dryRun`.
+//
+// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
+//
+// Corresponds with POST /cloudflare/createRecord/{domain} (the `CloudflareCreateRecord` operationId).
+func (c *ClientWithResponses) CloudflareCreateRecordWithBodyWithResponse(ctx context.Context, domain string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CloudflareCreateRecordResponse, error) {
+	rsp, err := c.CloudflareCreateRecordWithBody(ctx, domain, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCloudflareCreateRecordResponse(rsp)
+}
+
+// CloudflareCreateRecordWithResponse Create a DNS record in the domain's Cloudflare zone
+//
+// **This writes to the Cloudflare zone that actually answers for the domain**, unlike `/dns/*`, which manages Porkbun's nameservers and no longer affects resolution once a domain has moved.
+//
+// `name` accepts `@` for the apex or a bare label. MX requires `priority`. `proxied` applies to A/AAAA/CNAME only. Supports `dryRun`.
+//
+// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+//
+// Corresponds with POST /cloudflare/createRecord/{domain} (the `CloudflareCreateRecord` operationId).
+func (c *ClientWithResponses) CloudflareCreateRecordWithResponse(ctx context.Context, domain string, body CloudflareCreateRecordJSONRequestBody, reqEditors ...RequestEditorFn) (*CloudflareCreateRecordResponse, error) {
+	rsp, err := c.CloudflareCreateRecord(ctx, domain, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCloudflareCreateRecordResponse(rsp)
+}
+
+// CloudflareDeleteRecordWithBodyWithResponse Delete a DNS record from the domain's Cloudflare zone
+//
+// **This writes to the Cloudflare zone that actually answers for the domain**, unlike `/dns/*`, which manages Porkbun's nameservers and no longer affects resolution once a domain has moved.
+//
+// The record is read before deletion, so the response reports exactly what was removed and a bad id fails before anything is destroyed. Supports `dryRun`.
+//
+// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
+//
+// Corresponds with POST /cloudflare/deleteRecord/{domain}/{recordId} (the `CloudflareDeleteRecord` operationId).
+func (c *ClientWithResponses) CloudflareDeleteRecordWithBodyWithResponse(ctx context.Context, domain string, recordId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CloudflareDeleteRecordResponse, error) {
+	rsp, err := c.CloudflareDeleteRecordWithBody(ctx, domain, recordId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCloudflareDeleteRecordResponse(rsp)
+}
+
+// CloudflareDeleteRecordWithResponse Delete a DNS record from the domain's Cloudflare zone
+//
+// **This writes to the Cloudflare zone that actually answers for the domain**, unlike `/dns/*`, which manages Porkbun's nameservers and no longer affects resolution once a domain has moved.
+//
+// The record is read before deletion, so the response reports exactly what was removed and a bad id fails before anything is destroyed. Supports `dryRun`.
+//
+// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+//
+// Corresponds with POST /cloudflare/deleteRecord/{domain}/{recordId} (the `CloudflareDeleteRecord` operationId).
+func (c *ClientWithResponses) CloudflareDeleteRecordWithResponse(ctx context.Context, domain string, recordId string, body CloudflareDeleteRecordJSONRequestBody, reqEditors ...RequestEditorFn) (*CloudflareDeleteRecordResponse, error) {
+	rsp, err := c.CloudflareDeleteRecord(ctx, domain, recordId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCloudflareDeleteRecordResponse(rsp)
+}
+
+// CloudflareDisconnectWithResponse Remove the stored Cloudflare connection
+//
+// Revoke and forget this account's Cloudflare grant. Domains already moved stay on Cloudflare and keep resolving; this only stops us making further changes on the customer's behalf. Reconnecting requires the browser authorization again. Supports `dryRun`.
+//
+// Returns a wrapper object for the known response body format(s).
+//
+// Corresponds with POST /cloudflare/disconnect (the `CloudflareDisconnect` operationId).
+func (c *ClientWithResponses) CloudflareDisconnectWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*CloudflareDisconnectResponse, error) {
+	rsp, err := c.CloudflareDisconnect(ctx, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCloudflareDisconnectResponse(rsp)
+}
+
+// CloudflareEditRecordWithBodyWithResponse Update a DNS record in the domain's Cloudflare zone
+//
+// **This writes to the Cloudflare zone that actually answers for the domain**, unlike `/dns/*`, which manages Porkbun's nameservers and no longer affects resolution once a domain has moved.
+//
+// Partial update: fields you omit keep their current value. The response carries both the new record and the `previous` one. Supports `dryRun`.
+//
+// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
+//
+// Corresponds with POST /cloudflare/editRecord/{domain}/{recordId} (the `CloudflareEditRecord` operationId).
+func (c *ClientWithResponses) CloudflareEditRecordWithBodyWithResponse(ctx context.Context, domain string, recordId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CloudflareEditRecordResponse, error) {
+	rsp, err := c.CloudflareEditRecordWithBody(ctx, domain, recordId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCloudflareEditRecordResponse(rsp)
+}
+
+// CloudflareEditRecordWithResponse Update a DNS record in the domain's Cloudflare zone
+//
+// **This writes to the Cloudflare zone that actually answers for the domain**, unlike `/dns/*`, which manages Porkbun's nameservers and no longer affects resolution once a domain has moved.
+//
+// Partial update: fields you omit keep their current value. The response carries both the new record and the `previous` one. Supports `dryRun`.
+//
+// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+//
+// Corresponds with POST /cloudflare/editRecord/{domain}/{recordId} (the `CloudflareEditRecord` operationId).
+func (c *ClientWithResponses) CloudflareEditRecordWithResponse(ctx context.Context, domain string, recordId string, body CloudflareEditRecordJSONRequestBody, reqEditors ...RequestEditorFn) (*CloudflareEditRecordResponse, error) {
+	rsp, err := c.CloudflareEditRecord(ctx, domain, recordId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCloudflareEditRecordResponse(rsp)
+}
+
+// CloudflareGetWithResponse Get the Cloudflare move status for one domain
+//
+// Status of a single domain's move, including the zone id once created and the nameservers we replaced (kept so the move can be undone). `NOT_QUEUED` if the domain has never been queued. Also available via POST.
+//
+// **Status values** (poll until one of the terminal ones):
+//
+// | status | meaning | terminal |
+// |--------|---------|----------|
+// | `queued` | accepted, waiting for the worker | no |
+// | `working` | a run is touching this row right now | no |
+// | `activating` | nameservers repointed; waiting for Cloudflare to mark the zone active. Legitimately slow (registry + resolver propagation) — allow up to 24h | no |
+// | `connected` / `done` | the move finished | **yes** |
+// | `skipped` | not moved, and `message` says why (DNSSEC live, custom nameservers, no longer in the account) | **yes** |
+// | `failed` / `error` | the move did not complete; `message` says why. Re-queue with `/cloudflare/retry/{domain}` | **yes** |
+//
+// Poll on a sensible interval (a few seconds early on, then back off) — a zone typically leaves `queued` within seconds but can sit in `activating` while DNS propagates.
+//
+// Returns a wrapper object for the known response body format(s).
+//
+// Corresponds with GET /cloudflare/get/{domain} (the `CloudflareGet` operationId).
+func (c *ClientWithResponses) CloudflareGetWithResponse(ctx context.Context, domain string, reqEditors ...RequestEditorFn) (*CloudflareGetResponse, error) {
+	rsp, err := c.CloudflareGet(ctx, domain, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCloudflareGetResponse(rsp)
+}
+
+// CloudflareGetConnectionWithResponse Check the Cloudflare account connection (poll target)
+//
+// Whether this account has an active Cloudflare grant, and which Cloudflare account it points at.
+//
+// **This is the poll target for the connect flow.** Minting the grant is a human action: Cloudflare's consent screen has to be completed in a browser, and the authorization is bound to the Porkbun web session that started it, so it cannot be driven over the API. When `connected` is `false` the response carries a `connectUrl` — send the account owner there, then poll this endpoint until `connected` is `true`.
+//
+// Also available via POST.
+//
+// Returns a wrapper object for the known response body format(s).
+//
+// Corresponds with GET /cloudflare/getConnection (the `CloudflareGetConnection` operationId).
+func (c *ClientWithResponses) CloudflareGetConnectionWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*CloudflareGetConnectionResponse, error) {
+	rsp, err := c.CloudflareGetConnection(ctx, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCloudflareGetConnectionResponse(rsp)
+}
+
+// CloudflareGetQueueWithResponse List every Cloudflare move for the account
+//
+// Every Cloudflare move this account has requested, with status and message. Queue rows are never deleted, so this doubles as the audit trail. Also available via POST.
+//
+// **Status values** (poll until one of the terminal ones):
+//
+// | status | meaning | terminal |
+// |--------|---------|----------|
+// | `queued` | accepted, waiting for the worker | no |
+// | `working` | a run is touching this row right now | no |
+// | `activating` | nameservers repointed; waiting for Cloudflare to mark the zone active. Legitimately slow (registry + resolver propagation) — allow up to 24h | no |
+// | `connected` / `done` | the move finished | **yes** |
+// | `skipped` | not moved, and `message` says why (DNSSEC live, custom nameservers, no longer in the account) | **yes** |
+// | `failed` / `error` | the move did not complete; `message` says why. Re-queue with `/cloudflare/retry/{domain}` | **yes** |
+//
+// Poll on a sensible interval (a few seconds early on, then back off) — a zone typically leaves `queued` within seconds but can sit in `activating` while DNS propagates.
+//
+// Returns a wrapper object for the known response body format(s).
+//
+// Corresponds with GET /cloudflare/getQueue (the `CloudflareGetQueue` operationId).
+func (c *ClientWithResponses) CloudflareGetQueueWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*CloudflareGetQueueResponse, error) {
+	rsp, err := c.CloudflareGetQueue(ctx, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCloudflareGetQueueResponse(rsp)
+}
+
+// CloudflareGetRecordsWithResponse List the domain's live DNS records at Cloudflare
+//
+// The domain's DNS records **as Cloudflare currently holds them**, each with its `proxied` flag and whether it is `proxiable` at all.
+//
+// Once a domain has moved, this is the authoritative record set — `/dns/retrieve` reads the Porkbun zone, which is no longer the one answering queries. Requires the move to have finished (`ZONE_NOT_READY` otherwise). Also available via POST.
+//
+// Returns a wrapper object for the known response body format(s).
+//
+// Corresponds with GET /cloudflare/getRecords/{domain} (the `CloudflareGetRecords` operationId).
+func (c *ClientWithResponses) CloudflareGetRecordsWithResponse(ctx context.Context, domain string, reqEditors ...RequestEditorFn) (*CloudflareGetRecordsResponse, error) {
+	rsp, err := c.CloudflareGetRecords(ctx, domain, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCloudflareGetRecordsResponse(rsp)
+}
+
+// CloudflareGetZoneWithResponse Get live zone state from Cloudflare (and detect nameserver drift)
+//
+// What **Cloudflare** says about the zone right now — status, paused, its nameservers, activation date — as opposed to what our queue row remembers.
+//
+// These drift: if the nameservers are repointed elsewhere after the move, our row still reads `done` while Cloudflare has stopped answering for the domain. The response includes the live public nameservers and a `nameserversDrifted` boolean so you don't have to diff them. Also available via POST.
+//
+// Returns a wrapper object for the known response body format(s).
+//
+// Corresponds with GET /cloudflare/getZone/{domain} (the `CloudflareGetZone` operationId).
+func (c *ClientWithResponses) CloudflareGetZoneWithResponse(ctx context.Context, domain string, reqEditors ...RequestEditorFn) (*CloudflareGetZoneResponse, error) {
+	rsp, err := c.CloudflareGetZone(ctx, domain, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCloudflareGetZoneResponse(rsp)
+}
+
+// CloudflareGetZoneSettingsWithResponse Read the zone settings that matter after a move
+//
+// The Cloudflare zone settings worth caring about post-migration: `ssl`, `always_use_https`, `automatic_https_rewrites`, `min_tls_version`, `development_mode`, `cache_level`.
+//
+// The important one is **`ssl`**: `flexible` means Cloudflare fetches your origin over plain HTTP while visitors see a padlock, so the response warns when it is `off` or `flexible`. Also available via POST.
+//
+// If the account's Cloudflare authorization predates this feature it will not carry the `zone-settings.write` scope, and this returns `CLOUDFLARE_REAUTHORIZE_REQUIRED` with a `connectUrl`. Reconnecting is the same one-click browser flow and does not disturb domains already moved.
+//
+// Returns a wrapper object for the known response body format(s).
+//
+// Corresponds with GET /cloudflare/getZoneSettings/{domain} (the `CloudflareGetZoneSettings` operationId).
+func (c *ClientWithResponses) CloudflareGetZoneSettingsWithResponse(ctx context.Context, domain string, reqEditors ...RequestEditorFn) (*CloudflareGetZoneSettingsResponse, error) {
+	rsp, err := c.CloudflareGetZoneSettings(ctx, domain, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCloudflareGetZoneSettingsResponse(rsp)
+}
+
+// CloudflareInventoryWithResponse List every domain with its Cloudflare eligibility
+//
+// Every domain in the account with a `state` (`eligible`, `warn`, `blocked`, `connected`, `inprogress`) and a human-readable `reason`.
+//
+// Read this **before** queueing to see what will be skipped and why. Works even with no Cloudflare connection yet, so an agent can plan while the owner is still authorizing. Also available via POST.
+//
+// Returns a wrapper object for the known response body format(s).
+//
+// Corresponds with GET /cloudflare/inventory (the `CloudflareInventory` operationId).
+func (c *ClientWithResponses) CloudflareInventoryWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*CloudflareInventoryResponse, error) {
+	rsp, err := c.CloudflareInventory(ctx, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCloudflareInventoryResponse(rsp)
+}
+
+// CloudflarePreviewWithResponse Preview exactly which records a move would copy
+//
+// Which DNS records we would create in Cloudflare for this domain, and which we would drop, **without queueing anything**. The honest answer to "what will this do to my DNS" before committing.
+//
+// Records are always created DNS-only (grey cloud); use `/cloudflare/setProxy` afterwards to turn the proxy on. Also available via POST.
+//
+// Returns a wrapper object for the known response body format(s).
+//
+// Corresponds with GET /cloudflare/preview/{domain} (the `CloudflarePreview` operationId).
+func (c *ClientWithResponses) CloudflarePreviewWithResponse(ctx context.Context, domain string, reqEditors ...RequestEditorFn) (*CloudflarePreviewResponse, error) {
+	rsp, err := c.CloudflarePreview(ctx, domain, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCloudflarePreviewResponse(rsp)
+}
+
+// CloudflareRetryWithResponse Retry a failed or skipped domain
+//
+// Put a domain that failed or was skipped back in the queue. Fails with `RETRY_FAILED` if it is already connected, already in progress, or no longer in the account. Supports `dryRun`.
+//
+// Returns a wrapper object for the known response body format(s).
+//
+// Corresponds with POST /cloudflare/retry/{domain} (the `CloudflareRetry` operationId).
+func (c *ClientWithResponses) CloudflareRetryWithResponse(ctx context.Context, domain string, reqEditors ...RequestEditorFn) (*CloudflareRetryResponse, error) {
+	rsp, err := c.CloudflareRetry(ctx, domain, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCloudflareRetryResponse(rsp)
+}
+
+// CloudflareRollbackWithResponse Undo a completed move (restore Porkbun nameservers)
+//
+// Point the domain's nameservers back at Porkbun, restoring the DNS we still hold.
+//
+// The Cloudflare zone is deliberately left in place — deleting a zone in someone's own Cloudflare account is theirs to do. Fails with `ROLLBACK_FAILED` if we never moved the domain, it is already back on Porkbun nameservers, or it is being worked on right now. Supports `dryRun`.
+//
+// Returns a wrapper object for the known response body format(s).
+//
+// Corresponds with POST /cloudflare/rollback/{domain} (the `CloudflareRollback` operationId).
+func (c *ClientWithResponses) CloudflareRollbackWithResponse(ctx context.Context, domain string, reqEditors ...RequestEditorFn) (*CloudflareRollbackResponse, error) {
+	rsp, err := c.CloudflareRollback(ctx, domain, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCloudflareRollbackResponse(rsp)
+}
+
+// CloudflareSetProxyWithBodyWithResponse Turn the Cloudflare proxy (orange cloud) on or off
+//
+// Set `proxied` on the domain's Cloudflare DNS records.
+//
+// **The move itself always imports records DNS-only (grey cloud), on purpose** — changing how traffic is served at the same time as changing who serves DNS gives you two variables to debug at once. Proxying is therefore a separate, explicit step, best done after you've confirmed the site still works.
+//
+// Defaults to every proxiable record; pass `records` to target specific names (`"@"` means the apex, a bare label like `"www"` is expanded). Only A, AAAA and CNAME can be proxied — anything else is reported under `skipped` with a reason rather than failing the call. Records already in the requested state are skipped too.
+//
+// Proxying hides the origin IP, so if the zone's MX points at a hostname you are proxying, mail to it breaks; that case comes back in `warnings`. Supports `dryRun`.
+//
+// Rate limit: 60 changes per account per hour (these calls go to Cloudflare under Porkbun's OAuth client).
+//
+// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
+//
+// Corresponds with POST /cloudflare/setProxy/{domain} (the `CloudflareSetProxy` operationId).
+func (c *ClientWithResponses) CloudflareSetProxyWithBodyWithResponse(ctx context.Context, domain string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CloudflareSetProxyResponse, error) {
+	rsp, err := c.CloudflareSetProxyWithBody(ctx, domain, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCloudflareSetProxyResponse(rsp)
+}
+
+// CloudflareSetProxyWithResponse Turn the Cloudflare proxy (orange cloud) on or off
+//
+// Set `proxied` on the domain's Cloudflare DNS records.
+//
+// **The move itself always imports records DNS-only (grey cloud), on purpose** — changing how traffic is served at the same time as changing who serves DNS gives you two variables to debug at once. Proxying is therefore a separate, explicit step, best done after you've confirmed the site still works.
+//
+// Defaults to every proxiable record; pass `records` to target specific names (`"@"` means the apex, a bare label like `"www"` is expanded). Only A, AAAA and CNAME can be proxied — anything else is reported under `skipped` with a reason rather than failing the call. Records already in the requested state are skipped too.
+//
+// Proxying hides the origin IP, so if the zone's MX points at a hostname you are proxying, mail to it breaks; that case comes back in `warnings`. Supports `dryRun`.
+//
+// Rate limit: 60 changes per account per hour (these calls go to Cloudflare under Porkbun's OAuth client).
+//
+// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+//
+// Corresponds with POST /cloudflare/setProxy/{domain} (the `CloudflareSetProxy` operationId).
+func (c *ClientWithResponses) CloudflareSetProxyWithResponse(ctx context.Context, domain string, body CloudflareSetProxyJSONRequestBody, reqEditors ...RequestEditorFn) (*CloudflareSetProxyResponse, error) {
+	rsp, err := c.CloudflareSetProxy(ctx, domain, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCloudflareSetProxyResponse(rsp)
+}
+
+// CloudflareSetZoneSettingsWithBodyWithResponse Change zone settings (allowlisted)
+//
+// Set one or more of the allowlisted zone settings. This is an allowlist rather than a passthrough — Cloudflare exposes hundreds of settings and WAF/firewall/security controls are deliberately out of scope for this API.
+//
+// Prefer `ssl: "full"`; `flexible` is an invisible downgrade for visitors. Supports `dryRun`. Rate limit: shares the 60/hour Cloudflare-write budget.
+//
+// If the account's Cloudflare authorization predates this feature it will not carry the `zone-settings.write` scope, and this returns `CLOUDFLARE_REAUTHORIZE_REQUIRED` with a `connectUrl`. Reconnecting is the same one-click browser flow and does not disturb domains already moved.
+//
+// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
+//
+// Corresponds with POST /cloudflare/setZoneSettings/{domain} (the `CloudflareSetZoneSettings` operationId).
+func (c *ClientWithResponses) CloudflareSetZoneSettingsWithBodyWithResponse(ctx context.Context, domain string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CloudflareSetZoneSettingsResponse, error) {
+	rsp, err := c.CloudflareSetZoneSettingsWithBody(ctx, domain, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCloudflareSetZoneSettingsResponse(rsp)
+}
+
+// CloudflareSetZoneSettingsWithResponse Change zone settings (allowlisted)
+//
+// Set one or more of the allowlisted zone settings. This is an allowlist rather than a passthrough — Cloudflare exposes hundreds of settings and WAF/firewall/security controls are deliberately out of scope for this API.
+//
+// Prefer `ssl: "full"`; `flexible` is an invisible downgrade for visitors. Supports `dryRun`. Rate limit: shares the 60/hour Cloudflare-write budget.
+//
+// If the account's Cloudflare authorization predates this feature it will not carry the `zone-settings.write` scope, and this returns `CLOUDFLARE_REAUTHORIZE_REQUIRED` with a `connectUrl`. Reconnecting is the same one-click browser flow and does not disturb domains already moved.
+//
+// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+//
+// Corresponds with POST /cloudflare/setZoneSettings/{domain} (the `CloudflareSetZoneSettings` operationId).
+func (c *ClientWithResponses) CloudflareSetZoneSettingsWithResponse(ctx context.Context, domain string, body CloudflareSetZoneSettingsJSONRequestBody, reqEditors ...RequestEditorFn) (*CloudflareSetZoneSettingsResponse, error) {
+	rsp, err := c.CloudflareSetZoneSettings(ctx, domain, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCloudflareSetZoneSettingsResponse(rsp)
+}
+
 // DnsCreateWithBodyWithResponse Create DNS record
 //
 // Create a new DNS record for a domain. The record ID is returned in the response.
@@ -19799,9 +23791,15 @@ func (c *ClientWithResponses) EmailSetPasswordWithResponse(ctx context.Context, 
 	return ParseEmailSetPasswordResponse(rsp)
 }
 
-// HostingCreateWithBodyWithResponse Provision Secure Static Hosting
+// HostingCreateWithBodyWithResponse Provision hosting — a static site or a WordPress site
 //
-// Provision Secure Static Hosting for a domain in the account. The FIRST provision for a domain starts a **15-day free trial** ($0 now) that **auto-renews** at the plan price when the trial ends; a re-provision after deprovision is charged immediately to account credit (one free trial per domain). Provisioning **switches the domain to Porkbun nameservers** if it isn't already — pass `agreeToNameserverChange: true` to allow that. Supports `dryRun`. Remote setup can be async: `status` may be `PENDING` — poll `/hosting/get` until `ACTIVE` before deploying.
+// **Applies to:** Both products — the `sku` decides which.
+//
+// Provision hosting (Secure Static Hosting or Cloud for WordPress) for a domain in the account. The FIRST provision for a domain starts a **15-day free trial** ($0 now) that **auto-renews** at the plan price when the trial ends; a re-provision after deprovision is charged immediately to account credit (one free trial per domain). Provisioning **switches the domain to Porkbun nameservers** if it isn't already — pass `agreeToNameserverChange: true` to allow that. Supports `dryRun`. Remote setup can be async: `status` may be `PENDING` — poll `/hosting/get` until `ACTIVE` before deploying.
+//
+// **Cloud for WordPress:** pass a `CLOUDWORDPRESS…` sku to provision a managed WordPress site instead of static hosting. The file endpoints (deploy/files/deleteFile/makeDir) do not apply — manage the site through WordPress, using `/hosting/createWpCredentials/{domain}` for REST API credentials.
+//
+// **Rate limit:** 10 provisions per account per hour (`dryRun` calls are free).
 //
 // Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
 //
@@ -19814,9 +23812,15 @@ func (c *ClientWithResponses) HostingCreateWithBodyWithResponse(ctx context.Cont
 	return ParseHostingCreateResponse(rsp)
 }
 
-// HostingCreateWithResponse Provision Secure Static Hosting
+// HostingCreateWithResponse Provision hosting — a static site or a WordPress site
 //
-// Provision Secure Static Hosting for a domain in the account. The FIRST provision for a domain starts a **15-day free trial** ($0 now) that **auto-renews** at the plan price when the trial ends; a re-provision after deprovision is charged immediately to account credit (one free trial per domain). Provisioning **switches the domain to Porkbun nameservers** if it isn't already — pass `agreeToNameserverChange: true` to allow that. Supports `dryRun`. Remote setup can be async: `status` may be `PENDING` — poll `/hosting/get` until `ACTIVE` before deploying.
+// **Applies to:** Both products — the `sku` decides which.
+//
+// Provision hosting (Secure Static Hosting or Cloud for WordPress) for a domain in the account. The FIRST provision for a domain starts a **15-day free trial** ($0 now) that **auto-renews** at the plan price when the trial ends; a re-provision after deprovision is charged immediately to account credit (one free trial per domain). Provisioning **switches the domain to Porkbun nameservers** if it isn't already — pass `agreeToNameserverChange: true` to allow that. Supports `dryRun`. Remote setup can be async: `status` may be `PENDING` — poll `/hosting/get` until `ACTIVE` before deploying.
+//
+// **Cloud for WordPress:** pass a `CLOUDWORDPRESS…` sku to provision a managed WordPress site instead of static hosting. The file endpoints (deploy/files/deleteFile/makeDir) do not apply — manage the site through WordPress, using `/hosting/createWpCredentials/{domain}` for REST API credentials.
+//
+// **Rate limit:** 10 provisions per account per hour (`dryRun` calls are free).
 //
 // Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
 //
@@ -19829,7 +23833,59 @@ func (c *ClientWithResponses) HostingCreateWithResponse(ctx context.Context, dom
 	return ParseHostingCreateResponse(rsp)
 }
 
-// HostingDeleteWithBodyWithResponse Deprovision hosting
+// HostingCreateWpCredentialsWithBodyWithResponse Mint WordPress REST API credentials (WordPress only)
+//
+// **Applies to:** Cloud for WordPress only.
+//
+// Creates a WordPress **Application Password** so an agent or integration can drive the site over the WP REST API at `https://{domain}/wp-json/` using HTTP Basic auth. The password is returned **once** — WordPress stores only a hash.
+//
+// Defaults to a dedicated least-privilege `porkbun-agent` user with the `editor` role (created on first use), which can manage content but not install code. `role: "administrator"` grants full site control **including plugin installation (arbitrary code execution on the site)** and therefore requires `acknowledgeFullAccess: true`.
+//
+// Revoke any time via `/hosting/deleteWpCredentials/{domain}` or in wp-admin under Users → Profile. Requires the site to be provisioned and ACTIVE (poll `/hosting/get/{domain}`).
+//
+// Free **preview** sites (the $0 parked plan) are excluded — they return `PREVIEW_SITE_NOT_SUPPORTED`; upgrade to a paid plan first. Works on any Cloud for WordPress site in the account regardless of whether it was provisioned via the API or the website, including sites migrated onto WP Cloud from the legacy WordPress product. For `role: "administrator"` the site's actual administrator account is looked up rather than assumed, so a renamed admin user is handled.
+//
+// **Rate limit:** 20 mints per account per hour (`dryRun` calls are free).
+//
+// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
+//
+// Corresponds with POST /hosting/createWpCredentials/{domain} (the `HostingCreateWpCredentials` operationId).
+func (c *ClientWithResponses) HostingCreateWpCredentialsWithBodyWithResponse(ctx context.Context, domain string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*HostingCreateWpCredentialsResponse, error) {
+	rsp, err := c.HostingCreateWpCredentialsWithBody(ctx, domain, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseHostingCreateWpCredentialsResponse(rsp)
+}
+
+// HostingCreateWpCredentialsWithResponse Mint WordPress REST API credentials (WordPress only)
+//
+// **Applies to:** Cloud for WordPress only.
+//
+// Creates a WordPress **Application Password** so an agent or integration can drive the site over the WP REST API at `https://{domain}/wp-json/` using HTTP Basic auth. The password is returned **once** — WordPress stores only a hash.
+//
+// Defaults to a dedicated least-privilege `porkbun-agent` user with the `editor` role (created on first use), which can manage content but not install code. `role: "administrator"` grants full site control **including plugin installation (arbitrary code execution on the site)** and therefore requires `acknowledgeFullAccess: true`.
+//
+// Revoke any time via `/hosting/deleteWpCredentials/{domain}` or in wp-admin under Users → Profile. Requires the site to be provisioned and ACTIVE (poll `/hosting/get/{domain}`).
+//
+// Free **preview** sites (the $0 parked plan) are excluded — they return `PREVIEW_SITE_NOT_SUPPORTED`; upgrade to a paid plan first. Works on any Cloud for WordPress site in the account regardless of whether it was provisioned via the API or the website, including sites migrated onto WP Cloud from the legacy WordPress product. For `role: "administrator"` the site's actual administrator account is looked up rather than assumed, so a renamed admin user is handled.
+//
+// **Rate limit:** 20 mints per account per hour (`dryRun` calls are free).
+//
+// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+//
+// Corresponds with POST /hosting/createWpCredentials/{domain} (the `HostingCreateWpCredentials` operationId).
+func (c *ClientWithResponses) HostingCreateWpCredentialsWithResponse(ctx context.Context, domain string, body HostingCreateWpCredentialsJSONRequestBody, reqEditors ...RequestEditorFn) (*HostingCreateWpCredentialsResponse, error) {
+	rsp, err := c.HostingCreateWpCredentials(ctx, domain, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseHostingCreateWpCredentialsResponse(rsp)
+}
+
+// HostingDeleteWithBodyWithResponse Deprovision hosting (either product)
+//
+// **Applies to:** Both products.
 //
 // Deprovision (cancel) Secure Static Hosting for a domain; teardown is scheduled and completed by Porkbun. Note: the domain has already used its one free trial, so provisioning it again later will be charged (no second free trial).
 //
@@ -19844,7 +23900,9 @@ func (c *ClientWithResponses) HostingDeleteWithBodyWithResponse(ctx context.Cont
 	return ParseHostingDeleteResponse(rsp)
 }
 
-// HostingDeleteWithResponse Deprovision hosting
+// HostingDeleteWithResponse Deprovision hosting (either product)
+//
+// **Applies to:** Both products.
 //
 // Deprovision (cancel) Secure Static Hosting for a domain; teardown is scheduled and completed by Porkbun. Note: the domain has already used its one free trial, so provisioning it again later will be charged (no second free trial).
 //
@@ -19859,7 +23917,9 @@ func (c *ClientWithResponses) HostingDeleteWithResponse(ctx context.Context, dom
 	return ParseHostingDeleteResponse(rsp)
 }
 
-// HostingDeleteFileWithBodyWithResponse Delete a hosting file
+// HostingDeleteFileWithBodyWithResponse Delete a site file (static hosting only)
+//
+// **Applies to:** Secure Static Hosting only — a WordPress site returns `NOT_SUPPORTED_FOR_PRODUCT`.
 //
 // Delete a file (or empty directory) at `path` in the domain's hosting space.
 //
@@ -19874,7 +23934,9 @@ func (c *ClientWithResponses) HostingDeleteFileWithBodyWithResponse(ctx context.
 	return ParseHostingDeleteFileResponse(rsp)
 }
 
-// HostingDeleteFileWithResponse Delete a hosting file
+// HostingDeleteFileWithResponse Delete a site file (static hosting only)
+//
+// **Applies to:** Secure Static Hosting only — a WordPress site returns `NOT_SUPPORTED_FOR_PRODUCT`.
 //
 // Delete a file (or empty directory) at `path` in the domain's hosting space.
 //
@@ -19889,7 +23951,47 @@ func (c *ClientWithResponses) HostingDeleteFileWithResponse(ctx context.Context,
 	return ParseHostingDeleteFileResponse(rsp)
 }
 
-// HostingDeployWithBodyWithResponse Deploy files to hosting
+// HostingDeleteWpCredentialsWithBodyWithResponse Revoke WordPress application passwords (WordPress only)
+//
+// **Applies to:** Cloud for WordPress only.
+//
+// Revokes an application password by `uuid` (from `/hosting/getWpCredentials`), or every one for the user with `all: true`. Any integration using it stops authenticating immediately.
+//
+// Free preview sites are excluded (`PREVIEW_SITE_NOT_SUPPORTED`).
+//
+// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
+//
+// Corresponds with POST /hosting/deleteWpCredentials/{domain} (the `HostingDeleteWpCredentials` operationId).
+func (c *ClientWithResponses) HostingDeleteWpCredentialsWithBodyWithResponse(ctx context.Context, domain string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*HostingDeleteWpCredentialsResponse, error) {
+	rsp, err := c.HostingDeleteWpCredentialsWithBody(ctx, domain, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseHostingDeleteWpCredentialsResponse(rsp)
+}
+
+// HostingDeleteWpCredentialsWithResponse Revoke WordPress application passwords (WordPress only)
+//
+// **Applies to:** Cloud for WordPress only.
+//
+// Revokes an application password by `uuid` (from `/hosting/getWpCredentials`), or every one for the user with `all: true`. Any integration using it stops authenticating immediately.
+//
+// Free preview sites are excluded (`PREVIEW_SITE_NOT_SUPPORTED`).
+//
+// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+//
+// Corresponds with POST /hosting/deleteWpCredentials/{domain} (the `HostingDeleteWpCredentials` operationId).
+func (c *ClientWithResponses) HostingDeleteWpCredentialsWithResponse(ctx context.Context, domain string, body HostingDeleteWpCredentialsJSONRequestBody, reqEditors ...RequestEditorFn) (*HostingDeleteWpCredentialsResponse, error) {
+	rsp, err := c.HostingDeleteWpCredentials(ctx, domain, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseHostingDeleteWpCredentialsResponse(rsp)
+}
+
+// HostingDeployWithBodyWithResponse Upload site files (static hosting only)
+//
+// **Applies to:** Secure Static Hosting only — a WordPress site returns `NOT_SUPPORTED_FOR_PRODUCT`; manage its content through WordPress instead.
 //
 // Upload static files to the domain's Secure Static Hosting space. Send `files` as an array of `{ path, content }` where `content` is base64. Total payload ≤ 10 MB per request (split larger sites across calls). Only static-web file types are accepted (html/css/js/images/fonts/…); server-executable types are rejected. Hosting must be ACTIVE. A file’s `path` may include directories (e.g. `assets/css/style.css`); any missing parent directories are created automatically. Paths are sanitized (no traversal/control chars) and the filename extension must be an allowed static-web type.
 //
@@ -19904,7 +24006,9 @@ func (c *ClientWithResponses) HostingDeployWithBodyWithResponse(ctx context.Cont
 	return ParseHostingDeployResponse(rsp)
 }
 
-// HostingDeployWithResponse Deploy files to hosting
+// HostingDeployWithResponse Upload site files (static hosting only)
+//
+// **Applies to:** Secure Static Hosting only — a WordPress site returns `NOT_SUPPORTED_FOR_PRODUCT`; manage its content through WordPress instead.
 //
 // Upload static files to the domain's Secure Static Hosting space. Send `files` as an array of `{ path, content }` where `content` is base64. Total payload ≤ 10 MB per request (split larger sites across calls). Only static-web file types are accepted (html/css/js/images/fonts/…); server-executable types are rejected. Hosting must be ACTIVE. A file’s `path` may include directories (e.g. `assets/css/style.css`); any missing parent directories are created automatically. Paths are sanitized (no traversal/control chars) and the filename extension must be an allowed static-web type.
 //
@@ -19919,7 +24023,9 @@ func (c *ClientWithResponses) HostingDeployWithResponse(ctx context.Context, dom
 	return ParseHostingDeployResponse(rsp)
 }
 
-// HostingFilesWithResponse List hosting files
+// HostingFilesWithResponse List site files (static hosting only)
+//
+// **Applies to:** Secure Static Hosting only — a WordPress site returns `NOT_SUPPORTED_FOR_PRODUCT`.
 //
 // List file/directory names under an optional `path` in the domain's hosting space. Also available via POST (send `path` in the body).
 //
@@ -19934,7 +24040,9 @@ func (c *ClientWithResponses) HostingFilesWithResponse(ctx context.Context, doma
 	return ParseHostingFilesResponse(rsp)
 }
 
-// HostingGetWithResponse Get hosting status
+// HostingGetWithResponse Get hosting status (either product)
+//
+// **Applies to:** Both products.
 //
 // Return the Secure Static Hosting status for a domain (plan, server, trial, expiry, auto-renew), or `hosting: null` if none. Also available via POST.
 //
@@ -19949,7 +24057,28 @@ func (c *ClientWithResponses) HostingGetWithResponse(ctx context.Context, domain
 	return ParseHostingGetResponse(rsp)
 }
 
-// HostingMakeDirWithBodyWithResponse Create a hosting directory
+// HostingGetWpCredentialsWithResponse List WordPress application passwords (WordPress only)
+//
+// **Applies to:** Cloud for WordPress only.
+//
+// Lists the application passwords on the site (uuid, name, created, last used) so you can audit or pick one to revoke. Metadata only — WordPress stores just a hash, so a password can never be re-read. Optional `wpUser` (defaults to the dedicated `porkbun-agent` user).
+//
+// Free preview sites are excluded (`PREVIEW_SITE_NOT_SUPPORTED`).
+//
+// Returns a wrapper object for the known response body format(s).
+//
+// Corresponds with GET /hosting/getWpCredentials/{domain} (the `HostingGetWpCredentials` operationId).
+func (c *ClientWithResponses) HostingGetWpCredentialsWithResponse(ctx context.Context, domain string, params *HostingGetWpCredentialsParams, reqEditors ...RequestEditorFn) (*HostingGetWpCredentialsResponse, error) {
+	rsp, err := c.HostingGetWpCredentials(ctx, domain, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseHostingGetWpCredentialsResponse(rsp)
+}
+
+// HostingMakeDirWithBodyWithResponse Create a directory (static hosting only)
+//
+// **Applies to:** Secure Static Hosting only — a WordPress site returns `NOT_SUPPORTED_FOR_PRODUCT`.
 //
 // Create a directory (and any missing parent directories) at `path` in the domain’s hosting space. Deploy already auto-creates directories in a file’s path, so use this to stand up an empty directory explicitly. Path is sanitized segment-by-segment (no traversal / control chars).
 //
@@ -19964,7 +24093,9 @@ func (c *ClientWithResponses) HostingMakeDirWithBodyWithResponse(ctx context.Con
 	return ParseHostingMakeDirResponse(rsp)
 }
 
-// HostingMakeDirWithResponse Create a hosting directory
+// HostingMakeDirWithResponse Create a directory (static hosting only)
+//
+// **Applies to:** Secure Static Hosting only — a WordPress site returns `NOT_SUPPORTED_FOR_PRODUCT`.
 //
 // Create a directory (and any missing parent directories) at `path` in the domain’s hosting space. Deploy already auto-creates directories in a file’s path, so use this to stand up an empty directory explicitly. Path is sanitized segment-by-segment (no traversal / control chars).
 //
@@ -19979,9 +24110,11 @@ func (c *ClientWithResponses) HostingMakeDirWithResponse(ctx context.Context, do
 	return ParseHostingMakeDirResponse(rsp)
 }
 
-// HostingPlansWithResponse List provisionable hosting plans
+// HostingPlansWithResponse List provisionable hosting plans (static + WordPress)
 //
-// List the hosting plans that can be provisioned via the API, with price, interval, trial length, and features. Pass a row's `plan` to `/hosting/create` and its `price` (cents) as `acknowledgedCost`. Currently Secure Static Hosting; more products are added over time. Also available via POST.
+// **Applies to:** Both products.
+//
+// List the hosting plans that can be provisioned via the API, with price, interval, trial length, and features. Pass a row's `plan` to `/hosting/create` and its `price` (cents) as `acknowledgedCost`. Currently Secure Static Hosting; more products are added over time. Also available via POST. Includes both Secure Static Hosting and Cloud for WordPress (managed WordPress) plans; the `product` field distinguishes them.
 //
 // Returns a wrapper object for the known response body format(s).
 //
@@ -20373,7 +24506,7 @@ func (c *ClientWithResponses) SslRetrieveWithResponse(ctx context.Context, domai
 
 // WebhookCreateWithBodyWithResponse Create a webhook endpoint
 //
-// Register an HTTPS endpoint to receive signed event payloads. The response includes the generated `secret` — store it securely; it is the HMAC key used to verify the `X-Porkbun-Signature` header. Omit `events` (or pass `["*"]`) to subscribe to all event types. Maximum 20 endpoints per account.
+// Register an HTTPS endpoint to receive signed event payloads. The response includes the generated `secret` — store it securely; it is the HMAC key used to verify the `X-Porkbun-Signature` header. Omit `events` (or pass `["*"]`) to subscribe to all event types. Maximum 20 endpoints per account. **URL requirements:** the endpoint must be an `https://` URL on the standard port 443, with a hostname that resolves to a public internet address. Private, loopback, link-local, CGNAT and other reserved ranges are refused (`INVALID_WEBHOOK_URL`) because Porkbun delivers from inside its own network. Credentials in the URL (`https://user:pass@host`) are also refused — authenticate the receiver by verifying the `X-Porkbun-Signature` HMAC instead. A hostname that does not resolve yet is accepted, so you can register the endpoint before the receiver is deployed, but delivery is re-checked against these rules immediately before each request.
 //
 // Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
 //
@@ -20388,7 +24521,7 @@ func (c *ClientWithResponses) WebhookCreateWithBodyWithResponse(ctx context.Cont
 
 // WebhookCreateWithResponse Create a webhook endpoint
 //
-// Register an HTTPS endpoint to receive signed event payloads. The response includes the generated `secret` — store it securely; it is the HMAC key used to verify the `X-Porkbun-Signature` header. Omit `events` (or pass `["*"]`) to subscribe to all event types. Maximum 20 endpoints per account.
+// Register an HTTPS endpoint to receive signed event payloads. The response includes the generated `secret` — store it securely; it is the HMAC key used to verify the `X-Porkbun-Signature` header. Omit `events` (or pass `["*"]`) to subscribe to all event types. Maximum 20 endpoints per account. **URL requirements:** the endpoint must be an `https://` URL on the standard port 443, with a hostname that resolves to a public internet address. Private, loopback, link-local, CGNAT and other reserved ranges are refused (`INVALID_WEBHOOK_URL`) because Porkbun delivers from inside its own network. Credentials in the URL (`https://user:pass@host`) are also refused — authenticate the receiver by verifying the `X-Porkbun-Signature` HMAC instead. A hostname that does not resolve yet is accepted, so you can register the endpoint before the receiver is deployed, but delivery is re-checked against these rules immediately before each request.
 //
 // Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
 //
@@ -20598,7 +24731,7 @@ func (c *ClientWithResponses) WebhookTestWithResponse(ctx context.Context, body 
 
 // WebhookUpdateWithBodyWithResponse Update a webhook endpoint
 //
-// Update an endpoint's URL, event subscriptions, and/or status. Only the supplied fields change. Set `status` to `DISABLED` to pause deliveries or `ACTIVE` to resume (resuming also resets the consecutive-failure counter).
+// Update an endpoint's URL, event subscriptions, and/or status. Only the supplied fields change. Set `status` to `DISABLED` to pause deliveries or `ACTIVE` to resume (resuming also resets the consecutive-failure counter). **URL requirements:** the endpoint must be an `https://` URL on the standard port 443, with a hostname that resolves to a public internet address. Private, loopback, link-local, CGNAT and other reserved ranges are refused (`INVALID_WEBHOOK_URL`) because Porkbun delivers from inside its own network. Credentials in the URL (`https://user:pass@host`) are also refused — authenticate the receiver by verifying the `X-Porkbun-Signature` HMAC instead. A hostname that does not resolve yet is accepted, so you can register the endpoint before the receiver is deployed, but delivery is re-checked against these rules immediately before each request.
 //
 // Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
 //
@@ -20613,7 +24746,7 @@ func (c *ClientWithResponses) WebhookUpdateWithBodyWithResponse(ctx context.Cont
 
 // WebhookUpdateWithResponse Update a webhook endpoint
 //
-// Update an endpoint's URL, event subscriptions, and/or status. Only the supplied fields change. Set `status` to `DISABLED` to pause deliveries or `ACTIVE` to resume (resuming also resets the consecutive-failure counter).
+// Update an endpoint's URL, event subscriptions, and/or status. Only the supplied fields change. Set `status` to `DISABLED` to pause deliveries or `ACTIVE` to resume (resuming also resets the consecutive-failure counter). **URL requirements:** the endpoint must be an `https://` URL on the standard port 443, with a hostname that resolves to a public internet address. Private, loopback, link-local, CGNAT and other reserved ranges are refused (`INVALID_WEBHOOK_URL`) because Porkbun delivers from inside its own network. Credentials in the URL (`https://user:pass@host`) are also refused — authenticate the receiver by verifying the `X-Porkbun-Signature` HMAC instead. A hostname that does not resolve yet is accepted, so you can register the endpoint before the receiver is deployed, but delivery is re-checked against these rules immediately before each request.
 //
 // Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
 //
@@ -20887,6 +25020,448 @@ func ParseApikeyRetrieveResponse(rsp *http.Response) (*ApikeyRetrieveResponse, e
 			headers.XRateLimitReset = &value
 		}
 		response.Headers200 = &headers
+	}
+
+	return response, nil
+}
+
+// ParseCloudflareConnectResponse parses an HTTP response from a CloudflareConnectWithResponse call
+func ParseCloudflareConnectResponse(rsp *http.Response) (*CloudflareConnectResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &CloudflareConnectResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest map[string]interface{}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseCloudflareCreateRecordResponse parses an HTTP response from a CloudflareCreateRecordWithResponse call
+func ParseCloudflareCreateRecordResponse(rsp *http.Response) (*CloudflareCreateRecordResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &CloudflareCreateRecordResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest map[string]interface{}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseCloudflareDeleteRecordResponse parses an HTTP response from a CloudflareDeleteRecordWithResponse call
+func ParseCloudflareDeleteRecordResponse(rsp *http.Response) (*CloudflareDeleteRecordResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &CloudflareDeleteRecordResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest map[string]interface{}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseCloudflareDisconnectResponse parses an HTTP response from a CloudflareDisconnectWithResponse call
+func ParseCloudflareDisconnectResponse(rsp *http.Response) (*CloudflareDisconnectResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &CloudflareDisconnectResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest map[string]interface{}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseCloudflareEditRecordResponse parses an HTTP response from a CloudflareEditRecordWithResponse call
+func ParseCloudflareEditRecordResponse(rsp *http.Response) (*CloudflareEditRecordResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &CloudflareEditRecordResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest map[string]interface{}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseCloudflareGetResponse parses an HTTP response from a CloudflareGetWithResponse call
+func ParseCloudflareGetResponse(rsp *http.Response) (*CloudflareGetResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &CloudflareGetResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest map[string]interface{}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseCloudflareGetConnectionResponse parses an HTTP response from a CloudflareGetConnectionWithResponse call
+func ParseCloudflareGetConnectionResponse(rsp *http.Response) (*CloudflareGetConnectionResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &CloudflareGetConnectionResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest map[string]interface{}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseCloudflareGetQueueResponse parses an HTTP response from a CloudflareGetQueueWithResponse call
+func ParseCloudflareGetQueueResponse(rsp *http.Response) (*CloudflareGetQueueResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &CloudflareGetQueueResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest map[string]interface{}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseCloudflareGetRecordsResponse parses an HTTP response from a CloudflareGetRecordsWithResponse call
+func ParseCloudflareGetRecordsResponse(rsp *http.Response) (*CloudflareGetRecordsResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &CloudflareGetRecordsResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest map[string]interface{}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseCloudflareGetZoneResponse parses an HTTP response from a CloudflareGetZoneWithResponse call
+func ParseCloudflareGetZoneResponse(rsp *http.Response) (*CloudflareGetZoneResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &CloudflareGetZoneResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest map[string]interface{}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseCloudflareGetZoneSettingsResponse parses an HTTP response from a CloudflareGetZoneSettingsWithResponse call
+func ParseCloudflareGetZoneSettingsResponse(rsp *http.Response) (*CloudflareGetZoneSettingsResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &CloudflareGetZoneSettingsResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest map[string]interface{}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseCloudflareInventoryResponse parses an HTTP response from a CloudflareInventoryWithResponse call
+func ParseCloudflareInventoryResponse(rsp *http.Response) (*CloudflareInventoryResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &CloudflareInventoryResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest map[string]interface{}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseCloudflarePreviewResponse parses an HTTP response from a CloudflarePreviewWithResponse call
+func ParseCloudflarePreviewResponse(rsp *http.Response) (*CloudflarePreviewResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &CloudflarePreviewResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest map[string]interface{}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseCloudflareRetryResponse parses an HTTP response from a CloudflareRetryWithResponse call
+func ParseCloudflareRetryResponse(rsp *http.Response) (*CloudflareRetryResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &CloudflareRetryResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest map[string]interface{}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseCloudflareRollbackResponse parses an HTTP response from a CloudflareRollbackWithResponse call
+func ParseCloudflareRollbackResponse(rsp *http.Response) (*CloudflareRollbackResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &CloudflareRollbackResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest map[string]interface{}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseCloudflareSetProxyResponse parses an HTTP response from a CloudflareSetProxyWithResponse call
+func ParseCloudflareSetProxyResponse(rsp *http.Response) (*CloudflareSetProxyResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &CloudflareSetProxyResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest map[string]interface{}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseCloudflareSetZoneSettingsResponse parses an HTTP response from a CloudflareSetZoneSettingsWithResponse call
+func ParseCloudflareSetZoneSettingsResponse(rsp *http.Response) (*CloudflareSetZoneSettingsResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &CloudflareSetZoneSettingsResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest map[string]interface{}
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
 	}
 
 	return response, nil
@@ -22278,6 +26853,39 @@ func ParseHostingCreateResponse(rsp *http.Response) (*HostingCreateResponse, err
 	return response, nil
 }
 
+// ParseHostingCreateWpCredentialsResponse parses an HTTP response from a HostingCreateWpCredentialsWithResponse call
+func ParseHostingCreateWpCredentialsResponse(rsp *http.Response) (*HostingCreateWpCredentialsResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &HostingCreateWpCredentialsResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest HostingCreateWpCredentials200JSONResponseBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	}
+
+	return response, nil
+}
+
 // ParseHostingDeleteResponse parses an HTTP response from a HostingDeleteWithResponse call
 func ParseHostingDeleteResponse(rsp *http.Response) (*HostingDeleteResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -22327,6 +26935,39 @@ func ParseHostingDeleteFileResponse(rsp *http.Response) (*HostingDeleteFileRespo
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest HostingDeleteFile200JSONResponseBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseHostingDeleteWpCredentialsResponse parses an HTTP response from a HostingDeleteWpCredentialsWithResponse call
+func ParseHostingDeleteWpCredentialsResponse(rsp *http.Response) (*HostingDeleteWpCredentialsResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &HostingDeleteWpCredentialsResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest HostingDeleteWpCredentials200JSONResponseBody
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -22426,6 +27067,39 @@ func ParseHostingGetResponse(rsp *http.Response) (*HostingGetResponse, error) {
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest HostingGet200JSONResponseBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseHostingGetWpCredentialsResponse parses an HTTP response from a HostingGetWpCredentialsWithResponse call
+func ParseHostingGetWpCredentialsResponse(rsp *http.Response) (*HostingGetWpCredentialsResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &HostingGetWpCredentialsResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest HostingGetWpCredentials200JSONResponseBody
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}

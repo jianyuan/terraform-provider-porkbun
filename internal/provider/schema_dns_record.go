@@ -34,13 +34,16 @@ func dnsRecordSchema() superschema.Schema {
 			},
 			"id": superschema.StringAttribute{
 				Common: &schemaR.StringAttribute{
-					Computed:            true,
 					MarkdownDescription: "The record ID.",
 				},
 				Resource: &schemaR.StringAttribute{
+					Computed: true,
 					PlanModifiers: []planmodifier.String{
 						stringplanmodifier.UseStateForUnknown(),
 					},
+				},
+				DataSource: &schemaD.StringAttribute{
+					Required: true,
 				},
 			},
 			"subdomain": superschema.StringAttribute{
@@ -104,14 +107,15 @@ func dnsRecordSchema() superschema.Schema {
 				DataSource: &schemaD.Int64Attribute{},
 			},
 			"notes": superschema.StringAttribute{
-				Common: &schemaR.StringAttribute{},
+				Common: &schemaR.StringAttribute{
+					Computed: true,
+				},
 				Resource: &schemaR.StringAttribute{
 					MarkdownDescription: "Optional notes to store with the record. Not served in DNS.",
 					Optional:            true,
 				},
 				DataSource: &schemaD.StringAttribute{
 					MarkdownDescription: "Notes for the DNS record. Not served in DNS.",
-					Computed:            true,
 				},
 			},
 		},

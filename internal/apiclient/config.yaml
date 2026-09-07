@@ -5,6 +5,7 @@ generate:
   models: true
   client: true
 output-options:
+  nullable-type: true
   resolve-type-name-collisions: true
   generate-types-for-anonymous-schemas: true
   type-mapping:
