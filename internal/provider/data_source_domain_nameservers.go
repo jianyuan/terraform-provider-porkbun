@@ -5,9 +5,7 @@ import (
 	"net/http"
 
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
-	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/jianyuan/terraform-provider-porkbun/internal/fwdiag"
-	supertypes "github.com/orange-cloudavenue/terraform-plugin-framework-supertypes"
 )
 
 func NewDomainNameserversDataSource() datasource.DataSource {
@@ -25,20 +23,7 @@ func (d *DomainNameserversDataSource) Metadata(ctx context.Context, req datasour
 }
 
 func (d *DomainNameserversDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
-	resp.Schema = schema.Schema{
-		MarkdownDescription: "Get the authoritative name servers listed at the registry for your domain.",
-
-		Attributes: map[string]schema.Attribute{
-			"domain": schema.StringAttribute{
-				MarkdownDescription: "The domain name for which to retrieve the authoritative name servers.",
-				Required:            true,
-			},
-			"nameservers": schema.SetAttribute{
-				Computed:   true,
-				CustomType: supertypes.NewSetTypeOf[string](ctx),
-			},
-		},
-	}
+	resp.Schema = domainNameserversSchema().GetDataSource(ctx)
 }
 
 func (d *DomainNameserversDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
