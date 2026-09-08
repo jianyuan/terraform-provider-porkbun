@@ -22,7 +22,7 @@ type DomainModel struct {
 	NotLocal     types.Bool   `tfsdk:"not_local"`
 }
 
-func (m *DomainModel) FromAPI(ctx context.Context, domain apiclient.GetDomain200JSONResponseBody_Domain) (diags diag.Diagnostics) {
+func (m *DomainModel) FromAPI(ctx context.Context, domain apiclient.Domain) (diags diag.Diagnostics) {
 	m.Domain = types.StringPointerValue(domain.Domain)
 	m.Status = types.StringPointerValue(domain.Status)
 	m.Tld = types.StringPointerValue(domain.Tld)

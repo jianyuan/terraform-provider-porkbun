@@ -22,7 +22,7 @@ type DomainResourceModel struct {
 	DomainModel
 }
 
-func (m *DomainResourceModel) FromAPI(ctx context.Context, domain apiclient.GetDomain200JSONResponseBody_Domain) (diags diag.Diagnostics) {
+func (m *DomainResourceModel) FromAPI(ctx context.Context, domain apiclient.Domain) (diags diag.Diagnostics) {
 	diags.Append(m.DomainModel.FromAPI(ctx, domain)...)
 	return
 }
