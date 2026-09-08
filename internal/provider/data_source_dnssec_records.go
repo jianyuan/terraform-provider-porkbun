@@ -18,10 +18,10 @@ type DnssecRecordsDataSourceModel struct {
 	Records supertypes.SetNestedObjectValueOf[DnssecRecordsDataSourceModelRecordsItem] `tfsdk:"records"`
 }
 
-func (m *DnssecRecordsDataSourceModel) Fill(ctx context.Context, items []apiclient.GetDnssecRecords200JSONResponseBody_Records) (diags diag.Diagnostics) {
+func (m *DnssecRecordsDataSourceModel) FromAPI(ctx context.Context, items []apiclient.GetDnssecRecords200JSONResponseBody_Records) (diags diag.Diagnostics) {
 	m.Records = supertypes.NewSetNestedObjectValueOfValueSlice(ctx, lo.Map(items, func(item apiclient.GetDnssecRecords200JSONResponseBody_Records, _ int) DnssecRecordsDataSourceModelRecordsItem {
 		var mm DnssecRecordsDataSourceModelRecordsItem
-		diags.Append(mm.Fill(ctx, item)...)
+		diags.Append(mm.FromAPI(ctx, item)...)
 		return mm
 	}))
 	return
@@ -35,7 +35,7 @@ type DnssecRecordsDataSourceModelRecordsItem struct {
 	PubKey     types.String `tfsdk:"pub_key"`
 }
 
-func (m *DnssecRecordsDataSourceModelRecordsItem) Fill(ctx context.Context, item apiclient.GetDnssecRecords200JSONResponseBody_Records) (diags diag.Diagnostics) {
+func (m *DnssecRecordsDataSourceModelRecordsItem) FromAPI(ctx context.Context, item apiclient.GetDnssecRecords200JSONResponseBody_Records) (diags diag.Diagnostics) {
 	m.KeyTag = types.StringPointerValue(item.KeyTag)
 	m.Alg = types.StringPointerValue(item.Alg)
 	m.Digest = types.StringPointerValue(item.Digest)
@@ -121,7 +121,7 @@ func (d *DnssecRecordsDataSource) Read(ctx context.Context, req datasource.ReadR
 		records = lo.Values(*httpResp.JSON200.Records)
 	}
 
-	resp.Diagnostics.Append(data.Fill(ctx, records)...)
+	resp.Diagnostics.Append(data.FromAPI(ctx, records)...)
 	if resp.Diagnostics.HasError() {
 		return
 	}

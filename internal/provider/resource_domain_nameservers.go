@@ -73,7 +73,7 @@ func (r *DomainNameserversResource) Create(ctx context.Context, req resource.Cre
 		return
 	}
 
-	resp.Diagnostics.Append(data.Fill(ctx, *readHttpResp.JSON200.Ns)...)
+	resp.Diagnostics.Append(data.FromAPI(ctx, *readHttpResp.JSON200.Ns)...)
 	if resp.Diagnostics.HasError() {
 		return
 	}
@@ -108,7 +108,7 @@ func (r *DomainNameserversResource) Read(ctx context.Context, req resource.ReadR
 		return
 	}
 
-	resp.Diagnostics.Append(data.Fill(ctx, *httpResp.JSON200.Ns)...)
+	resp.Diagnostics.Append(data.FromAPI(ctx, *httpResp.JSON200.Ns)...)
 	if resp.Diagnostics.HasError() {
 		return
 	}
@@ -162,7 +162,7 @@ func (r *DomainNameserversResource) Update(ctx context.Context, req resource.Upd
 		return
 	}
 
-	resp.Diagnostics.Append(data.Fill(ctx, *readHttpResp.JSON200.Ns)...)
+	resp.Diagnostics.Append(data.FromAPI(ctx, *readHttpResp.JSON200.Ns)...)
 	if resp.Diagnostics.HasError() {
 		return
 	}

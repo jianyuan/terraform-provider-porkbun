@@ -30,7 +30,7 @@ type DnssecRecordResourceModel struct {
 	MaxSigLife      types.String `tfsdk:"max_sig_life"`
 }
 
-func (m *DnssecRecordResourceModel) Fill(ctx context.Context, data apiclient.DnsGetDnssecRecords200JSONResponseBody_Records) (diags diag.Diagnostics) {
+func (m *DnssecRecordResourceModel) FromAPI(ctx context.Context, data apiclient.DnsGetDnssecRecords200JSONResponseBody_Records) (diags diag.Diagnostics) {
 	m.Alg = types.StringPointerValue(data.Alg)
 	m.Digest = types.StringPointerValue(data.Digest)
 	m.DigestType = types.StringPointerValue(data.DigestType)
@@ -190,7 +190,7 @@ func (r *DnssecRecordResource) Create(ctx context.Context, req resource.CreateRe
 		return
 	}
 
-	resp.Diagnostics.Append(data.Fill(ctx, record)...)
+	resp.Diagnostics.Append(data.FromAPI(ctx, record)...)
 	if resp.Diagnostics.HasError() {
 		return
 	}
@@ -231,7 +231,7 @@ func (r *DnssecRecordResource) Read(ctx context.Context, req resource.ReadReques
 		return
 	}
 
-	resp.Diagnostics.Append(data.Fill(ctx, record)...)
+	resp.Diagnostics.Append(data.FromAPI(ctx, record)...)
 	if resp.Diagnostics.HasError() {
 		return
 	}

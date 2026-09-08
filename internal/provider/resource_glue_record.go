@@ -24,7 +24,7 @@ type GlueRecordResourceModel struct {
 	Ips       supertypes.SetValueOf[string] `tfsdk:"ips"`
 }
 
-func (m *GlueRecordResourceModel) Fill(ctx context.Context, records []string) (diags diag.Diagnostics) {
+func (m *GlueRecordResourceModel) FromAPI(ctx context.Context, records []string) (diags diag.Diagnostics) {
 	diags.Append(m.Ips.Set(ctx, records)...)
 	return
 }
@@ -195,7 +195,7 @@ func (r *GlueRecordResource) read(ctx context.Context, data *GlueRecordResourceM
 		}
 
 		if ipAddresses, err := host[1].AsGetDomainGlue200JSONResponseBodyHosts1(); err == nil {
-			diags.Append(data.Fill(ctx, ipAddresses)...)
+			diags.Append(data.FromAPI(ctx, ipAddresses)...)
 			return
 		} else if ipAddresses, err := host[1].AsGetDomainGlue200JSONResponseBodyHosts2(); err == nil {
 			var ips []string
@@ -205,7 +205,7 @@ func (r *GlueRecordResource) read(ctx context.Context, data *GlueRecordResourceM
 			if ipAddresses.V6 != nil {
 				ips = append(ips, *ipAddresses.V6...)
 			}
-			diags.Append(data.Fill(ctx, ips)...)
+			diags.Append(data.FromAPI(ctx, ips)...)
 			return
 		} else {
 			diags.AddError("Client error", "Unable to read, got unexpected glue record format")

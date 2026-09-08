@@ -21,7 +21,7 @@ type DomainAutoRenewSettingResourceModel struct {
 	AutoRenew types.Bool   `tfsdk:"auto_renew"`
 }
 
-func (m *DomainAutoRenewSettingResourceModel) Fill(ctx context.Context, autoRenew *porkbuntypes.FlexibleBool) (diags diag.Diagnostics) {
+func (m *DomainAutoRenewSettingResourceModel) FromAPI(ctx context.Context, autoRenew *porkbuntypes.FlexibleBool) (diags diag.Diagnostics) {
 	m.AutoRenew = porkbuntypes.FlexibleBoolPointerValue(autoRenew)
 	return
 }
@@ -106,7 +106,7 @@ func (r *DomainAutoRenewSettingResource) Create(ctx context.Context, req resourc
 		return
 	}
 
-	resp.Diagnostics.Append(data.Fill(ctx, readHttpResp.JSON200.Domain.AutoRenew)...)
+	resp.Diagnostics.Append(data.FromAPI(ctx, readHttpResp.JSON200.Domain.AutoRenew)...)
 	if resp.Diagnostics.HasError() {
 		return
 	}
@@ -141,7 +141,7 @@ func (r *DomainAutoRenewSettingResource) Read(ctx context.Context, req resource.
 		return
 	}
 
-	resp.Diagnostics.Append(data.Fill(ctx, httpResp.JSON200.Domain.AutoRenew)...)
+	resp.Diagnostics.Append(data.FromAPI(ctx, httpResp.JSON200.Domain.AutoRenew)...)
 	if resp.Diagnostics.HasError() {
 		return
 	}
@@ -193,7 +193,7 @@ func (r *DomainAutoRenewSettingResource) Update(ctx context.Context, req resourc
 		return
 	}
 
-	resp.Diagnostics.Append(data.Fill(ctx, readHttpResp.JSON200.Domain.AutoRenew)...)
+	resp.Diagnostics.Append(data.FromAPI(ctx, readHttpResp.JSON200.Domain.AutoRenew)...)
 	if resp.Diagnostics.HasError() {
 		return
 	}

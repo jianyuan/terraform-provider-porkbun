@@ -27,7 +27,7 @@ type DomainsDomainDataSourceModel struct {
 	NotLocal     types.Bool   `tfsdk:"not_local"`
 }
 
-func (m *DomainsDomainDataSourceModel) Fill(ctx context.Context, domain apiclient.DomainListAllResponse_Domains) (diags diag.Diagnostics) {
+func (m *DomainsDomainDataSourceModel) FromAPI(ctx context.Context, domain apiclient.DomainListAllResponse_Domains) (diags diag.Diagnostics) {
 	m.Domain = types.StringPointerValue(domain.Domain)
 	m.Status = types.StringPointerValue(domain.Status)
 	m.Tld = types.StringPointerValue(domain.Tld)
@@ -45,10 +45,10 @@ type DomainsDataSourceModel struct {
 	Domains supertypes.SetNestedObjectValueOf[DomainsDomainDataSourceModel] `tfsdk:"domains"`
 }
 
-func (m *DomainsDataSourceModel) Fill(ctx context.Context, domains []apiclient.DomainListAllResponse_Domains) (diags diag.Diagnostics) {
+func (m *DomainsDataSourceModel) FromAPI(ctx context.Context, domains []apiclient.DomainListAllResponse_Domains) (diags diag.Diagnostics) {
 	m.Domains = supertypes.NewSetNestedObjectValueOfValueSlice(ctx, lo.Map(domains, func(item apiclient.DomainListAllResponse_Domains, _ int) DomainsDomainDataSourceModel {
 		var mm DomainsDomainDataSourceModel
-		diags.Append(mm.Fill(ctx, item)...)
+		diags.Append(mm.FromAPI(ctx, item)...)
 		return mm
 	}))
 	return
@@ -153,7 +153,7 @@ func (d *DomainsDataSource) Read(ctx context.Context, req datasource.ReadRequest
 		params.Start = new(int64(len(domains) + 1))
 	}
 
-	resp.Diagnostics.Append(data.Fill(ctx, domains)...)
+	resp.Diagnostics.Append(data.FromAPI(ctx, domains)...)
 	if resp.Diagnostics.HasError() {
 		return
 	}

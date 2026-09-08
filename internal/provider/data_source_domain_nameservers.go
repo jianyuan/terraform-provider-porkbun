@@ -50,7 +50,7 @@ func (d *DomainNameserversDataSource) Read(ctx context.Context, req datasource.R
 		return
 	}
 
-	resp.Diagnostics.Append(data.Fill(ctx, *httpResp.JSON200.Ns)...)
+	resp.Diagnostics.Append(data.FromAPI(ctx, *httpResp.JSON200.Ns)...)
 	if resp.Diagnostics.HasError() {
 		return
 	}

@@ -14,7 +14,7 @@ type DomainNameserversModel struct {
 	Nameservers supertypes.SetValueOf[string] `tfsdk:"nameservers"`
 }
 
-func (m *DomainNameserversModel) Fill(ctx context.Context, nameservers []string) (diags diag.Diagnostics) {
+func (m *DomainNameserversModel) FromAPI(ctx context.Context, nameservers []string) (diags diag.Diagnostics) {
 	diags.Append(m.Nameservers.Set(ctx, lo.Uniq(nameservers))...)
 	return
 }
