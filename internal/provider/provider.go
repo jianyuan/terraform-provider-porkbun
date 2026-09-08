@@ -131,6 +131,8 @@ func (p *PorkbunProvider) Resources(ctx context.Context) []func() resource.Resou
 
 func (p *PorkbunProvider) DataSources(ctx context.Context) []func() datasource.DataSource {
 	return []func() datasource.DataSource{
+		NewAccountBalanceDataSource,
+		NewAPISpendSettingsDataSource,
 		NewDnsRecordDataSource,
 		NewDnsRecordsDataSource,
 		NewDnssecRecordsDataSource,
