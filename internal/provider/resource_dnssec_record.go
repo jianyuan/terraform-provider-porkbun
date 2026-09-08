@@ -163,7 +163,7 @@ func (r *DnssecRecordResource) Create(ctx context.Context, req resource.CreateRe
 	if err != nil {
 		resp.Diagnostics.Append(fwdiag.NewClientCreateError(err))
 		return
-	} else if createHttpResp.StatusCode() != http.StatusOK || createHttpResp.JSON200 == nil || createHttpResp.JSON200.Status != "SUCCESS" {
+	} else if !apiclient.IsOK(createHttpResp) {
 		resp.Diagnostics.Append(fwdiag.NewClientCreateHTTPResponseError(createHttpResp))
 		return
 	}
@@ -176,7 +176,7 @@ func (r *DnssecRecordResource) Create(ctx context.Context, req resource.CreateRe
 	if err != nil {
 		resp.Diagnostics.Append(fwdiag.NewClientReadError(err))
 		return
-	} else if readHttpResp.StatusCode() != http.StatusOK || readHttpResp.JSON200 == nil || readHttpResp.JSON200.Status != "SUCCESS" {
+	} else if !apiclient.IsOK(readHttpResp) {
 		resp.Diagnostics.Append(fwdiag.NewClientReadHTTPResponseError(readHttpResp))
 		return
 	} else if readHttpResp.JSON200.Records == nil {
@@ -217,7 +217,7 @@ func (r *DnssecRecordResource) Read(ctx context.Context, req resource.ReadReques
 	} else if httpResp.StatusCode() == http.StatusNotFound {
 		resp.State.RemoveResource(ctx)
 		return
-	} else if httpResp.StatusCode() != http.StatusOK || httpResp.JSON200 == nil || httpResp.JSON200.Status != "SUCCESS" {
+	} else if !apiclient.IsOK(httpResp) {
 		resp.Diagnostics.Append(fwdiag.NewClientReadHTTPResponseError(httpResp))
 		return
 	} else if httpResp.JSON200.Records == nil {
@@ -262,7 +262,7 @@ func (r *DnssecRecordResource) Delete(ctx context.Context, req resource.DeleteRe
 		return
 	} else if httpResp.StatusCode() == http.StatusNotFound {
 		return
-	} else if httpResp.StatusCode() != http.StatusOK || httpResp.JSON200 == nil || httpResp.JSON200.Status != "SUCCESS" {
+	} else if !apiclient.IsOK(httpResp) {
 		resp.Diagnostics.Append(fwdiag.NewClientDeleteHTTPResponseError(httpResp))
 		return
 	}

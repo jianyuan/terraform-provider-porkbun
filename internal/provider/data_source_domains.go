@@ -2,7 +2,6 @@ package provider
 
 import (
 	"context"
-	"net/http"
 
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
@@ -140,7 +139,7 @@ func (d *DomainsDataSource) Read(ctx context.Context, req datasource.ReadRequest
 		if err != nil {
 			resp.Diagnostics.Append(fwdiag.NewClientReadError(err))
 			return
-		} else if httpResp.StatusCode() != http.StatusOK || httpResp.JSON200 == nil || httpResp.JSON200.Status != "SUCCESS" {
+		} else if !apiclient.IsOK(httpResp) {
 			resp.Diagnostics.Append(fwdiag.NewClientReadHTTPResponseError(httpResp))
 			return
 		}

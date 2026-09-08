@@ -60,7 +60,7 @@ func (r *DomainResource) quote(ctx context.Context, domain string) (cents int64,
 	if err != nil {
 		diags.Append(fwdiag.NewClientCreateError(err))
 		return
-	} else if httpResp.StatusCode() != http.StatusOK || httpResp.JSON200 == nil || httpResp.JSON200.Status != "SUCCESS" {
+	} else if !apiclient.IsOK(httpResp) {
 		diags.Append(fwdiag.NewClientCreateHTTPResponseError(httpResp))
 		return
 	}
@@ -248,7 +248,7 @@ func (r *DomainResource) read(ctx context.Context, data *DomainResourceModel) (f
 		return
 	} else if httpResp.StatusCode() == http.StatusNotFound {
 		return
-	} else if httpResp.StatusCode() != http.StatusOK || httpResp.JSON200 == nil || httpResp.JSON200.Status != "SUCCESS" {
+	} else if !apiclient.IsOK(httpResp) {
 		diags.Append(fwdiag.NewClientReadHTTPResponseError(httpResp))
 		return
 	} else if httpResp.JSON200.Domain == nil {
