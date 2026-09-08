@@ -3,18 +3,15 @@ info:
   title: Overlay
   version: 0.0.0
 actions:
+  # Ensure DNS Create returns flexible id type
   - target: $.paths['/dns/create/{domain}'].post.responses['200'].content['application/json'].schema.properties.id
     update:
       type: string
       x-go-type: porkbuntypes.StringID
       x-go-type-import:
         path: github.com/jianyuan/terraform-provider-porkbun/internal/porkbuntypes
-  - target: $.paths['/domain/get/{domain}'].get.responses['200'].content['application/json'].schema.properties.domain.properties['securityLock', 'whoisPrivacy', 'autoRenew', 'apiAccess', 'notLocal']
-    update:
-      type: boolean
-      x-go-type: porkbuntypes.FlexibleBool
-      x-go-type-import:
-        path: github.com/jianyuan/terraform-provider-porkbun/internal/porkbuntypes
+
+  # Ensure Get Glue returns an array of items
   - target: $.paths['/domain/getGlue/{domain}'].get.responses['200'].content['application/json'].schema.properties.hosts.items
     update:
       items:
@@ -33,19 +30,104 @@ actions:
                 type: array
                 items:
                   type: string
+
+  # Ensure DNS Records Response records ttl and prio are flexible integers
   - target: $.components.schemas.DnsRecordsResponse.properties.records.items.properties['ttl', 'prio']
     update:
       type: integer
       x-go-type: porkbuntypes.FlexibleInt64
       x-go-type-import:
         path: github.com/jianyuan/terraform-provider-porkbun/internal/porkbuntypes
-  - target: $.components.schemas.DomainListAllResponse.properties.domains.items.properties['securityLock', 'whoisPrivacy', 'autoRenew', 'apiAccess', 'notLocal']
-    update:
-      type: boolean
-      x-go-type: porkbuntypes.FlexibleBool
-      x-go-type-import:
-        path: github.com/jianyuan/terraform-provider-porkbun/internal/porkbuntypes
+
+  # Make all response status fields required
   - target: $..[?(@.properties.status.type == 'string' && @.properties.status.example == 'SUCCESS')]
     update:
       required:
         - status
+
+  # Unify Domain schema
+  - target: $.components.schemas
+    update:
+      Domain:
+        type: object
+        properties:
+          domain:
+            type: string
+            example: example.com
+          status:
+            type: string
+            description: Domain registration status (e.g. ACTIVE)
+            example: ACTIVE
+          tld:
+            type: string
+            example: com
+          createDate:
+            type: string
+            example: 2021-01-15 10:00:00
+          expireDate:
+            type: string
+            example: 2027-01-15 10:00:00
+          securityLock:
+            type: boolean
+            x-go-type: porkbuntypes.FlexibleBool
+            x-go-type-import:
+              path: github.com/jianyuan/terraform-provider-porkbun/internal/porkbuntypes
+            description: 1 if transfer lock is enabled, 0 otherwise
+            example: 1
+          whoisPrivacy:
+            type: boolean
+            x-go-type: porkbuntypes.FlexibleBool
+            x-go-type-import:
+              path: github.com/jianyuan/terraform-provider-porkbun/internal/porkbuntypes
+            description: 1 if WHOIS privacy is enabled, 0 otherwise
+            example: 1
+          autoRenew:
+            type: boolean
+            x-go-type: porkbuntypes.FlexibleBool
+            x-go-type-import:
+              path: github.com/jianyuan/terraform-provider-porkbun/internal/porkbuntypes
+            description: 1 if auto-renew is enabled, 0 otherwise
+            example: 1
+          apiAccess:
+            type: boolean
+            x-go-type: porkbuntypes.FlexibleBool
+            x-go-type-import:
+              path: github.com/jianyuan/terraform-provider-porkbun/internal/porkbuntypes
+            description:
+              1 if the domain is opted in to API access, 0 otherwise. Per-domain
+              API access can be toggled at porkbun.com/account or globally
+              via the `Opt In All Domains` setting.
+            example: 1
+          notLocal:
+            type: boolean
+            x-go-type: porkbuntypes.FlexibleBool
+            x-go-type-import:
+              path: github.com/jianyuan/terraform-provider-porkbun/internal/porkbuntypes
+            description:
+              1 if the domain is externally managed (not authoritative), 0
+              otherwise
+            example: 0
+          labels:
+            type: array
+            description: Only present when includeLabels=yes
+            items:
+              type: object
+              properties:
+                id:
+                  type: string
+                title:
+                  type: string
+                color:
+                  type: string
+  - target: $.components.schemas.DomainListAllResponse.properties.domains.items
+    remove: true
+  - target: $.components.schemas.DomainListAllResponse.properties.domains
+    update:
+      items:
+        $ref: "#/components/schemas/Domain"
+  - target: $.paths['/domain/get/{domain}'].get.responses['200'].content['application/json'].schema.properties.domain
+    remove: true
+  - target: $.paths['/domain/get/{domain}'].get.responses['200'].content['application/json'].schema.properties
+    update:
+      domain:
+        $ref: "#/components/schemas/Domain"

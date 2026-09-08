@@ -9,9 +9,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/jianyuan/terraform-provider-porkbun/internal/apiclient"
 	"github.com/jianyuan/terraform-provider-porkbun/internal/fwdiag"
@@ -55,83 +52,7 @@ func (r *DnssecRecordResource) Metadata(ctx context.Context, req resource.Metada
 }
 
 func (r *DnssecRecordResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
-	resp.Schema = schema.Schema{
-		MarkdownDescription: "Manage a DNSSEC DS or key record at the registry. DNSSEC requirements vary by registry — `key_tag`, `alg`, `digest_type`, and `digest` are the minimum required fields. Key data fields are optional and will be omitted if not accepted by the registry.",
-
-		Attributes: map[string]schema.Attribute{
-			"domain": schema.StringAttribute{
-				MarkdownDescription: "The domain for the record being created.",
-				Required:            true,
-				PlanModifiers: []planmodifier.String{
-					stringplanmodifier.RequiresReplace(),
-				},
-			},
-			"alg": schema.StringAttribute{
-				MarkdownDescription: "DS Data algorithm number (e.g. 13 for ECDSA P-256 SHA-256).",
-				Required:            true,
-				PlanModifiers: []planmodifier.String{
-					stringplanmodifier.RequiresReplace(),
-				},
-			},
-			"digest": schema.StringAttribute{
-				MarkdownDescription: "Hex-encoded digest value.",
-				Required:            true,
-				PlanModifiers: []planmodifier.String{
-					stringplanmodifier.RequiresReplace(),
-				},
-			},
-			"digest_type": schema.StringAttribute{
-				MarkdownDescription: "Digest type number (e.g. 2 for SHA-256).",
-				Required:            true,
-				PlanModifiers: []planmodifier.String{
-					stringplanmodifier.RequiresReplace(),
-				},
-			},
-			"key_tag": schema.StringAttribute{
-				MarkdownDescription: "DNSSEC key tag.",
-				Required:            true,
-				PlanModifiers: []planmodifier.String{
-					stringplanmodifier.RequiresReplace(),
-				},
-			},
-			"key_data_algo": schema.StringAttribute{
-				MarkdownDescription: "Key data algorithm.",
-				Optional:            true,
-				PlanModifiers: []planmodifier.String{
-					stringplanmodifier.RequiresReplace(),
-				},
-			},
-			"key_data_flags": schema.StringAttribute{
-				MarkdownDescription: "Key data flags (optional, used when submitting full key data).",
-				Optional:            true,
-				PlanModifiers: []planmodifier.String{
-					stringplanmodifier.RequiresReplace(),
-				},
-			},
-			"key_data_protocol": schema.StringAttribute{
-				MarkdownDescription: "Key data protocol.",
-				Optional:            true,
-				PlanModifiers: []planmodifier.String{
-					stringplanmodifier.RequiresReplace(),
-				},
-			},
-			"key_data_public_key": schema.StringAttribute{
-				MarkdownDescription: "Key data public key in base64.",
-				Optional:            true,
-				Computed:            true,
-				PlanModifiers: []planmodifier.String{
-					stringplanmodifier.RequiresReplace(),
-				},
-			},
-			"max_sig_life": schema.StringAttribute{
-				MarkdownDescription: "Maximum signature lifetime in seconds (registry-specific).",
-				Optional:            true,
-				PlanModifiers: []planmodifier.String{
-					stringplanmodifier.RequiresReplace(),
-				},
-			},
-		},
-	}
+	resp.Schema = dnssecRecordSchema().GetResource(ctx)
 }
 
 func (r *DnssecRecordResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {

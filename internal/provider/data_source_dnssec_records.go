@@ -4,7 +4,6 @@ import (
 	"context"
 
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
-	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/jianyuan/terraform-provider-porkbun/internal/apiclient"
@@ -59,40 +58,7 @@ func (d *DnssecRecordsDataSource) Metadata(ctx context.Context, req datasource.M
 }
 
 func (d *DnssecRecordsDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
-	resp.Schema = schema.Schema{
-		MarkdownDescription: "Retrieves all DNSSEC records associated with the domain at the registry.",
-
-		Attributes: map[string]schema.Attribute{
-			"domain": schema.StringAttribute{
-				MarkdownDescription: "The domain name.",
-				Required:            true,
-			},
-			"records": schema.SetNestedAttribute{
-				MarkdownDescription: "All DNSSEC records.",
-				Computed:            true,
-				CustomType:          supertypes.NewSetNestedObjectTypeOf[DnssecRecordsDataSourceModelRecordsItem](ctx),
-				NestedObject: schema.NestedAttributeObject{
-					Attributes: map[string]schema.Attribute{
-						"key_tag": schema.StringAttribute{
-							Computed: true,
-						},
-						"alg": schema.StringAttribute{
-							Computed: true,
-						},
-						"digest_type": schema.StringAttribute{
-							Computed: true,
-						},
-						"digest": schema.StringAttribute{
-							Computed: true,
-						},
-						"pub_key": schema.StringAttribute{
-							Computed: true,
-						},
-					},
-				},
-			},
-		},
-	}
+	resp.Schema = dnssecRecordsSchema().GetDataSource(ctx)
 }
 
 func (d *DnssecRecordsDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {

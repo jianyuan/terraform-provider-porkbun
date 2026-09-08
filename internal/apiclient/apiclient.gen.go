@@ -1848,6 +1848,61 @@ type DnsRecordsResponse_Records struct {
 	Type *string `json:"type,omitempty"`
 }
 
+// Domain defines model for Domain.
+type Domain struct {
+	// ApiAccess 1 if the domain is opted in to API access, 0 otherwise. Per-domain API access can be toggled at porkbun.com/account or globally via the `Opt In All Domains` setting.
+	//
+	// Example: 1
+	ApiAccess *porkbuntypes.FlexibleBool `json:"apiAccess,omitempty"`
+
+	// AutoRenew 1 if auto-renew is enabled, 0 otherwise
+	//
+	// Example: 1
+	AutoRenew *porkbuntypes.FlexibleBool `json:"autoRenew,omitempty"`
+
+	// CreateDate Example: 2021-01-15 10:00:00
+	CreateDate *string `json:"createDate,omitempty"`
+
+	// Domain Example: example.com
+	Domain *string `json:"domain,omitempty"`
+
+	// ExpireDate Example: 2027-01-15 10:00:00
+	ExpireDate *string `json:"expireDate,omitempty"`
+
+	// Labels Only present when includeLabels=yes
+	Labels *[]Domain_Labels `json:"labels,omitempty"`
+
+	// NotLocal 1 if the domain is externally managed (not authoritative), 0 otherwise
+	//
+	// Example: 0
+	NotLocal *porkbuntypes.FlexibleBool `json:"notLocal,omitempty"`
+
+	// SecurityLock 1 if transfer lock is enabled, 0 otherwise
+	//
+	// Example: 1
+	SecurityLock *porkbuntypes.FlexibleBool `json:"securityLock,omitempty"`
+
+	// Status Domain registration status (e.g. ACTIVE)
+	//
+	// Example: ACTIVE
+	Status *string `json:"status,omitempty"`
+
+	// Tld Example: com
+	Tld *string `json:"tld,omitempty"`
+
+	// WhoisPrivacy 1 if WHOIS privacy is enabled, 0 otherwise
+	//
+	// Example: 1
+	WhoisPrivacy *porkbuntypes.FlexibleBool `json:"whoisPrivacy,omitempty"`
+}
+
+// Domain_Labels defines model for Domain.Labels.
+type Domain_Labels struct {
+	Color *string `json:"color,omitempty"`
+	Id    *string `json:"id,omitempty"`
+	Title *string `json:"title,omitempty"`
+}
+
 // DomainContact A domain contact. On update, a provided role requires firstName, address1, city, postalCode, country, phone, phoneCountryCode, and email. Country is an ISO 3166-1 alpha-2 code; phoneCountryCode is the numeric calling code (e.g. "1", "44"). state may be empty where not applicable.
 type DomainContact struct {
 	// Address1 Example: 1 Countess Rd
@@ -1898,66 +1953,11 @@ type DomainContact struct {
 // DomainListAllResponse defines model for DomainListAllResponse.
 type DomainListAllResponse struct {
 	// Count Number of domains returned in this page.
-	Count   *int64                          `json:"count,omitempty"`
-	Domains []DomainListAllResponse_Domains `json:"domains"`
+	Count   *int64   `json:"count,omitempty"`
+	Domains []Domain `json:"domains"`
 
 	// Status Example: SUCCESS
 	Status string `json:"status"`
-}
-
-// DomainListAllResponse_Domains_Labels defines model for DomainListAllResponse.Domains.Labels.
-type DomainListAllResponse_Domains_Labels struct {
-	Color *string `json:"color,omitempty"`
-	Id    *string `json:"id,omitempty"`
-	Title *string `json:"title,omitempty"`
-}
-
-// DomainListAllResponse_Domains defines model for DomainListAllResponse.Domains.
-type DomainListAllResponse_Domains struct {
-	// ApiAccess 1 if the domain is opted in to API access, 0 otherwise. Per-domain API access can be toggled at porkbun.com/account or globally via the `Opt In All Domains` setting.
-	//
-	// Example: 1
-	ApiAccess *porkbuntypes.FlexibleBool `json:"apiAccess,omitempty"`
-
-	// AutoRenew 1 if auto-renew is enabled, 0 otherwise
-	//
-	// Example: 1
-	AutoRenew *porkbuntypes.FlexibleBool `json:"autoRenew,omitempty"`
-
-	// CreateDate Example: 2021-01-15 10:00:00
-	CreateDate *string `json:"createDate,omitempty"`
-
-	// Domain Example: example.com
-	Domain *string `json:"domain,omitempty"`
-
-	// ExpireDate Example: 2027-01-15 10:00:00
-	ExpireDate *string `json:"expireDate,omitempty"`
-
-	// Labels Only present when includeLabels=yes
-	Labels *[]DomainListAllResponse_Domains_Labels `json:"labels,omitempty"`
-
-	// NotLocal 1 if the domain is externally managed (not authoritative), 0 otherwise
-	//
-	// Example: 0
-	NotLocal *porkbuntypes.FlexibleBool `json:"notLocal,omitempty"`
-
-	// SecurityLock 1 if transfer lock is enabled, 0 otherwise
-	//
-	// Example: 1
-	SecurityLock *porkbuntypes.FlexibleBool `json:"securityLock,omitempty"`
-
-	// Status Domain registration status (e.g. ACTIVE)
-	//
-	// Example: ACTIVE
-	Status *string `json:"status,omitempty"`
-
-	// Tld Example: com
-	Tld *string `json:"tld,omitempty"`
-
-	// WhoisPrivacy 1 if WHOIS privacy is enabled, 0 otherwise
-	//
-	// Example: 1
-	WhoisPrivacy *porkbuntypes.FlexibleBool `json:"whoisPrivacy,omitempty"`
 }
 
 // DryRunPreviewResponse Returned (HTTP 200) by /domain/create, /domain/renew, and /domain/transfer when the request includes `dryRun: true`. All validation has run but nothing was created or charged. All money amounts are in pennies (USD cents).
@@ -3111,29 +3111,9 @@ type GetDomainParams struct {
 // GetDomainParamsIncludeLabels defines parameters for GetDomain.
 type GetDomainParamsIncludeLabels string
 
-// GetDomain200JSONResponseBody_Domain defines parameters for GetDomain.
-type GetDomain200JSONResponseBody_Domain struct {
-	ApiAccess  *porkbuntypes.FlexibleBool `json:"apiAccess,omitempty"`
-	AutoRenew  *porkbuntypes.FlexibleBool `json:"autoRenew,omitempty"`
-	CreateDate *string                    `json:"createDate,omitempty"`
-
-	// Domain Example: example.com
-	Domain       *string                    `json:"domain,omitempty"`
-	ExpireDate   *string                    `json:"expireDate,omitempty"`
-	NotLocal     *porkbuntypes.FlexibleBool `json:"notLocal,omitempty"`
-	SecurityLock *porkbuntypes.FlexibleBool `json:"securityLock,omitempty"`
-
-	// Status Example: ACTIVE
-	Status *string `json:"status,omitempty"`
-
-	// Tld Example: com
-	Tld          *string                    `json:"tld,omitempty"`
-	WhoisPrivacy *porkbuntypes.FlexibleBool `json:"whoisPrivacy,omitempty"`
-}
-
 // GetDomain200JSONResponseBody defines parameters for GetDomain.
 type GetDomain200JSONResponseBody struct {
-	Domain *GetDomain200JSONResponseBody_Domain `json:"domain,omitempty"`
+	Domain *Domain `json:"domain,omitempty"`
 
 	// Status Example: SUCCESS
 	Status string `json:"status"`

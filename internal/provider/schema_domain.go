@@ -26,17 +26,16 @@ func domainSchema() superschema.Schema {
 		},
 		Attributes: superschema.Attributes{
 			"domain": superschema.StringAttribute{
-				Common: &schemaR.StringAttribute{
-					Required: true,
-				},
 				Resource: &schemaR.StringAttribute{
 					MarkdownDescription: "The fully qualified domain name to register.",
+					Required:            true,
 					PlanModifiers: []planmodifier.String{
 						stringplanmodifier.RequiresReplace(),
 					},
 				},
 				DataSource: &schemaD.StringAttribute{
 					MarkdownDescription: "Fully qualified domain name in the authenticated account.",
+					Required:            true,
 				},
 			},
 			"max_cost": superschema.Int64Attribute{

@@ -34,8 +34,8 @@ data "porkbun_dnssec_records" "example" {
 
 Read-Only:
 
-- `alg` (String)
-- `digest` (String)
-- `digest_type` (String)
-- `key_tag` (String)
-- `pub_key` (String)
+- `alg` (String) DS Data algorithm number (e.g. 13 for ECDSA P-256 SHA-256).
+- `digest` (String) Hex-encoded digest value.
+- `digest_type` (String) Digest type number (e.g. 2 for SHA-256).
+- `key_tag` (String) DNSSEC key tag.
+- `pub_key` (String) Public key.
