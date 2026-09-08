@@ -81,7 +81,7 @@ func (r *DnsRecordResource) Create(ctx context.Context, req resource.CreateReque
 	if err != nil {
 		resp.Diagnostics.Append(fwdiag.NewClientCreateError(err))
 		return
-	} else if httpResp.StatusCode() != http.StatusOK || httpResp.JSON200 == nil || httpResp.JSON200.Status == nil || *httpResp.JSON200.Status != "SUCCESS" {
+	} else if !apiclient.IsOK(httpResp) {
 		resp.Diagnostics.Append(fwdiag.NewClientCreateHTTPResponseError(httpResp))
 		return
 	}
@@ -139,7 +139,7 @@ func (r *DnsRecordResource) Update(ctx context.Context, req resource.UpdateReque
 	if err != nil {
 		resp.Diagnostics.Append(fwdiag.NewClientUpdateError(err))
 		return
-	} else if httpResp.StatusCode() != http.StatusOK || httpResp.JSON200 == nil || httpResp.JSON200.Status != "SUCCESS" {
+	} else if !apiclient.IsOK(httpResp) {
 		resp.Diagnostics.Append(fwdiag.NewClientUpdateHTTPResponseError(httpResp))
 		return
 	}
@@ -162,7 +162,7 @@ func (r *DnsRecordResource) read(ctx context.Context, data *DnsRecordResourceMod
 	if err != nil {
 		diags.Append(fwdiag.NewClientReadError(err))
 		return
-	} else if httpResp.StatusCode() != http.StatusOK || httpResp.JSON200 == nil || httpResp.JSON200.Status != "SUCCESS" {
+	} else if !apiclient.IsOK(httpResp) {
 		diags.Append(fwdiag.NewClientReadHTTPResponseError(httpResp))
 		return
 	} else if len(httpResp.JSON200.Records) != 1 {
@@ -193,7 +193,7 @@ func (r *DnsRecordResource) Delete(ctx context.Context, req resource.DeleteReque
 		return
 	} else if httpResp.StatusCode() == http.StatusNotFound {
 		return
-	} else if httpResp.StatusCode() != http.StatusOK || httpResp.JSON200 == nil || httpResp.JSON200.Status != "SUCCESS" {
+	} else if !apiclient.IsOK(httpResp) {
 		resp.Diagnostics.Append(fwdiag.NewClientDeleteHTTPResponseError(httpResp))
 		return
 	}

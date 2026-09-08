@@ -2,6 +2,7 @@ package apiclient
 
 import (
 	"context"
+	"encoding/json"
 	"net/http"
 
 	"github.com/hashicorp/go-retryablehttp"
@@ -31,4 +32,29 @@ func New(baseUrl, apiKey, secretKey string) (*ClientWithResponses, error) {
 			return nil
 		}),
 	)
+}
+
+func IsOK[T any](response interface {
+	StatusCode() int
+	GetJSON200() *T
+	GetBody() []byte
+}) bool {
+	if response.StatusCode() != http.StatusOK {
+		return false
+	}
+	if response.GetJSON200() == nil {
+		return false
+	}
+
+	var data struct {
+		Status string `json:"status"`
+	}
+	if err := json.Unmarshal(response.GetBody(), &data); err != nil {
+		return false
+	}
+	if data.Status != "SUCCESS" {
+		return false
+	}
+
+	return true
 }

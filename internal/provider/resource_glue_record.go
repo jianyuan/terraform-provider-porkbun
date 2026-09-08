@@ -24,7 +24,7 @@ type GlueRecordResourceModel struct {
 	Ips       supertypes.SetValueOf[string] `tfsdk:"ips"`
 }
 
-func (m *GlueRecordResourceModel) Fill(ctx context.Context, records []string) (diags diag.Diagnostics) {
+func (m *GlueRecordResourceModel) FromAPI(ctx context.Context, records []string) (diags diag.Diagnostics) {
 	diags.Append(m.Ips.Set(ctx, records)...)
 	return
 }
@@ -96,7 +96,7 @@ func (r *GlueRecordResource) Create(ctx context.Context, req resource.CreateRequ
 	if err != nil {
 		resp.Diagnostics.Append(fwdiag.NewClientCreateError(err))
 		return
-	} else if httpResp.StatusCode() != http.StatusOK || httpResp.JSON200 == nil || httpResp.JSON200.Status != "SUCCESS" {
+	} else if !apiclient.IsOK(httpResp) {
 		resp.Diagnostics.Append(fwdiag.NewClientCreateHTTPResponseError(httpResp))
 		return
 	}
@@ -148,7 +148,7 @@ func (r *GlueRecordResource) Update(ctx context.Context, req resource.UpdateRequ
 	if err != nil {
 		resp.Diagnostics.Append(fwdiag.NewClientUpdateError(err))
 		return
-	} else if httpResp.StatusCode() != http.StatusOK || httpResp.JSON200 == nil || httpResp.JSON200.Status != "SUCCESS" {
+	} else if !apiclient.IsOK(httpResp) {
 		resp.Diagnostics.Append(fwdiag.NewClientUpdateHTTPResponseError(httpResp))
 		return
 	}
@@ -170,7 +170,7 @@ func (r *GlueRecordResource) read(ctx context.Context, data *GlueRecordResourceM
 	if err != nil {
 		diags.Append(fwdiag.NewClientReadError(err))
 		return
-	} else if httpResp.StatusCode() != http.StatusOK || httpResp.JSON200 == nil || httpResp.JSON200.Status == nil || *httpResp.JSON200.Status != "SUCCESS" {
+	} else if !apiclient.IsOK(httpResp) {
 		diags.Append(fwdiag.NewClientReadHTTPResponseError(httpResp))
 		return
 	} else if httpResp.JSON200.Hosts == nil {
@@ -195,7 +195,7 @@ func (r *GlueRecordResource) read(ctx context.Context, data *GlueRecordResourceM
 		}
 
 		if ipAddresses, err := host[1].AsGetDomainGlue200JSONResponseBodyHosts1(); err == nil {
-			diags.Append(data.Fill(ctx, ipAddresses)...)
+			diags.Append(data.FromAPI(ctx, ipAddresses)...)
 			return
 		} else if ipAddresses, err := host[1].AsGetDomainGlue200JSONResponseBodyHosts2(); err == nil {
 			var ips []string
@@ -205,7 +205,7 @@ func (r *GlueRecordResource) read(ctx context.Context, data *GlueRecordResourceM
 			if ipAddresses.V6 != nil {
 				ips = append(ips, *ipAddresses.V6...)
 			}
-			diags.Append(data.Fill(ctx, ips)...)
+			diags.Append(data.FromAPI(ctx, ips)...)
 			return
 		} else {
 			diags.AddError("Client error", "Unable to read, got unexpected glue record format")
@@ -236,7 +236,7 @@ func (r *GlueRecordResource) Delete(ctx context.Context, req resource.DeleteRequ
 		return
 	} else if httpResp.StatusCode() == http.StatusNotFound {
 		return
-	} else if httpResp.StatusCode() != http.StatusOK || httpResp.JSON200 == nil || httpResp.JSON200.Status != "SUCCESS" {
+	} else if !apiclient.IsOK(httpResp) {
 		resp.Diagnostics.Append(fwdiag.NewClientDeleteHTTPResponseError(httpResp))
 		return
 	}

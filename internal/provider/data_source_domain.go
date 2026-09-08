@@ -2,9 +2,9 @@ package provider
 
 import (
 	"context"
-	"net/http"
 
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
+	"github.com/jianyuan/terraform-provider-porkbun/internal/apiclient"
 	"github.com/jianyuan/terraform-provider-porkbun/internal/fwdiag"
 )
 
@@ -44,7 +44,7 @@ func (d *DomainDataSource) Read(ctx context.Context, req datasource.ReadRequest,
 	if err != nil {
 		resp.Diagnostics.Append(fwdiag.NewClientReadError(err))
 		return
-	} else if httpResp.StatusCode() != http.StatusOK || httpResp.JSON200 == nil || httpResp.JSON200.Status == nil || *httpResp.JSON200.Status != "SUCCESS" {
+	} else if !apiclient.IsOK(httpResp) {
 		resp.Diagnostics.Append(fwdiag.NewClientReadHTTPResponseError(httpResp))
 		return
 	}

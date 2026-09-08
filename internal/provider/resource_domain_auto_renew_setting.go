@@ -21,7 +21,7 @@ type DomainAutoRenewSettingResourceModel struct {
 	AutoRenew types.Bool   `tfsdk:"auto_renew"`
 }
 
-func (m *DomainAutoRenewSettingResourceModel) Fill(ctx context.Context, autoRenew *porkbuntypes.FlexibleBool) (diags diag.Diagnostics) {
+func (m *DomainAutoRenewSettingResourceModel) FromAPI(ctx context.Context, autoRenew *porkbuntypes.FlexibleBool) (diags diag.Diagnostics) {
 	m.AutoRenew = porkbuntypes.FlexibleBoolPointerValue(autoRenew)
 	return
 }
@@ -85,7 +85,7 @@ func (r *DomainAutoRenewSettingResource) Create(ctx context.Context, req resourc
 	if err != nil {
 		resp.Diagnostics.Append(fwdiag.NewClientCreateError(err))
 		return
-	} else if updateHttpResp.StatusCode() != http.StatusOK || updateHttpResp.JSON200 == nil || updateHttpResp.JSON200.Status == nil || *updateHttpResp.JSON200.Status != "SUCCESS" {
+	} else if !apiclient.IsOK(updateHttpResp) {
 		resp.Diagnostics.Append(fwdiag.NewClientCreateHTTPResponseError(updateHttpResp))
 		return
 	}
@@ -98,7 +98,7 @@ func (r *DomainAutoRenewSettingResource) Create(ctx context.Context, req resourc
 	if err != nil {
 		resp.Diagnostics.Append(fwdiag.NewClientReadError(err))
 		return
-	} else if readHttpResp.StatusCode() != http.StatusOK || readHttpResp.JSON200 == nil || readHttpResp.JSON200.Status == nil || *readHttpResp.JSON200.Status != "SUCCESS" {
+	} else if !apiclient.IsOK(readHttpResp) {
 		resp.Diagnostics.Append(fwdiag.NewClientReadHTTPResponseError(readHttpResp))
 		return
 	} else if readHttpResp.JSON200.Domain == nil {
@@ -106,7 +106,7 @@ func (r *DomainAutoRenewSettingResource) Create(ctx context.Context, req resourc
 		return
 	}
 
-	resp.Diagnostics.Append(data.Fill(ctx, readHttpResp.JSON200.Domain.AutoRenew)...)
+	resp.Diagnostics.Append(data.FromAPI(ctx, readHttpResp.JSON200.Domain.AutoRenew)...)
 	if resp.Diagnostics.HasError() {
 		return
 	}
@@ -133,7 +133,7 @@ func (r *DomainAutoRenewSettingResource) Read(ctx context.Context, req resource.
 	} else if httpResp.StatusCode() == http.StatusNotFound {
 		resp.State.RemoveResource(ctx)
 		return
-	} else if httpResp.StatusCode() != http.StatusOK || httpResp.JSON200 == nil || httpResp.JSON200.Status == nil || *httpResp.JSON200.Status != "SUCCESS" {
+	} else if !apiclient.IsOK(httpResp) {
 		resp.Diagnostics.Append(fwdiag.NewClientReadHTTPResponseError(httpResp))
 		return
 	} else if httpResp.JSON200.Domain == nil {
@@ -141,7 +141,7 @@ func (r *DomainAutoRenewSettingResource) Read(ctx context.Context, req resource.
 		return
 	}
 
-	resp.Diagnostics.Append(data.Fill(ctx, httpResp.JSON200.Domain.AutoRenew)...)
+	resp.Diagnostics.Append(data.FromAPI(ctx, httpResp.JSON200.Domain.AutoRenew)...)
 	if resp.Diagnostics.HasError() {
 		return
 	}
@@ -172,7 +172,7 @@ func (r *DomainAutoRenewSettingResource) Update(ctx context.Context, req resourc
 	if err != nil {
 		resp.Diagnostics.Append(fwdiag.NewClientCreateError(err))
 		return
-	} else if updateHttpResp.StatusCode() != http.StatusOK || updateHttpResp.JSON200 == nil || updateHttpResp.JSON200.Status == nil || *updateHttpResp.JSON200.Status != "SUCCESS" {
+	} else if !apiclient.IsOK(updateHttpResp) {
 		resp.Diagnostics.Append(fwdiag.NewClientCreateHTTPResponseError(updateHttpResp))
 		return
 	}
@@ -185,7 +185,7 @@ func (r *DomainAutoRenewSettingResource) Update(ctx context.Context, req resourc
 	if err != nil {
 		resp.Diagnostics.Append(fwdiag.NewClientReadError(err))
 		return
-	} else if readHttpResp.StatusCode() != http.StatusOK || readHttpResp.JSON200 == nil || readHttpResp.JSON200.Status == nil || *readHttpResp.JSON200.Status != "SUCCESS" {
+	} else if !apiclient.IsOK(readHttpResp) {
 		resp.Diagnostics.Append(fwdiag.NewClientReadHTTPResponseError(readHttpResp))
 		return
 	} else if readHttpResp.JSON200.Domain == nil {
@@ -193,7 +193,7 @@ func (r *DomainAutoRenewSettingResource) Update(ctx context.Context, req resourc
 		return
 	}
 
-	resp.Diagnostics.Append(data.Fill(ctx, readHttpResp.JSON200.Domain.AutoRenew)...)
+	resp.Diagnostics.Append(data.FromAPI(ctx, readHttpResp.JSON200.Domain.AutoRenew)...)
 	if resp.Diagnostics.HasError() {
 		return
 	}

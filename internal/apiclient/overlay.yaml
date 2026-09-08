@@ -45,3 +45,7 @@ actions:
       x-go-type: porkbuntypes.FlexibleBool
       x-go-type-import:
         path: github.com/jianyuan/terraform-provider-porkbun/internal/porkbuntypes
+  - target: $..[?(@.properties.status.type == 'string' && @.properties.status.example == 'SUCCESS')]
+    update:
+      required:
+        - status
