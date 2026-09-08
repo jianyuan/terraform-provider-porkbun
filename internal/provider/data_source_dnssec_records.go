@@ -112,7 +112,7 @@ func (d *DnssecRecordsDataSource) Read(ctx context.Context, req datasource.ReadR
 	if err != nil {
 		resp.Diagnostics.Append(fwdiag.NewClientReadError(err))
 		return
-	} else if httpResp.StatusCode() != http.StatusOK || httpResp.JSON200 == nil || httpResp.JSON200.Status == nil || *httpResp.JSON200.Status != "SUCCESS" {
+	} else if httpResp.StatusCode() != http.StatusOK || httpResp.JSON200 == nil || httpResp.JSON200.Status != "SUCCESS" {
 		resp.Diagnostics.Append(fwdiag.NewClientReadHTTPResponseError(httpResp))
 		return
 	}

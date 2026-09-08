@@ -170,7 +170,7 @@ func (r *GlueRecordResource) read(ctx context.Context, data *GlueRecordResourceM
 	if err != nil {
 		diags.Append(fwdiag.NewClientReadError(err))
 		return
-	} else if httpResp.StatusCode() != http.StatusOK || httpResp.JSON200 == nil || httpResp.JSON200.Status == nil || *httpResp.JSON200.Status != "SUCCESS" {
+	} else if httpResp.StatusCode() != http.StatusOK || httpResp.JSON200 == nil || httpResp.JSON200.Status != "SUCCESS" {
 		diags.Append(fwdiag.NewClientReadHTTPResponseError(httpResp))
 		return
 	} else if httpResp.JSON200.Hosts == nil {

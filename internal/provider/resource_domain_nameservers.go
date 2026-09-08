@@ -65,7 +65,7 @@ func (r *DomainNameserversResource) Create(ctx context.Context, req resource.Cre
 	if err != nil {
 		resp.Diagnostics.Append(fwdiag.NewClientReadError(err))
 		return
-	} else if readHttpResp.StatusCode() != http.StatusOK || readHttpResp.JSON200 == nil || readHttpResp.JSON200.Status == nil || *readHttpResp.JSON200.Status != "SUCCESS" {
+	} else if readHttpResp.StatusCode() != http.StatusOK || readHttpResp.JSON200 == nil || readHttpResp.JSON200.Status != "SUCCESS" {
 		resp.Diagnostics.Append(fwdiag.NewClientReadHTTPResponseError(readHttpResp))
 		return
 	} else if readHttpResp.JSON200.Ns == nil {
@@ -100,7 +100,7 @@ func (r *DomainNameserversResource) Read(ctx context.Context, req resource.ReadR
 	} else if httpResp.StatusCode() == http.StatusNotFound {
 		resp.State.RemoveResource(ctx)
 		return
-	} else if httpResp.StatusCode() != http.StatusOK || httpResp.JSON200 == nil || httpResp.JSON200.Status == nil || *httpResp.JSON200.Status != "SUCCESS" {
+	} else if httpResp.StatusCode() != http.StatusOK || httpResp.JSON200 == nil || httpResp.JSON200.Status != "SUCCESS" {
 		resp.Diagnostics.Append(fwdiag.NewClientReadHTTPResponseError(httpResp))
 		return
 	} else if httpResp.JSON200.Ns == nil {
@@ -154,7 +154,7 @@ func (r *DomainNameserversResource) Update(ctx context.Context, req resource.Upd
 	if err != nil {
 		resp.Diagnostics.Append(fwdiag.NewClientReadError(err))
 		return
-	} else if readHttpResp.StatusCode() != http.StatusOK || readHttpResp.JSON200 == nil || readHttpResp.JSON200.Status == nil || *readHttpResp.JSON200.Status != "SUCCESS" {
+	} else if readHttpResp.StatusCode() != http.StatusOK || readHttpResp.JSON200 == nil || readHttpResp.JSON200.Status != "SUCCESS" {
 		resp.Diagnostics.Append(fwdiag.NewClientReadHTTPResponseError(readHttpResp))
 		return
 	} else if readHttpResp.JSON200.Ns == nil {

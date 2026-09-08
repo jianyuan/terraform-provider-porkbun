@@ -2571,7 +2571,7 @@ type WebhookDeliveryListResponse struct {
 	Start *int64 `json:"start,omitempty"`
 
 	// Status Example: SUCCESS
-	Status *string `json:"status,omitempty"`
+	Status string `json:"status"`
 
 	// Total Total matching deliveries (for pagination).
 	//
@@ -2584,7 +2584,7 @@ type WebhookDeliveryResponse struct {
 	Delivery *WebhookDelivery `json:"delivery,omitempty"`
 
 	// Status Example: SUCCESS
-	Status *string `json:"status,omitempty"`
+	Status string `json:"status"`
 }
 
 // WebhookEndpoint defines model for WebhookEndpoint.
@@ -2646,7 +2646,7 @@ type WebhookEndpointResponse struct {
 	Endpoint *WebhookEndpoint `json:"endpoint,omitempty"`
 
 	// Status Example: SUCCESS
-	Status *string `json:"status,omitempty"`
+	Status string `json:"status"`
 }
 
 // WebhookEventTypesResponse defines model for WebhookEventTypesResponse.
@@ -2655,7 +2655,7 @@ type WebhookEventTypesResponse struct {
 	EventTypes *[]string `json:"eventTypes,omitempty"`
 
 	// Status Example: SUCCESS
-	Status *string `json:"status,omitempty"`
+	Status string `json:"status"`
 }
 
 // WebhookIdRequest defines model for WebhookIdRequest.
@@ -2674,7 +2674,7 @@ type WebhookListResponse struct {
 	Endpoints *[]WebhookEndpoint `json:"endpoints,omitempty"`
 
 	// Status Example: SUCCESS
-	Status *string `json:"status,omitempty"`
+	Status string `json:"status"`
 }
 
 // WebhookResendResponse defines model for WebhookResendResponse.
@@ -2685,7 +2685,7 @@ type WebhookResendResponse struct {
 	Message *string `json:"message,omitempty"`
 
 	// Status Example: SUCCESS
-	Status *string `json:"status,omitempty"`
+	Status string `json:"status"`
 }
 
 // WebhookTestResponse defines model for WebhookTestResponse.
@@ -2699,7 +2699,7 @@ type WebhookTestResponse struct {
 	Message *string `json:"message,omitempty"`
 
 	// Status Example: SUCCESS
-	Status *string `json:"status,omitempty"`
+	Status string `json:"status"`
 }
 
 // GetApiSettingsParams defines parameters for GetApiSettings.
@@ -2839,7 +2839,7 @@ type ApikeyRequest200JSONResponseBody struct {
 	RequestToken string `json:"requestToken"`
 
 	// Status Example: SUCCESS
-	Status *string `json:"status,omitempty"`
+	Status string `json:"status"`
 }
 
 // ApikeyRetrieveJSONBody defines parameters for ApikeyRetrieve.
@@ -2867,7 +2867,7 @@ type ApikeyRetrieve200JSONResponseBody struct {
 	Secretapikey *string `json:"secretapikey,omitempty"`
 
 	// Status Example: SUCCESS
-	Status *ApikeyRetrieve200JSONResponseBodyStatus `json:"status,omitempty"`
+	Status ApikeyRetrieve200JSONResponseBodyStatus `json:"status"`
 }
 
 // CloudflareConnectJSONBody defines parameters for CloudflareConnect.
@@ -3012,7 +3012,7 @@ type DnsCreate200JSONResponseBody struct {
 	Id *porkbuntypes.StringID `json:"id,omitempty"`
 
 	// Status Example: SUCCESS
-	Status *string `json:"status,omitempty"`
+	Status string `json:"status"`
 }
 
 // GetDnssecRecordsParams defines parameters for GetDnssecRecords.
@@ -3041,7 +3041,7 @@ type GetDnssecRecords200JSONResponseBody struct {
 	Records *map[string]GetDnssecRecords200JSONResponseBody_Records `json:"records,omitempty"`
 
 	// Status Example: SUCCESS
-	Status *string `json:"status,omitempty"`
+	Status string `json:"status"`
 }
 
 // DnsGetDnssecRecords200JSONResponseBody_Records defines parameters for DnsGetDnssecRecords.
@@ -3061,7 +3061,7 @@ type DnsGetDnssecRecords200JSONResponseBody struct {
 	Records *map[string]DnsGetDnssecRecords200JSONResponseBody_Records `json:"records,omitempty"`
 
 	// Status Example: SUCCESS
-	Status *string `json:"status,omitempty"`
+	Status string `json:"status"`
 }
 
 // GetDnsRecordsParams defines parameters for GetDnsRecords.
@@ -3136,7 +3136,7 @@ type GetDomain200JSONResponseBody struct {
 	Domain *GetDomain200JSONResponseBody_Domain `json:"domain,omitempty"`
 
 	// Status Example: SUCCESS
-	Status *string `json:"status,omitempty"`
+	Status string `json:"status"`
 }
 
 // DomainGetContacts200JSONResponseBody_Contacts defines parameters for DomainGetContacts.
@@ -3159,7 +3159,7 @@ type DomainGetContacts200JSONResponseBody struct {
 	Contacts *DomainGetContacts200JSONResponseBody_Contacts `json:"contacts,omitempty"`
 
 	// Status Example: SUCCESS
-	Status *string `json:"status,omitempty"`
+	Status string `json:"status"`
 }
 
 // GetDomainGlueParams defines parameters for GetDomainGlue.
@@ -3197,7 +3197,7 @@ type GetDomainGlue200JSONResponseBody struct {
 	Hosts *[][]GetDomainGlue200JSONResponseBody_Hosts `json:"hosts,omitempty"`
 
 	// Status Example: SUCCESS
-	Status *string `json:"status,omitempty"`
+	Status string `json:"status"`
 }
 
 // DomainGetGlue200JSONResponseBody defines parameters for DomainGetGlue.
@@ -3206,7 +3206,7 @@ type DomainGetGlue200JSONResponseBody struct {
 	Hosts *[][]interface{} `json:"hosts,omitempty"`
 
 	// Status Example: SUCCESS
-	Status *string `json:"status,omitempty"`
+	Status string `json:"status"`
 }
 
 // GetDomainNsParams defines parameters for GetDomainNs.
@@ -3224,7 +3224,7 @@ type GetDomainNs200JSONResponseBody struct {
 	Ns *[]string `json:"ns,omitempty"`
 
 	// Status Example: SUCCESS
-	Status *string `json:"status,omitempty"`
+	Status string `json:"status"`
 }
 
 // DomainGetNs200JSONResponseBody defines parameters for DomainGetNs.
@@ -3233,7 +3233,7 @@ type DomainGetNs200JSONResponseBody struct {
 	Ns *[]string `json:"ns,omitempty"`
 
 	// Status Example: SUCCESS
-	Status *string `json:"status,omitempty"`
+	Status string `json:"status"`
 }
 
 // DomainGetRegistrationRequirementsParams defines parameters for DomainGetRegistrationRequirements.
@@ -3282,7 +3282,7 @@ type DomainGetRegistrationRequirements200JSONResponseBody struct {
 	RequiresValidatedAddress *bool `json:"requiresValidatedAddress,omitempty"`
 
 	// Status Example: SUCCESS
-	Status *string `json:"status,omitempty"`
+	Status string `json:"status"`
 
 	// Tld Example: us
 	Tld *string `json:"tld,omitempty"`
@@ -3394,7 +3394,7 @@ type DomainUpdateAutoRenew200JSONResponseBody struct {
 	Results *map[string]DomainUpdateAutoRenew200JSONResponseBody_Results `json:"results,omitempty"`
 
 	// Status Example: SUCCESS
-	Status *string `json:"status,omitempty"`
+	Status string `json:"status"`
 }
 
 // DomainUpdateContactsJSONBody defines parameters for DomainUpdateContacts.
@@ -3446,7 +3446,7 @@ type DomainUpdateContacts200JSONResponseBody struct {
 	RegistrantChanged *bool   `json:"registrantChanged,omitempty"`
 
 	// Status Example: SUCCESS
-	Status *string `json:"status,omitempty"`
+	Status string `json:"status"`
 }
 
 // EmailSetPasswordJSONBody defines parameters for EmailSetPassword.
@@ -3535,7 +3535,7 @@ type HostingCreate200JSONResponseBody struct {
 	OrderId *int64                                    `json:"orderId,omitempty"`
 
 	// Status Example: SUCCESS
-	Status *string `json:"status,omitempty"`
+	Status string `json:"status"`
 }
 
 // HostingCreateWpCredentialsJSONBody defines parameters for HostingCreateWpCredentials.
@@ -3828,7 +3828,7 @@ type ListMarketplaceListingsGet200JSONResponseBody struct {
 	Filtered *bool                                                    `json:"filtered,omitempty"`
 
 	// Status Example: SUCCESS
-	Status *string `json:"status,omitempty"`
+	Status string `json:"status"`
 }
 
 // ListMarketplaceListingsJSONBody defines parameters for ListMarketplaceListings.
@@ -3910,7 +3910,7 @@ type ListMarketplaceListings200JSONResponseBody struct {
 	Filtered *bool `json:"filtered,omitempty"`
 
 	// Status Example: SUCCESS
-	Status *string `json:"status,omitempty"`
+	Status string `json:"status"`
 }
 
 // MockDirectory200JSONResponseBody_Endpoints defines parameters for MockDirectory.
@@ -4030,7 +4030,7 @@ type GetPricingGet200JSONResponseBody struct {
 	Pricing *map[string]GetPricingGet200JSONResponseBody_Pricing `json:"pricing,omitempty"`
 
 	// Status Example: SUCCESS
-	Status *string `json:"status,omitempty"`
+	Status string `json:"status"`
 }
 
 // GetPricingJSONBody defines parameters for GetPricing.
@@ -4075,7 +4075,7 @@ type GetPricing200JSONResponseBody struct {
 	Pricing *map[string]GetPricing200JSONResponseBody_Pricing `json:"pricing,omitempty"`
 
 	// Status Example: SUCCESS
-	Status *string `json:"status,omitempty"`
+	Status string `json:"status"`
 }
 
 // SandboxResetJSONBody defines parameters for SandboxReset.
@@ -4168,7 +4168,7 @@ type GetSslRetrieve200JSONResponseBody struct {
 	Publickey *string `json:"publickey,omitempty"`
 
 	// Status Example: SUCCESS
-	Status *string `json:"status,omitempty"`
+	Status string `json:"status"`
 }
 
 // SslRetrieve200JSONResponseBody defines parameters for SslRetrieve.
@@ -4183,7 +4183,7 @@ type SslRetrieve200JSONResponseBody struct {
 	Publickey *string `json:"publickey,omitempty"`
 
 	// Status Example: SUCCESS
-	Status *string `json:"status,omitempty"`
+	Status string `json:"status"`
 }
 
 // WebhookDelete200JSONResponseBody defines parameters for WebhookDelete.
@@ -4192,7 +4192,7 @@ type WebhookDelete200JSONResponseBody struct {
 	Message *string `json:"message,omitempty"`
 
 	// Status Example: SUCCESS
-	Status *string `json:"status,omitempty"`
+	Status string `json:"status"`
 }
 
 // WebhookDeliveriesParams defines parameters for WebhookDeliveries.

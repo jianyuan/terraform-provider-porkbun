@@ -85,7 +85,7 @@ func (r *DomainAutoRenewSettingResource) Create(ctx context.Context, req resourc
 	if err != nil {
 		resp.Diagnostics.Append(fwdiag.NewClientCreateError(err))
 		return
-	} else if updateHttpResp.StatusCode() != http.StatusOK || updateHttpResp.JSON200 == nil || updateHttpResp.JSON200.Status == nil || *updateHttpResp.JSON200.Status != "SUCCESS" {
+	} else if updateHttpResp.StatusCode() != http.StatusOK || updateHttpResp.JSON200 == nil || updateHttpResp.JSON200.Status != "SUCCESS" {
 		resp.Diagnostics.Append(fwdiag.NewClientCreateHTTPResponseError(updateHttpResp))
 		return
 	}
@@ -98,7 +98,7 @@ func (r *DomainAutoRenewSettingResource) Create(ctx context.Context, req resourc
 	if err != nil {
 		resp.Diagnostics.Append(fwdiag.NewClientReadError(err))
 		return
-	} else if readHttpResp.StatusCode() != http.StatusOK || readHttpResp.JSON200 == nil || readHttpResp.JSON200.Status == nil || *readHttpResp.JSON200.Status != "SUCCESS" {
+	} else if readHttpResp.StatusCode() != http.StatusOK || readHttpResp.JSON200 == nil || readHttpResp.JSON200.Status != "SUCCESS" {
 		resp.Diagnostics.Append(fwdiag.NewClientReadHTTPResponseError(readHttpResp))
 		return
 	} else if readHttpResp.JSON200.Domain == nil {
@@ -133,7 +133,7 @@ func (r *DomainAutoRenewSettingResource) Read(ctx context.Context, req resource.
 	} else if httpResp.StatusCode() == http.StatusNotFound {
 		resp.State.RemoveResource(ctx)
 		return
-	} else if httpResp.StatusCode() != http.StatusOK || httpResp.JSON200 == nil || httpResp.JSON200.Status == nil || *httpResp.JSON200.Status != "SUCCESS" {
+	} else if httpResp.StatusCode() != http.StatusOK || httpResp.JSON200 == nil || httpResp.JSON200.Status != "SUCCESS" {
 		resp.Diagnostics.Append(fwdiag.NewClientReadHTTPResponseError(httpResp))
 		return
 	} else if httpResp.JSON200.Domain == nil {
@@ -172,7 +172,7 @@ func (r *DomainAutoRenewSettingResource) Update(ctx context.Context, req resourc
 	if err != nil {
 		resp.Diagnostics.Append(fwdiag.NewClientCreateError(err))
 		return
-	} else if updateHttpResp.StatusCode() != http.StatusOK || updateHttpResp.JSON200 == nil || updateHttpResp.JSON200.Status == nil || *updateHttpResp.JSON200.Status != "SUCCESS" {
+	} else if updateHttpResp.StatusCode() != http.StatusOK || updateHttpResp.JSON200 == nil || updateHttpResp.JSON200.Status != "SUCCESS" {
 		resp.Diagnostics.Append(fwdiag.NewClientCreateHTTPResponseError(updateHttpResp))
 		return
 	}
@@ -185,7 +185,7 @@ func (r *DomainAutoRenewSettingResource) Update(ctx context.Context, req resourc
 	if err != nil {
 		resp.Diagnostics.Append(fwdiag.NewClientReadError(err))
 		return
-	} else if readHttpResp.StatusCode() != http.StatusOK || readHttpResp.JSON200 == nil || readHttpResp.JSON200.Status == nil || *readHttpResp.JSON200.Status != "SUCCESS" {
+	} else if readHttpResp.StatusCode() != http.StatusOK || readHttpResp.JSON200 == nil || readHttpResp.JSON200.Status != "SUCCESS" {
 		resp.Diagnostics.Append(fwdiag.NewClientReadHTTPResponseError(readHttpResp))
 		return
 	} else if readHttpResp.JSON200.Domain == nil {

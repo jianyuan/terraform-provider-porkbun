@@ -248,7 +248,7 @@ func (r *DomainResource) read(ctx context.Context, data *DomainResourceModel) (f
 		return
 	} else if httpResp.StatusCode() == http.StatusNotFound {
 		return
-	} else if httpResp.StatusCode() != http.StatusOK || httpResp.JSON200 == nil || httpResp.JSON200.Status == nil || *httpResp.JSON200.Status != "SUCCESS" {
+	} else if httpResp.StatusCode() != http.StatusOK || httpResp.JSON200 == nil || httpResp.JSON200.Status != "SUCCESS" {
 		diags.Append(fwdiag.NewClientReadHTTPResponseError(httpResp))
 		return
 	} else if httpResp.JSON200.Domain == nil {
