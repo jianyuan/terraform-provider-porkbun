@@ -2,6 +2,7 @@ package provider
 
 import (
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+	schemaD "github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	schemaR "github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/boolplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
@@ -17,9 +18,11 @@ func urlForwardSchema() superschema.Schema {
 		},
 		Attributes: superschema.Attributes{
 			"id": superschema.StringAttribute{
-				Resource: &schemaR.StringAttribute{
+				Common: &schemaR.StringAttribute{
 					MarkdownDescription: "The record ID.",
 					Computed:            true,
+				},
+				Resource: &schemaR.StringAttribute{
 					PlanModifiers: []planmodifier.String{
 						stringplanmodifier.UseStateForUnknown(),
 					},
@@ -35,30 +38,45 @@ func urlForwardSchema() superschema.Schema {
 				},
 			},
 			"subdomain": superschema.StringAttribute{
-				Resource: &schemaR.StringAttribute{
+				Common: &schemaR.StringAttribute{
 					MarkdownDescription: "The subdomain portion only (optional, leave blank or omit for root domain). Alphanumeric and hyphens only.",
-					Optional:            true,
+				},
+				Resource: &schemaR.StringAttribute{
+					Optional: true,
 					PlanModifiers: []planmodifier.String{
 						stringplanmodifier.RequiresReplace(),
 					},
 				},
+				DataSource: &schemaD.StringAttribute{
+					Computed: true,
+				},
 			},
 			"include_path": superschema.BoolAttribute{
-				Resource: &schemaR.BoolAttribute{
+				Common: &schemaR.BoolAttribute{
 					MarkdownDescription: "Whether to append the request URI path to the forwarding destination.",
-					Required:            true,
+				},
+				Resource: &schemaR.BoolAttribute{
+					Required: true,
 					PlanModifiers: []planmodifier.Bool{
 						boolplanmodifier.RequiresReplace(),
 					},
 				},
+				DataSource: &schemaD.BoolAttribute{
+					Computed: true,
+				},
 			},
 			"location": superschema.StringAttribute{
-				Resource: &schemaR.StringAttribute{
+				Common: &schemaR.StringAttribute{
 					MarkdownDescription: "The destination URL to forward to.",
-					Required:            true,
+				},
+				Resource: &schemaR.StringAttribute{
+					Required: true,
 					PlanModifiers: []planmodifier.String{
 						stringplanmodifier.RequiresReplace(),
 					},
+				},
+				DataSource: &schemaD.StringAttribute{
+					Computed: true,
 				},
 			},
 			"type": superschema.StringAttribute{
@@ -71,6 +89,10 @@ func urlForwardSchema() superschema.Schema {
 					PlanModifiers: []planmodifier.String{
 						stringplanmodifier.RequiresReplace(),
 					},
+				},
+				DataSource: &schemaD.StringAttribute{
+					MarkdownDescription: "Redirect kind. `permanent` = HTTP 301; `temporary` = HTTP 302 (default); `masked` = loads the destination in a frame (URL masking).",
+					Computed:            true,
 				},
 			},
 			"redirect_type": superschema.StringAttribute{
@@ -85,14 +107,23 @@ func urlForwardSchema() superschema.Schema {
 						stringplanmodifier.RequiresReplace(),
 					},
 				},
+				DataSource: &schemaD.StringAttribute{
+					MarkdownDescription: "The exact redirect type; takes precedence over `type` when supplied. `301` = permanent, `302` or `307` = temporary (this is how you request 307), `masked` = URL masking.",
+					Computed:            true,
+				},
 			},
 			"wildcard": superschema.BoolAttribute{
-				Resource: &schemaR.BoolAttribute{
+				Common: &schemaR.BoolAttribute{
 					MarkdownDescription: "Whether to also forward all subdomains of the forwarded subdomain.",
-					Required:            true,
+				},
+				Resource: &schemaR.BoolAttribute{
+					Required: true,
 					PlanModifiers: []planmodifier.Bool{
 						boolplanmodifier.RequiresReplace(),
 					},
+				},
+				DataSource: &schemaD.BoolAttribute{
+					Computed: true,
 				},
 			},
 		},
