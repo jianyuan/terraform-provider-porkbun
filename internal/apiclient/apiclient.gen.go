@@ -278,6 +278,27 @@ func (e CreateDomainRequestAgreeToTerms) Valid() bool {
 	}
 }
 
+// Defines values for DnsPreflightResponseChecksSeverity.
+const (
+	Blocker DnsPreflightResponseChecksSeverity = "blocker"
+	Info    DnsPreflightResponseChecksSeverity = "info"
+	Warning DnsPreflightResponseChecksSeverity = "warning"
+)
+
+// Valid indicates whether the value is a known member of the DnsPreflightResponseChecksSeverity enum.
+func (e DnsPreflightResponseChecksSeverity) Valid() bool {
+	switch e {
+	case Blocker:
+		return true
+	case Info:
+		return true
+	case Warning:
+		return true
+	default:
+		return false
+	}
+}
+
 // Defines values for DnsRecordsResponseCloudflare.
 const (
 	Disabled DnsRecordsResponseCloudflare = "disabled"
@@ -1016,6 +1037,48 @@ func (e CloudflareSetZoneSettingsJSONBodySsl) Valid() bool {
 	}
 }
 
+// Defines values for DnsCreateDnssecRecord200JSONResponseBodyStatus.
+const (
+	DnsCreateDnssecRecord200JSONResponseBodyStatusERROR   DnsCreateDnssecRecord200JSONResponseBodyStatus = "ERROR"
+	DnsCreateDnssecRecord200JSONResponseBodyStatusSUCCESS DnsCreateDnssecRecord200JSONResponseBodyStatus = "SUCCESS"
+)
+
+// Valid indicates whether the value is a known member of the DnsCreateDnssecRecord200JSONResponseBodyStatus enum.
+func (e DnsCreateDnssecRecord200JSONResponseBodyStatus) Valid() bool {
+	switch e {
+	case DnsCreateDnssecRecord200JSONResponseBodyStatusERROR:
+		return true
+	case DnsCreateDnssecRecord200JSONResponseBodyStatusSUCCESS:
+		return true
+	default:
+		return false
+	}
+}
+
+// Defines values for DnsPreflightParamsIntent.
+const (
+	EnableDnssec    DnsPreflightParamsIntent = "enable-dnssec"
+	General         DnsPreflightParamsIntent = "general"
+	MoveNameservers DnsPreflightParamsIntent = "move-nameservers"
+	TransferOut     DnsPreflightParamsIntent = "transfer-out"
+)
+
+// Valid indicates whether the value is a known member of the DnsPreflightParamsIntent enum.
+func (e DnsPreflightParamsIntent) Valid() bool {
+	switch e {
+	case EnableDnssec:
+		return true
+	case General:
+		return true
+	case MoveNameservers:
+		return true
+	case TransferOut:
+		return true
+	default:
+		return false
+	}
+}
+
 // Defines values for GetDomainParamsIncludeLabels.
 const (
 	GetDomainParamsIncludeLabelsNo  GetDomainParamsIncludeLabels = "no"
@@ -1518,6 +1581,11 @@ type BasicResponse struct {
 
 	// Status Example: SUCCESS
 	Status BasicResponseStatus `json:"status"`
+
+	// Warnings Advisory, and present only when there is something to say. It never means the call failed. The one to handle: a DNS write is accepted and stored even when the domain is NOT delegated to our nameservers -- we keep the zone ready in case the delegation comes back -- so the write changed nothing that resolves, and this field says so. Show these to the user as written.
+	//
+	// Example: ["example.com is delegated to nameservers we do not operate (ns1.example-dns.net), so this change was saved to your Porkbun DNS zone but does NOT affect what resolves. Make the same change wherever those nameservers are managed, or point the domain back at ours (maceio.ns.porkbun.com, curitiba.ns.porkbun.com, salvador.ns.porkbun.com, fortaleza.ns.porkbun.com) with POST /domain/updateNs/example.com -- the zone you just edited is what we would start serving."]
+	Warnings *DnsWriteWarnings `json:"warnings,omitempty"`
 }
 
 // BasicResponseStatus Example: SUCCESS
@@ -1546,7 +1614,7 @@ type CheckDomainResponse_Limits struct {
 
 	// NaturalLanguage Human-readable rate limit summary
 	//
-	// Example: 1 out of 1 checks within 10 seconds used.
+	// Example: 1 out of 10 checks within 10 seconds used.
 	NaturalLanguage *string `json:"naturalLanguage,omitempty"`
 
 	// Used Number of checks used so far in the current window
@@ -1615,6 +1683,49 @@ type CheckDomainResponse_Response struct {
 	//
 	// Example: registration
 	Type *string `json:"type,omitempty"`
+}
+
+// CloseoutItem defines model for CloseoutItem.
+type CloseoutItem struct {
+	// Age Domain age in years.
+	Age nullable.Nullable[int64] `json:"age,omitempty"`
+
+	// CloseoutId Provider id for this listing.
+	CloseoutId *int64  `json:"closeoutId,omitempty"`
+	Domain     *string `json:"domain,omitempty"`
+
+	// EndTime When the listing ends, ISO 8601 UTC.
+	EndTime nullable.Nullable[string] `json:"endTime,omitempty"`
+
+	// EstibotAppraisal Third-party appraisal in US cents. Provider-supplied; treat as a weak signal.
+	EstibotAppraisal nullable.Nullable[int64] `json:"estibotAppraisal,omitempty"`
+	ExpiredRevenue   nullable.Nullable[int64] `json:"expiredRevenue,omitempty"`
+	InboundLinks     nullable.Nullable[int64] `json:"inboundLinks,omitempty"`
+	IsIdn            *bool                    `json:"isIdn,omitempty"`
+
+	// LocalDomain True when the name is already at Porkbun (renewed rather than transferred in). Only returned by /closeout/get/{domain}.
+	LocalDomain     nullable.Nullable[bool]  `json:"localDomain,omitempty"`
+	MonthlyVisitors nullable.Nullable[int64] `json:"monthlyVisitors,omitempty"`
+	NameLength      nullable.Nullable[int64] `json:"nameLength,omitempty"`
+
+	// OtherTldCount How many other TLDs the same SLD is registered in.
+	OtherTldCount nullable.Nullable[int64] `json:"otherTldCount,omitempty"`
+
+	// Price Current closeout price, integer US cents. Descends on a schedule.
+	Price *int64 `json:"price,omitempty"`
+
+	// ProviderRenewalPrice The provider's own renewal figure. Indicative only — the amount actually charged is `renewalPrice` from /closeout/get/{domain}, which uses Porkbun pricing.
+	ProviderRenewalPrice nullable.Nullable[int64] `json:"providerRenewalPrice,omitempty"`
+
+	// RegistrationDate Original registration date, ISO 8601 UTC.
+	RegistrationDate nullable.Nullable[string] `json:"registrationDate,omitempty"`
+
+	// RenewalPrice Porkbun's renewal or transfer price for the year included. Only returned by /closeout/get/{domain}.
+	RenewalPrice nullable.Nullable[int64] `json:"renewalPrice,omitempty"`
+	Tld          *string                  `json:"tld,omitempty"`
+
+	// TotalPrice price + renewalPrice. What /closeout/buy charges. Only returned by /closeout/get/{domain}.
+	TotalPrice nullable.Nullable[int64] `json:"totalPrice,omitempty"`
 }
 
 // CreateDnsRequest defines model for CreateDnsRequest.
@@ -1721,7 +1832,7 @@ type CreateDomainRequest struct {
 // CreateDomainRequestAgreeToTerms Must be 'yes' or '1' to confirm agreement to the Domain Name Registration Agreement, Product Terms of Service, Privacy Policy, and automatic renewal terms.
 type CreateDomainRequestAgreeToTerms string
 
-// CreateDomainResponse Example: {"balance":4027,"cost":973,"domain":"example.com","limits":{"attempts":{"TTL":1,"limit":1,"naturalLanguage":"1 out of 1 create attempts within 1 seconds used.","used":1},"success":{"TTL":86400,"limit":50,"naturalLanguage":"1 out of 50 successful creates within 86400 seconds used.","used":1}},"orderId":12345678,"requestId":"019e04fa-258d-7d11-aa86-4d5795c3fe8f","status":"SUCCESS","ttlRemaining":86400}
+// CreateDomainResponse Example: {"balance":4027,"cost":973,"domain":"example.com","limits":{"attempts":{"TTL":1,"limit":1,"naturalLanguage":"1 out of 1 create attempts within 1 seconds used.","used":1},"success":{"TTL":86400,"limit":50,"naturalLanguage":"1 out of 1000 successful creates within 86400 seconds used.","used":1}},"orderId":12345678,"requestId":"019e04fa-258d-7d11-aa86-4d5795c3fe8f","status":"SUCCESS","ttlRemaining":86400}
 type CreateDomainResponse struct {
 	// Balance Remaining account credit balance in pennies after the charge
 	Balance *int64 `json:"balance,omitempty"`
@@ -1801,6 +1912,170 @@ type CreateWebhookRequest struct {
 	Url string `json:"url"`
 }
 
+// DnsDiffResponse defines model for DnsDiffResponse.
+type DnsDiffResponse struct {
+	// Domain Example: example.com
+	Domain *string `json:"domain,omitempty"`
+
+	// Extra Live, not in the restore point. A restore leaves these alone unless prune is true.
+	Extra *[]DnsHistoryRecord `json:"extra,omitempty"`
+
+	// InSync Example: false
+	InSync *bool `json:"inSync,omitempty"`
+
+	// Missing In the restore point, not live. A restore adds these back.
+	Missing  *[]DnsHistoryRecord       `json:"missing,omitempty"`
+	Snapshot *DnsDiffResponse_Snapshot `json:"snapshot,omitempty"`
+
+	// Status Example: SUCCESS
+	Status string `json:"status"`
+}
+
+// DnsDiffResponse_Snapshot defines model for DnsDiffResponse.Snapshot.
+type DnsDiffResponse_Snapshot struct {
+	// Id Example: 1234
+	Id *int64 `json:"id,omitempty"`
+
+	// Reason Example: before-edit
+	Reason *string `json:"reason,omitempty"`
+
+	// TakenAt Example: 2026-09-16 22:14:19
+	TakenAt *string `json:"takenAt,omitempty"`
+}
+
+// DnsHistoryRecord defines model for DnsHistoryRecord.
+type DnsHistoryRecord struct {
+	// Content For masked records (parking, ALIAS, HTTPS) this is the value you configured, not the internal host it resolves to.
+	//
+	// Example: 203.0.113.10
+	Content *string `json:"content,omitempty"`
+
+	// Name Fully qualified.
+	//
+	// Example: www.example.com
+	Name *string                  `json:"name,omitempty"`
+	Prio nullable.Nullable[int64] `json:"prio,omitempty"`
+
+	// Ttl Example: 600
+	Ttl *int64 `json:"ttl,omitempty"`
+
+	// Type Example: A
+	Type *string `json:"type,omitempty"`
+}
+
+// DnsHistoryResponse defines model for DnsHistoryResponse.
+type DnsHistoryResponse struct {
+	// Domain Example: example.com
+	Domain *string `json:"domain,omitempty"`
+
+	// RestorePoints Newest first, up to 50.
+	RestorePoints *[]DnsHistoryResponse_RestorePoints `json:"restorePoints,omitempty"`
+
+	// Status Example: SUCCESS
+	Status string `json:"status"`
+}
+
+// DnsHistoryResponse_RestorePoints defines model for DnsHistoryResponse.RestorePoints.
+type DnsHistoryResponse_RestorePoints struct {
+	// Id Pass this to /dns/diff and /dns/restore.
+	//
+	// Example: 1234
+	Id *int64 `json:"id,omitempty"`
+
+	// MatchesLive True when the live zone is identical to this point, so you can see where you are without diffing.
+	//
+	// Example: false
+	MatchesLive *bool `json:"matchesLive,omitempty"`
+
+	// Reason Why it was taken: before-create, before-edit, before-delete, before-wipe, before-restore-{id}, or a reason supplied by support.
+	//
+	// Example: before-edit
+	Reason *string `json:"reason,omitempty"`
+
+	// RecordCount The size of the zone AS IT WAS at that moment, not now.
+	//
+	// Example: 9
+	RecordCount *int64 `json:"recordCount,omitempty"`
+
+	// Source auto (taken by the platform before a write), api, cli or archiveDns.
+	//
+	// Example: auto
+	Source *string `json:"source,omitempty"`
+
+	// TakenAt Example: 2026-09-16 22:14:19
+	TakenAt *string `json:"takenAt,omitempty"`
+}
+
+// DnsPreflightResponse defines model for DnsPreflightResponse.
+type DnsPreflightResponse struct {
+	// Blockers Check ids that will break something. Read these first.
+	Blockers *[]string `json:"blockers,omitempty"`
+
+	// Checks Every check that ran, passing ones included, so a caller can show what was verified rather than only what failed.
+	Checks *[]DnsPreflightResponse_Checks `json:"checks,omitempty"`
+
+	// Domain Example: example.com
+	Domain *string `json:"domain,omitempty"`
+
+	// Intent Example: move-nameservers
+	Intent *string `json:"intent,omitempty"`
+
+	// Safe True only when there are no blockers AND no warnings.
+	//
+	// Example: false
+	Safe *bool `json:"safe,omitempty"`
+
+	// Status Example: SUCCESS
+	Status string `json:"status"`
+
+	// Warnings Will not break outright, but usually what the customer asks about next.
+	Warnings *[]string `json:"warnings,omitempty"`
+}
+
+// DnsPreflightResponseChecksSeverity defines model for DnsPreflightResponse.Checks.Severity.
+type DnsPreflightResponseChecksSeverity string
+
+// DnsPreflightResponse_Checks defines model for DnsPreflightResponse.Checks.
+type DnsPreflightResponse_Checks struct {
+	// Detail The reasoning, including the rule it comes from.
+	Detail *string `json:"detail,omitempty"`
+
+	// Id Example: dnssec-active
+	Id *string `json:"id,omitempty"`
+
+	// NextAction What to do about it. Absent on checks that passed.
+	NextAction *string                             `json:"next_action,omitempty"`
+	Ok         *bool                               `json:"ok,omitempty"`
+	Severity   *DnsPreflightResponseChecksSeverity `json:"severity,omitempty"`
+	Title      *string                             `json:"title,omitempty"`
+}
+
+// DnsRecordInput defines model for DnsRecordInput.
+type DnsRecordInput struct {
+	// Content Example: 203.0.113.10
+	Content *string `json:"content,omitempty"`
+
+	// Name Subdomain prefix only, or empty string for the apex. `@` and a fully-qualified name are both accepted and normalised.
+	//
+	// Example: www
+	Name *string `json:"name,omitempty"`
+
+	// Prio Priority, for MX and SRV.
+	//
+	// Example: 10
+	Prio nullable.Nullable[int64] `json:"prio,omitempty"`
+
+	// Ttl Raised to the API minimum if lower.
+	//
+	// Example: 600
+	Ttl *int64 `json:"ttl,omitempty"`
+
+	// Type Record type. NS and SOA are ignored on import.
+	//
+	// Example: A
+	Type *string `json:"type,omitempty"`
+}
+
 // DnsRecordsResponse defines model for DnsRecordsResponse.
 type DnsRecordsResponse struct {
 	// Cloudflare Whether Cloudflare proxy is enabled for this domain
@@ -1847,6 +2122,55 @@ type DnsRecordsResponse_Records struct {
 	// Example: A
 	Type *string `json:"type,omitempty"`
 }
+
+// DnsRestoreResponse defines model for DnsRestoreResponse.
+type DnsRestoreResponse struct {
+	// Domain Example: example.com
+	Domain *string `json:"domain,omitempty"`
+
+	// Failed Records that could not be recreated, with the reason. Parking and other masked types are managed elsewhere and cannot be restored this way.
+	Failed *[]DnsRestoreResponse_Failed `json:"failed,omitempty"`
+
+	// PreviousStateSavedAs A new restore point holding the state from immediately BEFORE this restore. Restore that to undo this.
+	//
+	// Example: 1240
+	PreviousStateSavedAs nullable.Nullable[int64] `json:"previousStateSavedAs,omitempty"`
+
+	// Removed Records deleted, which is always 0 unless prune was true.
+	//
+	// Example: 0
+	Removed *int64 `json:"removed,omitempty"`
+
+	// Restored Records added back. A true count -- anything that could not be recreated is in `failed` instead.
+	//
+	// Example: 2
+	Restored *int64 `json:"restored,omitempty"`
+
+	// RestoredFrom The restore point used.
+	//
+	// Example: 1234
+	RestoredFrom *int64 `json:"restoredFrom,omitempty"`
+
+	// Status Example: SUCCESS
+	Status string `json:"status"`
+
+	// Warnings Advisory, and present only when there is something to say. It never means the call failed. The one to handle: a DNS write is accepted and stored even when the domain is NOT delegated to our nameservers -- we keep the zone ready in case the delegation comes back -- so the write changed nothing that resolves, and this field says so. Show these to the user as written.
+	//
+	// Example: ["example.com is delegated to nameservers we do not operate (ns1.example-dns.net), so this change was saved to your Porkbun DNS zone but does NOT affect what resolves. Make the same change wherever those nameservers are managed, or point the domain back at ours (maceio.ns.porkbun.com, curitiba.ns.porkbun.com, salvador.ns.porkbun.com, fortaleza.ns.porkbun.com) with POST /domain/updateNs/example.com -- the zone you just edited is what we would start serving."]
+	Warnings *DnsWriteWarnings `json:"warnings,omitempty"`
+}
+
+// DnsRestoreResponse_Failed defines model for DnsRestoreResponse.Failed.
+type DnsRestoreResponse_Failed struct {
+	Name   *string `json:"name,omitempty"`
+	Reason *string `json:"reason,omitempty"`
+	Type   *string `json:"type,omitempty"`
+}
+
+// DnsWriteWarnings Advisory, and present only when there is something to say. It never means the call failed. The one to handle: a DNS write is accepted and stored even when the domain is NOT delegated to our nameservers -- we keep the zone ready in case the delegation comes back -- so the write changed nothing that resolves, and this field says so. Show these to the user as written.
+//
+// Example: ["example.com is delegated to nameservers we do not operate (ns1.example-dns.net), so this change was saved to your Porkbun DNS zone but does NOT affect what resolves. Make the same change wherever those nameservers are managed, or point the domain back at ours (maceio.ns.porkbun.com, curitiba.ns.porkbun.com, salvador.ns.porkbun.com, fortaleza.ns.porkbun.com) with POST /domain/updateNs/example.com -- the zone you just edited is what we would start serving."]
+type DnsWriteWarnings = []string
 
 // Domain defines model for Domain.
 type Domain struct {
@@ -2323,7 +2647,7 @@ type RenewDomainRequest struct {
 	Secretapikey string `json:"secretapikey"`
 }
 
-// RenewDomainResponse Example: {"balance":3928,"cost":1099,"domain":"example.com","expirationDate":"2027-04-21","limits":{"attempts":{"TTL":1,"limit":1,"naturalLanguage":"1 out of 1 renewal attempts within 1 seconds used.","used":1},"success":{"TTL":86400,"limit":50,"naturalLanguage":"1 out of 50 successful renewals within 86400 seconds used.","used":1}},"orderId":12345679,"requestId":"019e04fa-3c11-7a02-9bd2-1f7c0e4a8b55","status":"SUCCESS","ttlRemaining":86400}
+// RenewDomainResponse Example: {"balance":3928,"cost":1099,"domain":"example.com","expirationDate":"2027-04-21","limits":{"attempts":{"TTL":1,"limit":1,"naturalLanguage":"1 out of 1 renewal attempts within 1 seconds used.","used":1},"success":{"TTL":86400,"limit":50,"naturalLanguage":"1 out of 1000 successful renewals within 86400 seconds used.","used":1}},"orderId":12345679,"requestId":"019e04fa-3c11-7a02-9bd2-1f7c0e4a8b55","status":"SUCCESS","ttlRemaining":86400}
 type RenewDomainResponse struct {
 	// Balance Remaining account credit balance in pennies after the charge
 	Balance *int64 `json:"balance,omitempty"`
@@ -2403,11 +2727,16 @@ type TransferDomainRequest struct {
 	// DryRun Optional. When true, runs all pre-flight validation and returns a preview with `dryRun: true` and `wouldSucceed` WITHOUT initiating the transfer or charging. Nothing changes and the rate-limit budget is not consumed.
 	DryRun *bool `json:"dryRun,omitempty"`
 
+	// HoldForDnsSetup Charge the transfer but hold it at `PENDINGDNS` instead of releasing it to the registry, so the DNS zone can be built before the domain moves. This is the no-downtime path: hold, then `POST /domain/prepareTransfer/{domain}`, then load records with `/dns/import/{domain}`, then `POST /domain/startTransfer/{domain}`. Nothing releases a held transfer on a timer. Not available for .uk or Handshake TLDs, which return `TRANSFER_HOLD_NOT_AVAILABLE` and are not charged.
+	//
+	// Example: true
+	HoldForDnsSetup *bool `json:"holdForDnsSetup,omitempty"`
+
 	// Secretapikey Your API secret key.
 	Secretapikey string `json:"secretapikey"`
 }
 
-// TransferDomainResponse Example: {"balance":2829,"domain":"example.com","limits":{"attempts":{"TTL":1,"limit":1,"naturalLanguage":"1 out of 1 transfer attempts within 1 seconds used.","used":1},"success":{"TTL":86400,"limit":50,"naturalLanguage":"1 out of 50 successful transfers within 86400 seconds used.","used":1}},"message":"Transfer initiated. The domain transfer process has begun and typically takes 5-7 days to complete.","orderId":12345680,"requestId":"019e04fa-5f22-7c93-8a41-2e9d0b3f6c77","status":"SUCCESS","transferId":98765,"ttlRemaining":86400}
+// TransferDomainResponse Example: {"balance":2829,"domain":"example.com","limits":{"attempts":{"TTL":1,"limit":1,"naturalLanguage":"1 out of 1 transfer attempts within 1 seconds used.","used":1},"success":{"TTL":86400,"limit":50,"naturalLanguage":"1 out of 1000 successful transfers within 86400 seconds used.","used":1}},"message":"Transfer initiated. The domain transfer process has begun and typically takes 5-7 days to complete.","orderId":12345680,"requestId":"019e04fa-5f22-7c93-8a41-2e9d0b3f6c77","status":"SUCCESS","transferId":98765,"ttlRemaining":86400}
 type TransferDomainResponse struct {
 	// Balance Remaining account credit balance in cents.
 	Balance *int64                         `json:"balance,omitempty"`
@@ -2870,6 +3199,86 @@ type ApikeyRetrieve200JSONResponseBody struct {
 	Status ApikeyRetrieve200JSONResponseBodyStatus `json:"status"`
 }
 
+// CloseoutBuyJSONBody defines parameters for CloseoutBuy.
+type CloseoutBuyJSONBody struct {
+	// Cost Exact totalPrice in integer US cents, from /closeout/get/{domain}. Use 0 only with dryRun to request a quote.
+	//
+	// Example: 1684
+	Cost int64 `json:"cost"`
+
+	// DryRun Validate and price without charging or claiming.
+	//
+	// Example: true
+	DryRun *bool `json:"dryRun,omitempty"`
+}
+
+// CloseoutBuy200JSONResponseBody defines parameters for CloseoutBuy.
+type CloseoutBuy200JSONResponseBody struct {
+	CloseoutId    *int64  `json:"closeoutId,omitempty"`
+	CloseoutPrice *int64  `json:"closeoutPrice,omitempty"`
+	Domain        *string `json:"domain,omitempty"`
+	Message       *string `json:"message,omitempty"`
+	OrderId       *int64  `json:"orderId,omitempty"`
+	RenewalPrice  *int64  `json:"renewalPrice,omitempty"`
+	Status        *string `json:"status,omitempty"`
+	TotalPrice    *int64  `json:"totalPrice,omitempty"`
+}
+
+// CloseoutGet200JSONResponseBody defines parameters for CloseoutGet.
+type CloseoutGet200JSONResponseBody struct {
+	Available *bool         `json:"available,omitempty"`
+	Closeout  *CloseoutItem `json:"closeout,omitempty"`
+	Status    *string       `json:"status,omitempty"`
+}
+
+// CloseoutSearchParams defines parameters for CloseoutSearch.
+type CloseoutSearchParams struct {
+	// Query Keyword match on the domain name.
+	Query *string `form:"query,omitempty" json:"query,omitempty"`
+
+	// Tld Single TLD, with or without the leading dot. Omit to search all.
+	Tld *string `form:"tld,omitempty" json:"tld,omitempty"`
+
+	// NameLength Exact SLD character count.
+	NameLength *int64 `form:"nameLength,omitempty" json:"nameLength,omitempty"`
+
+	// AgeMin Minimum domain age in years. Pair with sortName=registrationDate to find aged names.
+	AgeMin *int64 `form:"ageMin,omitempty" json:"ageMin,omitempty"`
+
+	// AgeMax Maximum domain age in years.
+	AgeMax *int64 `form:"ageMax,omitempty" json:"ageMax,omitempty"`
+
+	// PriceMin Minimum closeout price, integer US cents. Converted to whole dollars for the provider, rounding outward so the range never excludes an item inside it.
+	PriceMin *int64 `form:"priceMin,omitempty" json:"priceMin,omitempty"`
+
+	// PriceMax Maximum closeout price, integer US cents.
+	PriceMax *int64 `form:"priceMax,omitempty" json:"priceMax,omitempty"`
+
+	// SortName One of: domain, endTime, price, revenue, visitors, inboundLinks, registrationDate. Ascending on registrationDate means oldest registration first, which is how you find aged names. Ascending on revenue, visitors or inboundLinks puts the domains with no recorded figure first (they return null) — use desc on those to see the highest values; the response carries a `warnings` entry reminding you.
+	SortName *string `form:"sortName,omitempty" json:"sortName,omitempty"`
+
+	// SortDirection `asc` or `desc`.
+	SortDirection *string `form:"sortDirection,omitempty" json:"sortDirection,omitempty"`
+
+	// Start Offset for paging. Default 0.
+	Start *int64 `form:"start,omitempty" json:"start,omitempty"`
+
+	// Limit Rows per page, 1-500. Default 100.
+	Limit *int64 `form:"limit,omitempty" json:"limit,omitempty"`
+}
+
+// CloseoutSearch200JSONResponseBody defines parameters for CloseoutSearch.
+type CloseoutSearch200JSONResponseBody struct {
+	Closeouts *[]CloseoutItem `json:"closeouts,omitempty"`
+	Count     *int64          `json:"count,omitempty"`
+	Limit     *int64          `json:"limit,omitempty"`
+	Start     *int64          `json:"start,omitempty"`
+	Status    *string         `json:"status,omitempty"`
+
+	// TotalAvailable Size of the filtered set, for paging.
+	TotalAvailable *int64 `json:"totalAvailable,omitempty"`
+}
+
 // CloudflareConnectJSONBody defines parameters for CloudflareConnect.
 type CloudflareConnectJSONBody struct {
 	// Domains Domain names to move. A comma-separated string is also accepted.
@@ -3013,6 +3422,29 @@ type DnsCreate200JSONResponseBody struct {
 
 	// Status Example: SUCCESS
 	Status string `json:"status"`
+
+	// Warnings Advisory, and present only when there is something to say. It never means the call failed. The one to handle: a DNS write is accepted and stored even when the domain is NOT delegated to our nameservers -- we keep the zone ready in case the delegation comes back -- so the write changed nothing that resolves, and this field says so. Show these to the user as written.
+	//
+	// Example: ["example.com is delegated to nameservers we do not operate (ns1.example-dns.net), so this change was saved to your Porkbun DNS zone but does NOT affect what resolves. Make the same change wherever those nameservers are managed, or point the domain back at ours (maceio.ns.porkbun.com, curitiba.ns.porkbun.com, salvador.ns.porkbun.com, fortaleza.ns.porkbun.com) with POST /domain/updateNs/example.com -- the zone you just edited is what we would start serving."]
+	Warnings *DnsWriteWarnings `json:"warnings,omitempty"`
+}
+
+// DnsCreateDnssecRecord200JSONResponseBodyStatus defines parameters for DnsCreateDnssecRecord.
+type DnsCreateDnssecRecord200JSONResponseBodyStatus string
+
+// DnsCreateDnssecRecord200JSONResponseBody defines parameters for DnsCreateDnssecRecord.
+type DnsCreateDnssecRecord200JSONResponseBody struct {
+	// Code Machine-readable error code. Present when status is ERROR.
+	Code *string `json:"code,omitempty"`
+
+	// Message Human-readable message. Present on ERROR, sometimes on SUCCESS.
+	Message *string `json:"message,omitempty"`
+
+	// Status Example: SUCCESS
+	Status DnsCreateDnssecRecord200JSONResponseBodyStatus `json:"status"`
+
+	// Warnings Present only when a value was accepted but is being retired, e.g. a digest type the registry has announced it will stop accepting. Advisory: the record was created.
+	Warnings *[]string `json:"warnings,omitempty"`
 }
 
 // GetDnssecRecordsParams defines parameters for GetDnssecRecords.
@@ -3064,6 +3496,68 @@ type DnsGetDnssecRecords200JSONResponseBody struct {
 	Status string `json:"status"`
 }
 
+// DnsImportJSONBody defines parameters for DnsImport.
+type DnsImportJSONBody struct {
+	// Records Records to create. Omit to import what a scan discovers. NS and SOA entries are ignored — they describe the delegation, not the zone contents.
+	Records *[]DnsRecordInput `json:"records,omitempty"`
+}
+
+// DnsImport200JSONResponseBody defines parameters for DnsImport.
+type DnsImport200JSONResponseBody struct {
+	Created  *int64                    `json:"created,omitempty"`
+	Domain   *string                   `json:"domain,omitempty"`
+	Failed   *int64                    `json:"failed,omitempty"`
+	Failures *[]map[string]interface{} `json:"failures,omitempty"`
+
+	// Skipped Already present, so nothing needed doing.
+	Skipped *int64 `json:"skipped,omitempty"`
+
+	// Status Example: SUCCESS
+	Status string `json:"status"`
+
+	// Warnings Advisory, and present only when there is something to say. It never means the call failed. The one to handle: a DNS write is accepted and stored even when the domain is NOT delegated to our nameservers -- we keep the zone ready in case the delegation comes back -- so the write changed nothing that resolves, and this field says so. Show these to the user as written.
+	//
+	// Example: ["example.com is delegated to nameservers we do not operate (ns1.example-dns.net), so this change was saved to your Porkbun DNS zone but does NOT affect what resolves. Make the same change wherever those nameservers are managed, or point the domain back at ours (maceio.ns.porkbun.com, curitiba.ns.porkbun.com, salvador.ns.porkbun.com, fortaleza.ns.porkbun.com) with POST /domain/updateNs/example.com -- the zone you just edited is what we would start serving."]
+	Warnings *DnsWriteWarnings `json:"warnings,omitempty"`
+}
+
+// DnsPreflightParams defines parameters for DnsPreflight.
+type DnsPreflightParams struct {
+	// Intent What you are about to do. One of general, move-nameservers, transfer-out, enable-dnssec. May also be sent in the request body.
+	Intent *DnsPreflightParamsIntent `form:"intent,omitempty" json:"intent,omitempty"`
+}
+
+// DnsPreflightParamsIntent defines parameters for DnsPreflight.
+type DnsPreflightParamsIntent string
+
+// DnsRestoreJSONBody defines parameters for DnsRestore.
+type DnsRestoreJSONBody struct {
+	// Apikey Your API key. Required in body when not using header auth.
+	//
+	// Example: pk1_...
+	Apikey *string `json:"apikey,omitempty"`
+
+	// DryRun Report what would change without changing anything.
+	//
+	// Example: true
+	DryRun *bool `json:"dryRun,omitempty"`
+
+	// Prune Also delete live records that are not in the restore point. Default false, which only adds back what is missing.
+	//
+	// Example: false
+	Prune *bool `json:"prune,omitempty"`
+
+	// Secretapikey Your secret API key. Required in body when providing apikey.
+	//
+	// Example: sk1_...
+	Secretapikey *string `json:"secretapikey,omitempty"`
+
+	// SnapshotId The restore point to go back to, from GET /dns/history/{domain}.
+	//
+	// Example: 1234
+	SnapshotId int64 `json:"snapshotId"`
+}
+
 // GetDnsRecordsParams defines parameters for GetDnsRecords.
 type GetDnsRecordsParams struct {
 	// XAPIKey API key header auth (use with X-Secret-API-Key)
@@ -3089,6 +3583,73 @@ type GetDnsRecordsByNameTypeParams struct {
 
 	// XSecretAPIKey Secret API key header auth (use with X-API-Key)
 	XSecretAPIKey *string `json:"X-Secret-API-Key,omitempty"`
+}
+
+// DnsScan200JSONResponseBody defines parameters for DnsScan.
+type DnsScan200JSONResponseBody struct {
+	Domain      *string           `json:"domain,omitempty"`
+	RecordCount *int64            `json:"recordCount,omitempty"`
+	Records     *[]DnsRecordInput `json:"records,omitempty"`
+
+	// Status Example: SUCCESS
+	Status string `json:"status"`
+}
+
+// DomainCancelTransfer200JSONResponseBody defines parameters for DomainCancelTransfer.
+type DomainCancelTransfer200JSONResponseBody struct {
+	Cancelled           *bool   `json:"cancelled,omitempty"`
+	Domain              *string `json:"domain,omitempty"`
+	Message             *string `json:"message,omitempty"`
+	OrderId             *int64  `json:"orderId,omitempty"`
+	PreviousStatus      *string `json:"previousStatus,omitempty"`
+	RefundAmount        *int64  `json:"refundAmount,omitempty"`
+	Refunded            *bool   `json:"refunded,omitempty"`
+	RegistryCode        *string `json:"registryCode,omitempty"`
+	RegistryResultCode  *string `json:"registryResultCode,omitempty"`
+	Status              *string `json:"status,omitempty"`
+	TransferStatus      *string `json:"transferStatus,omitempty"`
+	WithdrawnAtRegistry *bool   `json:"withdrawnAtRegistry,omitempty"`
+}
+
+// DomainCheckDomainBulkJSONBody defines parameters for DomainCheckDomainBulk.
+type DomainCheckDomainBulkJSONBody struct {
+	// Apikey Your API key. Required in body when not using header auth.
+	//
+	// Example: pk1_...
+	Apikey *string `json:"apikey,omitempty"`
+
+	// Domains Domains to check, e.g. ["example.com", "example.net"]. Duplicates are removed.
+	//
+	// Example: ["example.com","example.net","example.dev"]
+	Domains []string `json:"domains"`
+
+	// Secretapikey Your secret API key. Required in body when providing apikey.
+	//
+	// Example: sk1_...
+	Secretapikey *string `json:"secretapikey,omitempty"`
+}
+
+// DomainCheckDomainBulk200JSONResponseBody defines parameters for DomainCheckDomainBulk.
+type DomainCheckDomainBulk200JSONResponseBody struct {
+	// Checked How many domains were answered
+	//
+	// Example: 3
+	Checked *int64 `json:"checked,omitempty"`
+
+	// Domains Keyed by domain name; each value has the same shape as the single-check `response` object
+	Domains *map[string]map[string]interface{} `json:"domains,omitempty"`
+
+	// Invalid Entries that could not be checked, each with a reason
+	Invalid *[]map[string]interface{} `json:"invalid,omitempty"`
+
+	// Limits Bulk budget usage; `countedIn` is "domains"
+	Limits *map[string]interface{} `json:"limits,omitempty"`
+
+	// Status Example: SUCCESS
+	Status string `json:"status"`
+
+	// Unresolved The registry did not answer for these. NOT a statement of availability - retry them.
+	Unresolved *[]string `json:"unresolved,omitempty"`
 }
 
 // DomainCreate200JSONResponseBody defines parameters for DomainCreate.
@@ -3280,6 +3841,20 @@ type GetTransferGetParams struct {
 	XSecretAPIKey *string `json:"X-Secret-API-Key,omitempty"`
 }
 
+// DomainGetTransferSetup200JSONResponseBody defines parameters for DomainGetTransferSetup.
+type DomainGetTransferSetup200JSONResponseBody struct {
+	Delegation         *map[string]interface{} `json:"delegation,omitempty"`
+	Dnssec             *int64                  `json:"dnssec,omitempty"`
+	Domain             *string                 `json:"domain,omitempty"`
+	Held               *int64                  `json:"held,omitempty"`
+	NextStep           *map[string]interface{} `json:"nextStep,omitempty"`
+	PorkbunNameservers *[]string               `json:"porkbunNameservers,omitempty"`
+	RecordCount        *int64                  `json:"recordCount,omitempty"`
+	Status             *string                 `json:"status,omitempty"`
+	Transfer           *map[string]interface{} `json:"transfer,omitempty"`
+	ZoneReady          *int64                  `json:"zoneReady,omitempty"`
+}
+
 // GetDomainUrlForwardingParams defines parameters for GetDomainUrlForwarding.
 type GetDomainUrlForwardingParams struct {
 	// XAPIKey API key header auth (use with X-Secret-API-Key)
@@ -3352,9 +3927,32 @@ type ListTransfersGetParams struct {
 	XSecretAPIKey *string `json:"X-Secret-API-Key,omitempty"`
 }
 
+// DomainPrepareTransfer200JSONResponseBody defines parameters for DomainPrepareTransfer.
+type DomainPrepareTransfer200JSONResponseBody struct {
+	Domain             *string   `json:"domain,omitempty"`
+	Message            *string   `json:"message,omitempty"`
+	PorkbunNameservers *[]string `json:"porkbunNameservers,omitempty"`
+	RecordCount        *int64    `json:"recordCount,omitempty"`
+	Status             *string   `json:"status,omitempty"`
+	ZoneReady          *bool     `json:"zoneReady,omitempty"`
+}
+
 // DomainRenew200JSONResponseBody defines parameters for DomainRenew.
 type DomainRenew200JSONResponseBody struct {
 	union json.RawMessage
+}
+
+// DomainStartTransferJSONBody defines parameters for DomainStartTransfer.
+type DomainStartTransferJSONBody struct {
+	// Force Release even though the zone is empty. Use only when the domain needs no DNS here.
+	Force *bool `json:"force,omitempty"`
+}
+
+// DomainStartTransfer200JSONResponseBody defines parameters for DomainStartTransfer.
+type DomainStartTransfer200JSONResponseBody struct {
+	Domain  *string `json:"domain,omitempty"`
+	Message *string `json:"message,omitempty"`
+	Status  *string `json:"status,omitempty"`
 }
 
 // TransferDomain200JSONResponseBody defines parameters for TransferDomain.
@@ -3427,6 +4025,22 @@ type DomainUpdateContacts200JSONResponseBody struct {
 
 	// Status Example: SUCCESS
 	Status string `json:"status"`
+}
+
+// DomainUpdateTransferAuthCodeJSONBody defines parameters for DomainUpdateTransferAuthCode.
+type DomainUpdateTransferAuthCodeJSONBody struct {
+	// AuthCode The replacement authorization code, exactly as the losing registrar issued it. Never interpolate this into a shell command.
+	AuthCode string `json:"authCode"`
+}
+
+// DomainUpdateTransferAuthCode200JSONResponseBody defines parameters for DomainUpdateTransferAuthCode.
+type DomainUpdateTransferAuthCode200JSONResponseBody struct {
+	AuthCodeValid  *bool   `json:"authCodeValid,omitempty"`
+	Domain         *string `json:"domain,omitempty"`
+	Message        *string `json:"message,omitempty"`
+	PreviousStatus *string `json:"previousStatus,omitempty"`
+	Status         *string `json:"status,omitempty"`
+	TransferStatus *string `json:"transferStatus,omitempty"`
 }
 
 // EmailSetPasswordJSONBody defines parameters for EmailSetPassword.
@@ -4244,6 +4858,9 @@ type ApikeyRequestJSONRequestBody ApikeyRequestJSONBody
 // ApikeyRetrieveJSONRequestBody defines body for ApikeyRetrieve for application/json ContentType.
 type ApikeyRetrieveJSONRequestBody ApikeyRetrieveJSONBody
 
+// CloseoutBuyJSONRequestBody defines body for CloseoutBuy for application/json ContentType.
+type CloseoutBuyJSONRequestBody CloseoutBuyJSONBody
+
 // CloudflareConnectJSONRequestBody defines body for CloudflareConnect for application/json ContentType.
 type CloudflareConnectJSONRequestBody CloudflareConnectJSONBody
 
@@ -4277,6 +4894,9 @@ type DnsDeleteByNameTypeJSONRequestBody = AuthRequest
 // DnsDeleteDnssecRecordJSONRequestBody defines body for DnsDeleteDnssecRecord for application/json ContentType.
 type DnsDeleteDnssecRecordJSONRequestBody = AuthRequest
 
+// DnsDiffJSONRequestBody defines body for DnsDiff for application/json ContentType.
+type DnsDiffJSONRequestBody = AuthRequest
+
 // DnsEditJSONRequestBody defines body for DnsEdit for application/json ContentType.
 type DnsEditJSONRequestBody = EditDnsRequest
 
@@ -4285,6 +4905,18 @@ type DnsEditByNameTypeJSONRequestBody = EditDnsByNameTypeRequest
 
 // DnsGetDnssecRecordsJSONRequestBody defines body for DnsGetDnssecRecords for application/json ContentType.
 type DnsGetDnssecRecordsJSONRequestBody = AuthRequest
+
+// DnsHistoryJSONRequestBody defines body for DnsHistory for application/json ContentType.
+type DnsHistoryJSONRequestBody = AuthRequest
+
+// DnsImportJSONRequestBody defines body for DnsImport for application/json ContentType.
+type DnsImportJSONRequestBody DnsImportJSONBody
+
+// DnsPreflightJSONRequestBody defines body for DnsPreflight for application/json ContentType.
+type DnsPreflightJSONRequestBody = AuthRequest
+
+// DnsRestoreJSONRequestBody defines body for DnsRestore for application/json ContentType.
+type DnsRestoreJSONRequestBody DnsRestoreJSONBody
 
 // DnsRetrieveJSONRequestBody defines body for DnsRetrieve for application/json ContentType.
 type DnsRetrieveJSONRequestBody = AuthRequest
@@ -4297,6 +4929,9 @@ type DnsRetrieveByNameTypeJSONRequestBody = AuthRequest
 
 // DomainAddUrlForwardJSONRequestBody defines body for DomainAddUrlForward for application/json ContentType.
 type DomainAddUrlForwardJSONRequestBody = AddUrlForwardRequest
+
+// DomainCheckDomainBulkJSONRequestBody defines body for DomainCheckDomainBulk for application/json ContentType.
+type DomainCheckDomainBulkJSONRequestBody DomainCheckDomainBulkJSONBody
 
 // DomainCheckDomainJSONRequestBody defines body for DomainCheckDomain for application/json ContentType.
 type DomainCheckDomainJSONRequestBody = AuthRequest
@@ -4328,6 +4963,9 @@ type ListDomainsJSONRequestBody = ListAllRequest
 // DomainRenewJSONRequestBody defines body for DomainRenew for application/json ContentType.
 type DomainRenewJSONRequestBody = RenewDomainRequest
 
+// DomainStartTransferJSONRequestBody defines body for DomainStartTransfer for application/json ContentType.
+type DomainStartTransferJSONRequestBody DomainStartTransferJSONBody
+
 // TransferDomainJSONRequestBody defines body for TransferDomain for application/json ContentType.
 type TransferDomainJSONRequestBody = TransferDomainRequest
 
@@ -4342,6 +4980,9 @@ type DomainUpdateGlueJSONRequestBody = GlueRecordRequest
 
 // DomainUpdateNsJSONRequestBody defines body for DomainUpdateNs for application/json ContentType.
 type DomainUpdateNsJSONRequestBody = UpdateNsRequest
+
+// DomainUpdateTransferAuthCodeJSONRequestBody defines body for DomainUpdateTransferAuthCode for application/json ContentType.
+type DomainUpdateTransferAuthCodeJSONRequestBody DomainUpdateTransferAuthCodeJSONBody
 
 // EmailSetPasswordJSONRequestBody defines body for EmailSetPassword for application/json ContentType.
 type EmailSetPasswordJSONRequestBody EmailSetPasswordJSONBody
@@ -4862,6 +5503,62 @@ type ClientInterface interface {
 	// Corresponds with POST /apikey/retrieve (the `ApikeyRetrieve` operationId).
 	ApikeyRetrieve(ctx context.Context, body ApikeyRetrieveJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// CloseoutBuyWithBody Buy a closeout outright
+	//
+	// **Spends account credit.** Buys a closeout at its current price and claims the name with the provider in one call. Send `cost` as the exact `totalPrice` from `/closeout/get/{domain}`; any other value is refused with `COST_MISMATCH` so a caller can never be charged a price it did not name. `dryRun: true` with `cost: 0` returns a quote and charges nothing. Honours `Idempotency-Key`.
+	//
+	// **The domain does not arrive immediately.** Claiming reserves it; the provider then has to release it, which usually takes a few days. Poll `/domain/listAll` or subscribe to the `domain.registered` webhook rather than expecting it in your account when this returns.
+	//
+	// Every post-charge failure refunds automatically and says so via `refunded: true` — including losing the race to another buyer (`CLOSEOUT_UNAVAILABLE`) and the price moving between quote and claim (`COST_MISMATCH`). Closeouts are first-come at a fixed price, so a lost race is not worth retrying on the same name.
+	//
+	// Not available with a sandbox key (`SANDBOX_UNSUPPORTED`): the inventory provider has no test environment, so a purchase cannot be rehearsed without claiming a real name. Use `dryRun` against a live key instead — it validates and prices without charging.
+	//
+	// Eligibility is the same as registering a domain, plus verified email and phone. There is no account-age or prior-order requirement — a first-time customer can buy a closeout, which matters because listings are first-come and often gone within minutes. An account that support has blocked from auctions and closeouts (past-due invoices, or an auction terms violation) returns `CLOSEOUT_NOT_ELIGIBLE`, which is not retryable.
+	//
+	// Takes any type of body and a specified content type.
+	//
+	// Corresponds with POST /closeout/buy/{domain} (the `CloseoutBuy` operationId).
+	CloseoutBuyWithBody(ctx context.Context, domain string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// CloseoutBuy Buy a closeout outright
+	//
+	// **Spends account credit.** Buys a closeout at its current price and claims the name with the provider in one call. Send `cost` as the exact `totalPrice` from `/closeout/get/{domain}`; any other value is refused with `COST_MISMATCH` so a caller can never be charged a price it did not name. `dryRun: true` with `cost: 0` returns a quote and charges nothing. Honours `Idempotency-Key`.
+	//
+	// **The domain does not arrive immediately.** Claiming reserves it; the provider then has to release it, which usually takes a few days. Poll `/domain/listAll` or subscribe to the `domain.registered` webhook rather than expecting it in your account when this returns.
+	//
+	// Every post-charge failure refunds automatically and says so via `refunded: true` — including losing the race to another buyer (`CLOSEOUT_UNAVAILABLE`) and the price moving between quote and claim (`COST_MISMATCH`). Closeouts are first-come at a fixed price, so a lost race is not worth retrying on the same name.
+	//
+	// Not available with a sandbox key (`SANDBOX_UNSUPPORTED`): the inventory provider has no test environment, so a purchase cannot be rehearsed without claiming a real name. Use `dryRun` against a live key instead — it validates and prices without charging.
+	//
+	// Eligibility is the same as registering a domain, plus verified email and phone. There is no account-age or prior-order requirement — a first-time customer can buy a closeout, which matters because listings are first-come and often gone within minutes. An account that support has blocked from auctions and closeouts (past-due invoices, or an auction terms violation) returns `CLOSEOUT_NOT_ELIGIBLE`, which is not retryable.
+	//
+	// Takes a body of the `application/json` content type.
+	//
+	// Corresponds with POST /closeout/buy/{domain} (the `CloseoutBuy` operationId).
+	CloseoutBuy(ctx context.Context, domain string, body CloseoutBuyJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// CloseoutGet One closeout, with the binding total
+	//
+	// A single closeout plus `totalPrice` — the closeout price plus the registration year that comes with it. That total is what `/closeout/buy` will charge and what it expects back as `cost`.
+	//
+	// `localDomain` tells you which side of the pricing you are on: true means the name is already at Porkbun and is renewed, false means it is transferred in. `available` is false once somebody has claimed it.
+	//
+	// Corresponds with GET /closeout/get/{domain} (the `CloseoutGet` operationId).
+	CloseoutGet(ctx context.Context, domain string, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// CloseoutSearch Search expired-domain closeouts
+	//
+	// Search the closeout inventory. Closeouts are expired domains that did not sell at auction and are now offered at a fixed, descending price — there is no bidding, the first buyer at the current price takes the name.
+	//
+	// Every filter is optional; with none you get the first page of the whole list plus `totalAvailable`. Page with `start`/`limit` until `start >= totalAvailable`.
+	//
+	// **`age` and `registrationDate` are on every row and both are sortable.** On the website the inventory is paginated by price tier and registration date is not shown, so finding aged names means walking several tier pages and then doing a WHOIS lookup per candidate. `sortName=registrationDate&sortDirection=asc` returns the oldest registrations first in one call.
+	//
+	// `price` is the closeout price alone. The binding total adds the renewal or transfer year you are also buying, and comes from `/closeout/get/{domain}` — it cannot be derived from search results, because a domain already at Porkbun is renewed while anything else is transferred in, and those are priced differently.
+	//
+	// Corresponds with GET /closeout/search (the `CloseoutSearch` operationId).
+	CloseoutSearch(ctx context.Context, params *CloseoutSearchParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// CloudflareConnectWithBody Queue domains to move to the customer's Cloudflare account
 	//
 	// Queue one or many domains. For each one we create the zone in the customer's own Cloudflare account, copy across the DNS records we hold, and repoint the registry nameservers at Cloudflare.
@@ -4878,7 +5575,7 @@ type ClientInterface interface {
 	//
 	// Requires an active Cloudflare connection (`CLOUDFLARE_NOT_CONNECTED` otherwise). Limits: 500 domains per call, 2000 domains per account per hour.
 	//
-	// After queueing, poll `/cloudflare/get/{domain}`: the row moves `queued` → `working` → `activating` → `connected`. `activating` means the nameservers are already repointed and Cloudflare is confirming the zone, which can take a while as DNS propagates.
+	// After queueing, poll `/cloudflare/get/{domain}`: the row moves `queued` → `working` → `setup` → `activating` → `connected`. `setup` means Cloudflare has the zone but has not provisioned it yet, so the nameservers have deliberately not been touched. `activating` means the nameservers are already repointed and Cloudflare is confirming the zone, which can take a while as DNS propagates.
 	//
 	// Takes any type of body and a specified content type.
 	//
@@ -4901,7 +5598,7 @@ type ClientInterface interface {
 	//
 	// Requires an active Cloudflare connection (`CLOUDFLARE_NOT_CONNECTED` otherwise). Limits: 500 domains per call, 2000 domains per account per hour.
 	//
-	// After queueing, poll `/cloudflare/get/{domain}`: the row moves `queued` → `working` → `activating` → `connected`. `activating` means the nameservers are already repointed and Cloudflare is confirming the zone, which can take a while as DNS propagates.
+	// After queueing, poll `/cloudflare/get/{domain}`: the row moves `queued` → `working` → `setup` → `activating` → `connected`. `setup` means Cloudflare has the zone but has not provisioned it yet, so the nameservers have deliberately not been touched. `activating` means the nameservers are already repointed and Cloudflare is confirming the zone, which can take a while as DNS propagates.
 	//
 	// Takes a body of the `application/json` content type.
 	//
@@ -4991,12 +5688,14 @@ type ClientInterface interface {
 	// |--------|---------|----------|
 	// | `queued` | accepted, waiting for the worker | no |
 	// | `working` | a run is touching this row right now | no |
-	// | `activating` | nameservers repointed; waiting for Cloudflare to mark the zone active. Legitimately slow (registry + resolver propagation) — allow up to 24h | no |
+	// | `setup` | the zone exists in the customer's Cloudflare account but Cloudflare has not provisioned it yet (`initializing`). **The nameservers have not been touched** — the domain still resolves from Porkbun. Cloudflare can sit here for hours when an account has a backlog of zones it never activated | no |
+	// | `activating` | nameservers repointed; waiting for Cloudflare to mark the zone active. Legitimately slow (registry + resolver propagation) — allow up to 72h, and a real move has been observed taking 59h | no |
 	// | `connected` / `done` | the move finished | **yes** |
 	// | `skipped` | not moved, and `message` says why (DNSSEC live, custom nameservers, no longer in the account) | **yes** |
-	// | `failed` / `error` | the move did not complete; `message` says why. Re-queue with `/cloudflare/retry/{domain}` | **yes** |
+	// | `failed` / `error` | the move did not complete; `message` says why. Re-queue with `/cloudflare/retry/{domain}` | **yes**, with one exception: a row that failed waiting on Cloudflare is re-checked for up to 30 days, so it can still close out as `connected` (or have its `message` updated to say it is now retryable) if Cloudflare activates the zone late |
+	// | `undone` | the nameservers were put back on Porkbun — either the customer undid the move, or the domain stopped resolving while Cloudflare had not activated it yet and we restored it without waiting for the deadline | **yes** |
 	//
-	// Poll on a sensible interval (a few seconds early on, then back off) — a zone typically leaves `queued` within seconds but can sit in `activating` while DNS propagates.
+	// Poll on a sensible interval (a few seconds early on, then back off) — a zone typically leaves `queued` within seconds but can sit in `setup` or `activating` while Cloudflare provisions the zone and DNS propagates.
 	//
 	// Corresponds with GET /cloudflare/get/{domain} (the `CloudflareGet` operationId).
 	CloudflareGet(ctx context.Context, domain string, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -5022,12 +5721,14 @@ type ClientInterface interface {
 	// |--------|---------|----------|
 	// | `queued` | accepted, waiting for the worker | no |
 	// | `working` | a run is touching this row right now | no |
-	// | `activating` | nameservers repointed; waiting for Cloudflare to mark the zone active. Legitimately slow (registry + resolver propagation) — allow up to 24h | no |
+	// | `setup` | the zone exists in the customer's Cloudflare account but Cloudflare has not provisioned it yet (`initializing`). **The nameservers have not been touched** — the domain still resolves from Porkbun. Cloudflare can sit here for hours when an account has a backlog of zones it never activated | no |
+	// | `activating` | nameservers repointed; waiting for Cloudflare to mark the zone active. Legitimately slow (registry + resolver propagation) — allow up to 72h, and a real move has been observed taking 59h | no |
 	// | `connected` / `done` | the move finished | **yes** |
 	// | `skipped` | not moved, and `message` says why (DNSSEC live, custom nameservers, no longer in the account) | **yes** |
-	// | `failed` / `error` | the move did not complete; `message` says why. Re-queue with `/cloudflare/retry/{domain}` | **yes** |
+	// | `failed` / `error` | the move did not complete; `message` says why. Re-queue with `/cloudflare/retry/{domain}` | **yes**, with one exception: a row that failed waiting on Cloudflare is re-checked for up to 30 days, so it can still close out as `connected` (or have its `message` updated to say it is now retryable) if Cloudflare activates the zone late |
+	// | `undone` | the nameservers were put back on Porkbun — either the customer undid the move, or the domain stopped resolving while Cloudflare had not activated it yet and we restored it without waiting for the deadline | **yes** |
 	//
-	// Poll on a sensible interval (a few seconds early on, then back off) — a zone typically leaves `queued` within seconds but can sit in `activating` while DNS propagates.
+	// Poll on a sensible interval (a few seconds early on, then back off) — a zone typically leaves `queued` within seconds but can sit in `setup` or `activating` while Cloudflare provisions the zone and DNS propagates.
 	//
 	// Corresponds with GET /cloudflare/getQueue (the `CloudflareGetQueue` operationId).
 	CloudflareGetQueue(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -5177,6 +5878,8 @@ type ClientInterface interface {
 	//
 	// Create a DNSSEC DS or key record at the registry. DNSSEC requirements vary by registry — `keyTag`, `alg`, `digestType`, and `digest` are the minimum required fields. Key data fields are optional and will be omitted if not accepted by the registry.
 	//
+	// Algorithm and digest type are validated against the registry's own policy before the request is sent. Registries are retiring the values deprecated by RFC 9904/9905/9906 on different schedules, so what is accepted depends on the TLD: a value one registry has already dropped may still be accepted by another. A value the registry no longer accepts returns `DNSSEC_ALGORITHM_DEPRECATED`; one that still works but is being retired returns `status: SUCCESS` with a `warnings` array. Use algorithm 8 (RSA/SHA-256) or 13 (ECDSA/SHA-256) with digest type 2 (SHA-256) to be accepted everywhere. Existing DNSSEC records keep resolving regardless, and can always be deleted.
+	//
 	// Takes any type of body and a specified content type.
 	//
 	// Corresponds with POST /dns/createDnssecRecord/{domain} (the `DnsCreateDnssecRecord` operationId).
@@ -5185,6 +5888,8 @@ type ClientInterface interface {
 	// DnsCreateDnssecRecord Create DNSSEC record
 	//
 	// Create a DNSSEC DS or key record at the registry. DNSSEC requirements vary by registry — `keyTag`, `alg`, `digestType`, and `digest` are the minimum required fields. Key data fields are optional and will be omitted if not accepted by the registry.
+	//
+	// Algorithm and digest type are validated against the registry's own policy before the request is sent. Registries are retiring the values deprecated by RFC 9904/9905/9906 on different schedules, so what is accepted depends on the TLD: a value one registry has already dropped may still be accepted by another. A value the registry no longer accepts returns `DNSSEC_ALGORITHM_DEPRECATED`; one that still works but is being retired returns `status: SUCCESS` with a `warnings` array. Use algorithm 8 (RSA/SHA-256) or 13 (ECDSA/SHA-256) with digest type 2 (SHA-256) to be accepted everywhere. Existing DNSSEC records keep resolving regardless, and can always be deleted.
 	//
 	// Takes a body of the `application/json` content type.
 	//
@@ -5244,6 +5949,40 @@ type ClientInterface interface {
 	//
 	// Corresponds with POST /dns/deleteDnssecRecord/{domain}/{keytag} (the `DnsDeleteDnssecRecord` operationId).
 	DnsDeleteDnssecRecord(ctx context.Context, domain string, keytag string, body DnsDeleteDnssecRecordJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// DnsDiffWithBody Compare a restore point with the live zone
+	//
+	// What changed between a restore point and the zone as it stands now.
+	//
+	// - `missing` -- in the restore point, not live. These are the records a restore would add back.
+	// - `extra` -- live, not in the restore point. A restore leaves these alone unless you pass `prune`.
+	// - `inSync` -- true when neither list has anything in it.
+	//
+	// Records are compared on **name, type, content and priority**, not on id: an id means nothing across a delete and re-create, and what anyone means by "the same record" is the data. SOA and NS are excluded from both lists because they are the zone's own scaffolding.
+	//
+	// For masked records (parking, `ALIAS`, `HTTPS`) the value shown is the one you configured, not the internal host it resolves to.
+	//
+	// Takes any type of body and a specified content type.
+	//
+	// Corresponds with GET /dns/diff/{domain}/{snapshotId} (the `DnsDiff` operationId).
+	DnsDiffWithBody(ctx context.Context, domain string, snapshotId int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// DnsDiff Compare a restore point with the live zone
+	//
+	// What changed between a restore point and the zone as it stands now.
+	//
+	// - `missing` -- in the restore point, not live. These are the records a restore would add back.
+	// - `extra` -- live, not in the restore point. A restore leaves these alone unless you pass `prune`.
+	// - `inSync` -- true when neither list has anything in it.
+	//
+	// Records are compared on **name, type, content and priority**, not on id: an id means nothing across a delete and re-create, and what anyone means by "the same record" is the data. SOA and NS are excluded from both lists because they are the zone's own scaffolding.
+	//
+	// For masked records (parking, `ALIAS`, `HTTPS`) the value shown is the one you configured, not the internal host it resolves to.
+	//
+	// Takes a body of the `application/json` content type.
+	//
+	// Corresponds with GET /dns/diff/{domain}/{snapshotId} (the `DnsDiff` operationId).
+	DnsDiff(ctx context.Context, domain string, snapshotId int64, body DnsDiffJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// DnsEditWithBody Edit DNS record by ID
 	//
@@ -5305,6 +6044,158 @@ type ClientInterface interface {
 	//
 	// Corresponds with POST /dns/getDnssecRecords/{domain} (the `DnsGetDnssecRecords` operationId).
 	DnsGetDnssecRecords(ctx context.Context, domain string, body DnsGetDnssecRecordsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// DnsHistoryWithBody List restore points for a zone
+	//
+	// Every version of a zone we still hold, newest first.
+	//
+	// **DNS is the only part of a stack with no undo, and this is it.** If a record was deleted or edited by mistake, you do not have to know what it used to say -- ask for the restore points, diff one against the live zone, and put it back.
+	//
+	// Restore points are taken automatically: before the **first** write to a zone in each hour (so a session of edits costs one point, not one per record), before any bulk import or zone wipe, and before any restore. `recordCount` is the size of the zone **as it was at that moment**, not now.
+	//
+	// `matchesLive` tells you which point the zone currently sits on without diffing each one. Up to 50 are returned.
+	//
+	// Takes any type of body and a specified content type.
+	//
+	// Corresponds with GET /dns/history/{domain} (the `DnsHistory` operationId).
+	DnsHistoryWithBody(ctx context.Context, domain string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// DnsHistory List restore points for a zone
+	//
+	// Every version of a zone we still hold, newest first.
+	//
+	// **DNS is the only part of a stack with no undo, and this is it.** If a record was deleted or edited by mistake, you do not have to know what it used to say -- ask for the restore points, diff one against the live zone, and put it back.
+	//
+	// Restore points are taken automatically: before the **first** write to a zone in each hour (so a session of edits costs one point, not one per record), before any bulk import or zone wipe, and before any restore. `recordCount` is the size of the zone **as it was at that moment**, not now.
+	//
+	// `matchesLive` tells you which point the zone currently sits on without diffing each one. Up to 50 are returned.
+	//
+	// Takes a body of the `application/json` content type.
+	//
+	// Corresponds with GET /dns/history/{domain} (the `DnsHistory` operationId).
+	DnsHistory(ctx context.Context, domain string, body DnsHistoryJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// DnsImportWithBody Bulk-create DNS records (transfer restore)
+	//
+	// Create many records in one call, so a domain arriving from another registrar keeps resolving instead of going dark.
+	//
+	// Send `records` to import an exact list — the better path when the old registrar has an API you can read with your own credentials. Omit `records` entirely and whatever `/dns/scan/{domain}` can discover is imported instead.
+	//
+	// **Idempotent.** A record that already exists is counted in `skipped`, not `failed`, so this is safe to re-run and safe to use as a converge step. Records that fail individually are listed in `failures` while the rest still import; the call only errors outright if nothing was importable.
+	//
+	// Imported records do nothing until the domain actually points at the Porkbun nameservers — check `/domain/getNs/{domain}` and set them with `/domain/updateNs/{domain}`. Maximum 500 records per call. Supports `dryRun`.
+	//
+	// Takes any type of body and a specified content type.
+	//
+	// Corresponds with POST /dns/import/{domain} (the `DnsImport` operationId).
+	DnsImportWithBody(ctx context.Context, domain string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// DnsImport Bulk-create DNS records (transfer restore)
+	//
+	// Create many records in one call, so a domain arriving from another registrar keeps resolving instead of going dark.
+	//
+	// Send `records` to import an exact list — the better path when the old registrar has an API you can read with your own credentials. Omit `records` entirely and whatever `/dns/scan/{domain}` can discover is imported instead.
+	//
+	// **Idempotent.** A record that already exists is counted in `skipped`, not `failed`, so this is safe to re-run and safe to use as a converge step. Records that fail individually are listed in `failures` while the rest still import; the call only errors outright if nothing was importable.
+	//
+	// Imported records do nothing until the domain actually points at the Porkbun nameservers — check `/domain/getNs/{domain}` and set them with `/domain/updateNs/{domain}`. Maximum 500 records per call. Supports `dryRun`.
+	//
+	// Takes a body of the `application/json` content type.
+	//
+	// Corresponds with POST /dns/import/{domain} (the `DnsImport` operationId).
+	DnsImport(ctx context.Context, domain string, body DnsImportJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// DnsPreflightWithBody Check whether a change will break the domain
+	//
+	// Read-only. Answers the question of whether a change is about to break the domain, before you change delegation, transfer it out, or turn DNSSEC on. It changes nothing and spends nothing.
+	//
+	// **Every check here comes from an incident we actually had**, which is the point: these are the failures where a zone looks fine and stops working anyway, and nobody can say why afterwards. Each finding names the rule it comes from and carries a `next_action`, so it argues its case rather than asserting a verdict.
+	//
+	// Pass `intent` to scope it: `general` (default) runs everything applicable, `move-nameservers` adds the delegation checks, `transfer-out` adds the checks that matter when leaving, `enable-dnssec` the DNSSEC ones.
+	//
+	// Read `blockers` first -- those will break something. `warnings` will not break outright but are usually what the customer asks about next. `safe` is true only when both lists are empty.
+	//
+	// | id | severity | what it catches |
+	// |----|----------|-----------------|
+	// | `dnssec-active` | blocker | DS records are published, so new nameservers serve answers that do not match them and validating resolvers refuse the whole zone. The domain goes dark rather than degrading. Remove DNSSEC, wait for the DS TTL, then move. |
+	// | `dnssec-unknown` | warning | the registry did not answer conclusively. Do not read that as an absence of DNSSEC. |
+	// | `cname-exclusivity` | blocker | a CNAME sharing a name with another record type, which RFC 1034 forbids and resolvers handle inconsistently. |
+	// | `spf-duplicate` | blocker | more than one apex SPF record: a permerror under RFC 7208 4.5 that makes receivers fail the check for every sender. |
+	// | `spf-lookups` | blocker | an SPF chain over the ten DNS lookups RFC 7208 4.6.4 allows, which is also a permerror. |
+	// | `mx-undeliverable` | blocker | an apex MX pointing somewhere unreachable such as localhost, so mail bounces or vanishes. |
+	// | `wildcard-shadowed` | warning | names that exist only because of an MX or TXT record. Under RFC 4592 a wildcard answers only names that do NOT exist, so those names stop inheriting the wildcard address and go dark with nothing in the zone looking wrong. |
+	// | `apex-resolves` | warning | nothing answers at the bare domain. |
+	// | `zone-size` | warning | within 10 percent of the 2,500-record limit. |
+	// | `nameservers-ours` | warning | the domain is delegated to nameservers we do not operate, or to a mix of ours and someone else's -- so the zone you are inspecting is not what the world resolves. Writes to it keep succeeding and change nothing visible. |
+	// | `cloudflare-zone` | info | the zone is served through Cloudflare, which can lag briefly after a delegation change. |
+	//
+	// Takes any type of body and a specified content type.
+	//
+	// Corresponds with GET /dns/preflight/{domain} (the `DnsPreflight` operationId).
+	DnsPreflightWithBody(ctx context.Context, domain string, params *DnsPreflightParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// DnsPreflight Check whether a change will break the domain
+	//
+	// Read-only. Answers the question of whether a change is about to break the domain, before you change delegation, transfer it out, or turn DNSSEC on. It changes nothing and spends nothing.
+	//
+	// **Every check here comes from an incident we actually had**, which is the point: these are the failures where a zone looks fine and stops working anyway, and nobody can say why afterwards. Each finding names the rule it comes from and carries a `next_action`, so it argues its case rather than asserting a verdict.
+	//
+	// Pass `intent` to scope it: `general` (default) runs everything applicable, `move-nameservers` adds the delegation checks, `transfer-out` adds the checks that matter when leaving, `enable-dnssec` the DNSSEC ones.
+	//
+	// Read `blockers` first -- those will break something. `warnings` will not break outright but are usually what the customer asks about next. `safe` is true only when both lists are empty.
+	//
+	// | id | severity | what it catches |
+	// |----|----------|-----------------|
+	// | `dnssec-active` | blocker | DS records are published, so new nameservers serve answers that do not match them and validating resolvers refuse the whole zone. The domain goes dark rather than degrading. Remove DNSSEC, wait for the DS TTL, then move. |
+	// | `dnssec-unknown` | warning | the registry did not answer conclusively. Do not read that as an absence of DNSSEC. |
+	// | `cname-exclusivity` | blocker | a CNAME sharing a name with another record type, which RFC 1034 forbids and resolvers handle inconsistently. |
+	// | `spf-duplicate` | blocker | more than one apex SPF record: a permerror under RFC 7208 4.5 that makes receivers fail the check for every sender. |
+	// | `spf-lookups` | blocker | an SPF chain over the ten DNS lookups RFC 7208 4.6.4 allows, which is also a permerror. |
+	// | `mx-undeliverable` | blocker | an apex MX pointing somewhere unreachable such as localhost, so mail bounces or vanishes. |
+	// | `wildcard-shadowed` | warning | names that exist only because of an MX or TXT record. Under RFC 4592 a wildcard answers only names that do NOT exist, so those names stop inheriting the wildcard address and go dark with nothing in the zone looking wrong. |
+	// | `apex-resolves` | warning | nothing answers at the bare domain. |
+	// | `zone-size` | warning | within 10 percent of the 2,500-record limit. |
+	// | `nameservers-ours` | warning | the domain is delegated to nameservers we do not operate, or to a mix of ours and someone else's -- so the zone you are inspecting is not what the world resolves. Writes to it keep succeeding and change nothing visible. |
+	// | `cloudflare-zone` | info | the zone is served through Cloudflare, which can lag briefly after a delegation change. |
+	//
+	// Takes a body of the `application/json` content type.
+	//
+	// Corresponds with GET /dns/preflight/{domain} (the `DnsPreflight` operationId).
+	DnsPreflight(ctx context.Context, domain string, params *DnsPreflightParams, body DnsPreflightJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// DnsRestoreWithBody Restore a zone to a previous state
+	//
+	// Put a zone back to a restore point.
+	//
+	// **What it does by default:** adds back every record in the restore point that is not live now. It does **not** remove records you have added since -- pass `prune: true` for that. "Restore my records" usually means "put back what I lost", not "delete everything I have done since", so the destructive half is opt-in.
+	//
+	// **This is itself reversible.** The zone's current state is snapshotted before anything changes and the new point's id comes back as `previousStateSavedAs`, so an unwanted restore is undone by restoring that.
+	//
+	// **Read `failed`.** Parking records and other masked types (`ALIAS`, `HTTPS`) are managed by another part of the platform and cannot be recreated this way. They come back named in `failed` rather than being counted as restored, so `restored` is a true count. SOA and NS are never touched.
+	//
+	// Supports `dryRun: true`, which reports exactly what would be added and removed and changes nothing.
+	//
+	// Takes any type of body and a specified content type.
+	//
+	// Corresponds with POST /dns/restore/{domain} (the `DnsRestore` operationId).
+	DnsRestoreWithBody(ctx context.Context, domain string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// DnsRestore Restore a zone to a previous state
+	//
+	// Put a zone back to a restore point.
+	//
+	// **What it does by default:** adds back every record in the restore point that is not live now. It does **not** remove records you have added since -- pass `prune: true` for that. "Restore my records" usually means "put back what I lost", not "delete everything I have done since", so the destructive half is opt-in.
+	//
+	// **This is itself reversible.** The zone's current state is snapshotted before anything changes and the new point's id comes back as `previousStateSavedAs`, so an unwanted restore is undone by restoring that.
+	//
+	// **Read `failed`.** Parking records and other masked types (`ALIAS`, `HTTPS`) are managed by another part of the platform and cannot be recreated this way. They come back named in `failed` rather than being counted as restored, so `restored` is a true count. SOA and NS are never touched.
+	//
+	// Supports `dryRun: true`, which reports exactly what would be added and removed and changes nothing.
+	//
+	// Takes a body of the `application/json` content type.
+	//
+	// Corresponds with POST /dns/restore/{domain} (the `DnsRestore` operationId).
+	DnsRestore(ctx context.Context, domain string, body DnsRestoreJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// GetDnsRecords Retrieve all DNS records
 	//
@@ -5381,6 +6272,17 @@ type ClientInterface interface {
 	// Corresponds with POST /dns/retrieveByNameType/{domain}/{type}/{subdomain} (the `DnsRetrieveByNameType` operationId).
 	DnsRetrieveByNameType(ctx context.Context, domain string, pType string, subdomain string, body DnsRetrieveByNameTypeJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// DnsScan Discover the records a domain currently publishes
+	//
+	// Query a domain's **live authoritative nameservers** and return the records they answer with, writing nothing. This is what makes an inbound transfer non-destructive: a transfer moves only the delegation — EPP carries no zone data — so once the losing registrar stops answering for the zone, whatever it published is gone and unrecoverable. Run this **before** the nameservers move, then pass the result to `/dns/import/{domain}`.
+	//
+	// The scan probes a wide list of well-known names (apex, common subdomains, MX, DKIM selectors, provider verification hosts) and consolidates wildcards. It cannot enumerate a zone — DNS has no listing operation and AXFR is universally refused — so treat it as thorough but **not exhaustive**. If the old registrar exposes the zone through its own API, that is authoritative: read it with your own credentials (they never need to reach Porkbun) and POST those records to `/dns/import` instead.
+	//
+	// Metered separately at 20 calls per hour per account, because each call is roughly 90 DNS lookups.
+	//
+	// Corresponds with GET /dns/scan/{domain} (the `DnsScan` operationId).
+	DnsScan(ctx context.Context, domain string, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// DomainAddUrlForwardWithBody Add URL forward
 	//
 	// Add a URL forward for a domain or subdomain.
@@ -5399,11 +6301,60 @@ type ClientInterface interface {
 	// Corresponds with POST /domain/addUrlForward/{domain} (the `DomainAddUrlForward` operationId).
 	DomainAddUrlForward(ctx context.Context, domain string, body DomainAddUrlForwardJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// DomainCancelTransfer Cancel an inbound transfer and refund it
+	//
+	// Cancel a pending inbound transfer and refund the order. The sequence is deliberate: mark the transfer cancelled locally, withdraw it at the registry, **verify** the registry actually accepted the withdrawal, and only then refund. If the registry state cannot be confirmed the local row is restored and `TRANSFER_STATE_UNCONFIRMED` is returned rather than refunding a transfer that may still be live.
+	//
+	// The response reports `withdrawnAtRegistry`, `registryResultCode`, `refunded` and `refundAmount` so you can see exactly how far it got. Supports `dryRun`.
+	//
+	// Corresponds with POST /domain/cancelTransfer/{domain} (the `DomainCancelTransfer` operationId).
+	DomainCancelTransfer(ctx context.Context, domain string, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// DomainCheckDomainBulkWithBody Check several domains at once
+	//
+	// Check availability and pricing for up to 25 domains in one call. Same endpoint as the single check, with a `domains` array in the body and no domain in the path.
+	//
+	// **Prefer this over looping the single check.** Checks are chunked per registry, so a batch is materially less work for us than the same names one at a time, and the budget reflects that: this draws on a separate allowance of **200 domains per 60 seconds** per account, against 10 checks per 10 seconds for the single form. Counting is per DOMAIN, not per request, so 25 domains spends 25 of the 200.
+	//
+	// **Partial results are normal and must be read.** Three lists come back and they mean different things:
+	// - `domains` - answered, keyed by domain name, each value identical in shape to the single-check `response`.
+	// - `invalid` - entries that are not checkable at all (not a domain, unsupported TLD). One typo does not fail the call; the other names are still answered.
+	// - `unresolved` - the registry did not answer in time. These are **neither available nor taken**; treating them as unavailable is wrong. Retry them.
+	//
+	// Duplicates are removed before the budget is charged. If more than 25 remain, nothing is checked and `BULK_CHECK_TOO_MANY` is returned rather than a truncated answer.
+	//
+	// **Latency.** This is synchronous: one request, one complete answer, no polling. 25 domains across 25 different TLDs measures around 3 seconds, because the connection manager fans a batch that fits under every registry's cap out as a single command. A few registries cap low and **.de accepts one domain per command**, so a batch heavy in those becomes several sequential commands; if that would need more than 4, the call is refused with `BULK_CHECK_TOO_SLOW` rather than left to time out mid-response.
+	//
+	// Takes any type of body and a specified content type.
+	//
+	// Corresponds with POST /domain/checkDomain (the `DomainCheckDomainBulk` operationId).
+	DomainCheckDomainBulkWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// DomainCheckDomainBulk Check several domains at once
+	//
+	// Check availability and pricing for up to 25 domains in one call. Same endpoint as the single check, with a `domains` array in the body and no domain in the path.
+	//
+	// **Prefer this over looping the single check.** Checks are chunked per registry, so a batch is materially less work for us than the same names one at a time, and the budget reflects that: this draws on a separate allowance of **200 domains per 60 seconds** per account, against 10 checks per 10 seconds for the single form. Counting is per DOMAIN, not per request, so 25 domains spends 25 of the 200.
+	//
+	// **Partial results are normal and must be read.** Three lists come back and they mean different things:
+	// - `domains` - answered, keyed by domain name, each value identical in shape to the single-check `response`.
+	// - `invalid` - entries that are not checkable at all (not a domain, unsupported TLD). One typo does not fail the call; the other names are still answered.
+	// - `unresolved` - the registry did not answer in time. These are **neither available nor taken**; treating them as unavailable is wrong. Retry them.
+	//
+	// Duplicates are removed before the budget is charged. If more than 25 remain, nothing is checked and `BULK_CHECK_TOO_MANY` is returned rather than a truncated answer.
+	//
+	// **Latency.** This is synchronous: one request, one complete answer, no polling. 25 domains across 25 different TLDs measures around 3 seconds, because the connection manager fans a batch that fits under every registry's cap out as a single command. A few registries cap low and **.de accepts one domain per command**, so a batch heavy in those becomes several sequential commands; if that would need more than 4, the call is refused with `BULK_CHECK_TOO_SLOW` rather than left to time out mid-response.
+	//
+	// Takes a body of the `application/json` content type.
+	//
+	// Corresponds with POST /domain/checkDomain (the `DomainCheckDomainBulk` operationId).
+	DomainCheckDomainBulk(ctx context.Context, body DomainCheckDomainBulkJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// DomainCheckDomainWithBody Check domain availability
 	//
 	// Check if a domain is available for registration and retrieve current pricing. Includes registration, renewal, and transfer prices.
 	//
-	// **Rate limit:** Configurable per API key. Default is 1 check per 10 seconds per account. Rate limit usage is returned in the `limits` field of the response.
+	// **Rate limit:** Configurable per API key. Default is 10 checks per 10 seconds per account (raised from 1 per 10 seconds in 3.29). The window is intentionally 10 seconds rather than 1, so a batch of candidate names can be checked back-to-back. `/domain/checkSingleDomain` draws on the same budget. Rate limit usage is returned in the `limits` field of the response.
 	//
 	// Takes any type of body and a specified content type.
 	//
@@ -5414,7 +6365,7 @@ type ClientInterface interface {
 	//
 	// Check if a domain is available for registration and retrieve current pricing. Includes registration, renewal, and transfer prices.
 	//
-	// **Rate limit:** Configurable per API key. Default is 1 check per 10 seconds per account. Rate limit usage is returned in the `limits` field of the response.
+	// **Rate limit:** Configurable per API key. Default is 10 checks per 10 seconds per account (raised from 1 per 10 seconds in 3.29). The window is intentionally 10 seconds rather than 1, so a batch of candidate names can be checked back-to-back. `/domain/checkSingleDomain` draws on the same budget. Rate limit usage is returned in the `limits` field of the response.
 	//
 	// Takes a body of the `application/json` content type.
 	//
@@ -5436,8 +6387,8 @@ type ClientInterface interface {
 	// **WHOIS privacy.** WHOIS privacy is automatically enabled on new registrations (when the TLD supports it). Pass the optional `whoisPrivacy` field to override this on a per-registration basis, or change the account-level default under Account Security Settings on porkbun.com/account.
 	//
 	// **Rate limits (both apply):**
-	// - Attempt limit (default: 1 attempt per 10 seconds per account)
-	// - Success limit (default: 50 successful registrations per 86400 seconds per account)
+	// - Attempt limit (default: 1 attempt per second per account)
+	// - Success limit (default: 1000 successful registrations per 86400 seconds per account)
 	//
 	// Both limits are configurable per API key and their current values are returned in the `limits` field of the response.
 	//
@@ -5485,8 +6436,8 @@ type ClientInterface interface {
 	// **WHOIS privacy.** WHOIS privacy is automatically enabled on new registrations (when the TLD supports it). Pass the optional `whoisPrivacy` field to override this on a per-registration basis, or change the account-level default under Account Security Settings on porkbun.com/account.
 	//
 	// **Rate limits (both apply):**
-	// - Attempt limit (default: 1 attempt per 10 seconds per account)
-	// - Success limit (default: 50 successful registrations per 86400 seconds per account)
+	// - Attempt limit (default: 1 attempt per second per account)
+	// - Success limit (default: 1000 successful registrations per 86400 seconds per account)
 	//
 	// Both limits are configurable per API key and their current values are returned in the `limits` field of the response.
 	//
@@ -5614,14 +6565,14 @@ type ClientInterface interface {
 
 	// GetDomainNs Get nameservers
 	//
-	// Retrieve the authoritative nameservers listed at the registry for the domain. Supports both GET (with header auth) and POST (with body or header auth).
+	// Retrieve the authoritative nameservers listed at the registry for the domain. Supports both GET (with header auth) and POST (with body or header auth). **Nameservers are an unordered set.** This reads live from the registry, and registries are free to return the set in any order — so the order here will often differ from the order you sent to `/domain/updateNs`. Order carries no meaning in DNS (an NS RRset is unordered, RFC 1034/2181) and is not preserved by the parent zone. Compare nameservers as a set; if you are writing a Terraform provider or similar, model this as a set, not an ordered list, or every plan will show phantom drift.
 	//
 	// Corresponds with GET /domain/getNs/{domain} (the `GetDomainNs` operationId).
 	GetDomainNs(ctx context.Context, domain string, params *GetDomainNsParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// DomainGetNsWithBody Get nameservers
 	//
-	// Retrieve the authoritative nameservers listed at the registry for the domain. Supports both GET (with header auth) and POST (with body or header auth).
+	// Retrieve the authoritative nameservers listed at the registry for the domain. Supports both GET (with header auth) and POST (with body or header auth). **Nameservers are an unordered set.** This reads live from the registry, and registries are free to return the set in any order — so the order here will often differ from the order you sent to `/domain/updateNs`. Order carries no meaning in DNS (an NS RRset is unordered, RFC 1034/2181) and is not preserved by the parent zone. Compare nameservers as a set; if you are writing a Terraform provider or similar, model this as a set, not an ordered list, or every plan will show phantom drift.
 	//
 	// Takes any type of body and a specified content type.
 	//
@@ -5630,7 +6581,7 @@ type ClientInterface interface {
 
 	// DomainGetNs Get nameservers
 	//
-	// Retrieve the authoritative nameservers listed at the registry for the domain. Supports both GET (with header auth) and POST (with body or header auth).
+	// Retrieve the authoritative nameservers listed at the registry for the domain. Supports both GET (with header auth) and POST (with body or header auth). **Nameservers are an unordered set.** This reads live from the registry, and registries are free to return the set in any order — so the order here will often differ from the order you sent to `/domain/updateNs`. Order carries no meaning in DNS (an NS RRset is unordered, RFC 1034/2181) and is not preserved by the parent zone. Compare nameservers as a set; if you are writing a Terraform provider or similar, model this as a set, not an ordered list, or every plan will show phantom drift.
 	//
 	// Takes a body of the `application/json` content type.
 	//
@@ -5650,6 +6601,13 @@ type ClientInterface interface {
 	//
 	// Corresponds with GET /domain/getTransfer/{domain} (the `GetTransferGet` operationId).
 	GetTransferGet(ctx context.Context, domain string, params *GetTransferGetParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// DomainGetTransferSetup State of an in-flight inbound transfer
+	//
+	// Where a pending inbound transfer is and what it is waiting on: whether it is held at `PENDINGDNS`, whether its DNS zone exists, how many records are in it, what the domain currently delegates to, and the next step to take. Use it to resume a no-downtime transfer without keeping state of your own.
+	//
+	// Corresponds with GET /domain/getTransferSetup/{domain} (the `DomainGetTransferSetup` operationId).
+	DomainGetTransferSetup(ctx context.Context, domain string, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// GetDomainUrlForwarding List URL forwards
 	//
@@ -5747,6 +6705,13 @@ type ClientInterface interface {
 	// Corresponds with GET /domain/listTransfers (the `ListTransfersGet` operationId).
 	ListTransfersGet(ctx context.Context, params *ListTransfersGetParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// DomainPrepareTransfer Create the DNS zone for a held transfer
+	//
+	// Create the Porkbun DNS zone for a domain whose inbound transfer is held at `PENDINGDNS`, so records can be added **before** the domain moves. The zone is created deliberately rather than as a side effect of the first record write. Returns the Porkbun nameservers to point the domain at. Then load the zone with `/dns/import/{domain}` (or the `/dns/*` endpoints) and release with `/domain/startTransfer/{domain}`. Supports `dryRun`.
+	//
+	// Corresponds with POST /domain/prepareTransfer/{domain} (the `DomainPrepareTransfer` operationId).
+	DomainPrepareTransfer(ctx context.Context, domain string, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// DomainRenewWithBody Renew a domain
 	//
 	// Renew a domain using account credit. Requirements:
@@ -5762,8 +6727,8 @@ type ClientInterface interface {
 	// Renewals are always for the registry-minimum duration (usually 1 year). Use `/domain/checkDomain/{domain}` with `priceType=renewal` to get the current price before renewing.
 	//
 	// **Rate limits (both apply):**
-	// - Attempt limit (default: 1 attempt per 10 seconds per account)
-	// - Success limit (default: 50 successful renewals per 86400 seconds per account)
+	// - Attempt limit (default: 1 attempt per second per account)
+	// - Success limit (default: 1000 successful renewals per 86400 seconds per account)
 	//
 	// Both limits are configurable per API key and their current values are returned in the `limits` field of the response.
 	//
@@ -5811,8 +6776,8 @@ type ClientInterface interface {
 	// Renewals are always for the registry-minimum duration (usually 1 year). Use `/domain/checkDomain/{domain}` with `priceType=renewal` to get the current price before renewing.
 	//
 	// **Rate limits (both apply):**
-	// - Attempt limit (default: 1 attempt per 10 seconds per account)
-	// - Success limit (default: 50 successful renewals per 86400 seconds per account)
+	// - Attempt limit (default: 1 attempt per second per account)
+	// - Success limit (default: 1000 successful renewals per 86400 seconds per account)
 	//
 	// Both limits are configurable per API key and their current values are returned in the `limits` field of the response.
 	//
@@ -5844,6 +6809,28 @@ type ClientInterface interface {
 	//
 	// Corresponds with POST /domain/renew/{domain} (the `DomainRenew` operationId).
 	DomainRenew(ctx context.Context, domain string, body DomainRenewJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// DomainStartTransferWithBody Release a held transfer to the registry
+	//
+	// Release a transfer held at `PENDINGDNS` into the registry pipeline. Nothing releases a held transfer on a timer — this call is the only thing that does.
+	//
+	// Refuses with `TRANSFER_ZONE_EMPTY` if the zone has no records, which is the outage the hold exists to prevent. Pass `force: true` only if the domain genuinely needs no DNS at Porkbun. Supports `dryRun`.
+	//
+	// Takes any type of body and a specified content type.
+	//
+	// Corresponds with POST /domain/startTransfer/{domain} (the `DomainStartTransfer` operationId).
+	DomainStartTransferWithBody(ctx context.Context, domain string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// DomainStartTransfer Release a held transfer to the registry
+	//
+	// Release a transfer held at `PENDINGDNS` into the registry pipeline. Nothing releases a held transfer on a timer — this call is the only thing that does.
+	//
+	// Refuses with `TRANSFER_ZONE_EMPTY` if the zone has no records, which is the outage the hold exists to prevent. Pass `force: true` only if the domain genuinely needs no DNS at Porkbun. Supports `dryRun`.
+	//
+	// Takes a body of the `application/json` content type.
+	//
+	// Corresponds with POST /domain/startTransfer/{domain} (the `DomainStartTransfer` operationId).
+	DomainStartTransfer(ctx context.Context, domain string, body DomainStartTransferJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// TransferDomainWithBody Initiate a domain transfer
 	//
@@ -5987,7 +6974,7 @@ type ClientInterface interface {
 
 	// DomainUpdateNsWithBody Update nameservers
 	//
-	// Update the nameservers for the domain at the registry.
+	// Update the nameservers for the domain at the registry. The list you send is applied as a set — the registry may store and return it in a different order, so do not expect `/domain/getNs` to echo your ordering back. See `/domain/getNs`.
 	//
 	// Takes any type of body and a specified content type.
 	//
@@ -5996,12 +6983,34 @@ type ClientInterface interface {
 
 	// DomainUpdateNs Update nameservers
 	//
-	// Update the nameservers for the domain at the registry.
+	// Update the nameservers for the domain at the registry. The list you send is applied as a set — the registry may store and return it in a different order, so do not expect `/domain/getNs` to echo your ordering back. See `/domain/getNs`.
 	//
 	// Takes a body of the `application/json` content type.
 	//
 	// Corresponds with POST /domain/updateNs/{domain} (the `DomainUpdateNs` operationId).
 	DomainUpdateNs(ctx context.Context, domain string, body DomainUpdateNsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// DomainUpdateTransferAuthCodeWithBody Replace the auth code on a stuck transfer
+	//
+	// Replace the authorization code on an inbound transfer that stalled because the code was wrong, and re-queue it — instead of cancelling, refunding and re-submitting.
+	//
+	// The new code is validated against the registry before it is stored, so a bad code is rejected here (`INVALID_AUTH_CODE`) rather than failing again later. Only transfers in a repairable state qualify; anything else returns `TRANSFER_NOT_REPAIRABLE`. Supports `dryRun`.
+	//
+	// Takes any type of body and a specified content type.
+	//
+	// Corresponds with POST /domain/updateTransferAuthCode/{domain} (the `DomainUpdateTransferAuthCode` operationId).
+	DomainUpdateTransferAuthCodeWithBody(ctx context.Context, domain string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// DomainUpdateTransferAuthCode Replace the auth code on a stuck transfer
+	//
+	// Replace the authorization code on an inbound transfer that stalled because the code was wrong, and re-queue it — instead of cancelling, refunding and re-submitting.
+	//
+	// The new code is validated against the registry before it is stored, so a bad code is rejected here (`INVALID_AUTH_CODE`) rather than failing again later. Only transfers in a repairable state qualify; anything else returns `TRANSFER_NOT_REPAIRABLE`. Supports `dryRun`.
+	//
+	// Takes a body of the `application/json` content type.
+	//
+	// Corresponds with POST /domain/updateTransferAuthCode/{domain} (the `DomainUpdateTransferAuthCode` operationId).
+	DomainUpdateTransferAuthCode(ctx context.Context, domain string, body DomainUpdateTransferAuthCodeJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// EmailSetPasswordWithBody Set email hosting password
 	//
@@ -6805,6 +7814,102 @@ func (c *Client) ApikeyRetrieve(ctx context.Context, body ApikeyRetrieveJSONRequ
 	return c.Client.Do(req)
 }
 
+// CloseoutBuyWithBody Buy a closeout outright
+//
+// **Spends account credit.** Buys a closeout at its current price and claims the name with the provider in one call. Send `cost` as the exact `totalPrice` from `/closeout/get/{domain}`; any other value is refused with `COST_MISMATCH` so a caller can never be charged a price it did not name. `dryRun: true` with `cost: 0` returns a quote and charges nothing. Honours `Idempotency-Key`.
+//
+// **The domain does not arrive immediately.** Claiming reserves it; the provider then has to release it, which usually takes a few days. Poll `/domain/listAll` or subscribe to the `domain.registered` webhook rather than expecting it in your account when this returns.
+//
+// Every post-charge failure refunds automatically and says so via `refunded: true` — including losing the race to another buyer (`CLOSEOUT_UNAVAILABLE`) and the price moving between quote and claim (`COST_MISMATCH`). Closeouts are first-come at a fixed price, so a lost race is not worth retrying on the same name.
+//
+// Not available with a sandbox key (`SANDBOX_UNSUPPORTED`): the inventory provider has no test environment, so a purchase cannot be rehearsed without claiming a real name. Use `dryRun` against a live key instead — it validates and prices without charging.
+//
+// Eligibility is the same as registering a domain, plus verified email and phone. There is no account-age or prior-order requirement — a first-time customer can buy a closeout, which matters because listings are first-come and often gone within minutes. An account that support has blocked from auctions and closeouts (past-due invoices, or an auction terms violation) returns `CLOSEOUT_NOT_ELIGIBLE`, which is not retryable.
+//
+// Takes any type of body and a specified content type.
+//
+// Corresponds with POST /closeout/buy/{domain} (the `CloseoutBuy` operationId).
+func (c *Client) CloseoutBuyWithBody(ctx context.Context, domain string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCloseoutBuyRequestWithBody(c.Server, domain, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// CloseoutBuy Buy a closeout outright
+//
+// **Spends account credit.** Buys a closeout at its current price and claims the name with the provider in one call. Send `cost` as the exact `totalPrice` from `/closeout/get/{domain}`; any other value is refused with `COST_MISMATCH` so a caller can never be charged a price it did not name. `dryRun: true` with `cost: 0` returns a quote and charges nothing. Honours `Idempotency-Key`.
+//
+// **The domain does not arrive immediately.** Claiming reserves it; the provider then has to release it, which usually takes a few days. Poll `/domain/listAll` or subscribe to the `domain.registered` webhook rather than expecting it in your account when this returns.
+//
+// Every post-charge failure refunds automatically and says so via `refunded: true` — including losing the race to another buyer (`CLOSEOUT_UNAVAILABLE`) and the price moving between quote and claim (`COST_MISMATCH`). Closeouts are first-come at a fixed price, so a lost race is not worth retrying on the same name.
+//
+// Not available with a sandbox key (`SANDBOX_UNSUPPORTED`): the inventory provider has no test environment, so a purchase cannot be rehearsed without claiming a real name. Use `dryRun` against a live key instead — it validates and prices without charging.
+//
+// Eligibility is the same as registering a domain, plus verified email and phone. There is no account-age or prior-order requirement — a first-time customer can buy a closeout, which matters because listings are first-come and often gone within minutes. An account that support has blocked from auctions and closeouts (past-due invoices, or an auction terms violation) returns `CLOSEOUT_NOT_ELIGIBLE`, which is not retryable.
+//
+// Takes a body of the `application/json` content type.
+//
+// Corresponds with POST /closeout/buy/{domain} (the `CloseoutBuy` operationId).
+func (c *Client) CloseoutBuy(ctx context.Context, domain string, body CloseoutBuyJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCloseoutBuyRequest(c.Server, domain, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// CloseoutGet One closeout, with the binding total
+//
+// A single closeout plus `totalPrice` — the closeout price plus the registration year that comes with it. That total is what `/closeout/buy` will charge and what it expects back as `cost`.
+//
+// `localDomain` tells you which side of the pricing you are on: true means the name is already at Porkbun and is renewed, false means it is transferred in. `available` is false once somebody has claimed it.
+//
+// Corresponds with GET /closeout/get/{domain} (the `CloseoutGet` operationId).
+func (c *Client) CloseoutGet(ctx context.Context, domain string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCloseoutGetRequest(c.Server, domain)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// CloseoutSearch Search expired-domain closeouts
+//
+// Search the closeout inventory. Closeouts are expired domains that did not sell at auction and are now offered at a fixed, descending price — there is no bidding, the first buyer at the current price takes the name.
+//
+// Every filter is optional; with none you get the first page of the whole list plus `totalAvailable`. Page with `start`/`limit` until `start >= totalAvailable`.
+//
+// **`age` and `registrationDate` are on every row and both are sortable.** On the website the inventory is paginated by price tier and registration date is not shown, so finding aged names means walking several tier pages and then doing a WHOIS lookup per candidate. `sortName=registrationDate&sortDirection=asc` returns the oldest registrations first in one call.
+//
+// `price` is the closeout price alone. The binding total adds the renewal or transfer year you are also buying, and comes from `/closeout/get/{domain}` — it cannot be derived from search results, because a domain already at Porkbun is renewed while anything else is transferred in, and those are priced differently.
+//
+// Corresponds with GET /closeout/search (the `CloseoutSearch` operationId).
+func (c *Client) CloseoutSearch(ctx context.Context, params *CloseoutSearchParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCloseoutSearchRequest(c.Server, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
 // CloudflareConnectWithBody Queue domains to move to the customer's Cloudflare account
 //
 // Queue one or many domains. For each one we create the zone in the customer's own Cloudflare account, copy across the DNS records we hold, and repoint the registry nameservers at Cloudflare.
@@ -6821,7 +7926,7 @@ func (c *Client) ApikeyRetrieve(ctx context.Context, body ApikeyRetrieveJSONRequ
 //
 // Requires an active Cloudflare connection (`CLOUDFLARE_NOT_CONNECTED` otherwise). Limits: 500 domains per call, 2000 domains per account per hour.
 //
-// After queueing, poll `/cloudflare/get/{domain}`: the row moves `queued` → `working` → `activating` → `connected`. `activating` means the nameservers are already repointed and Cloudflare is confirming the zone, which can take a while as DNS propagates.
+// After queueing, poll `/cloudflare/get/{domain}`: the row moves `queued` → `working` → `setup` → `activating` → `connected`. `setup` means Cloudflare has the zone but has not provisioned it yet, so the nameservers have deliberately not been touched. `activating` means the nameservers are already repointed and Cloudflare is confirming the zone, which can take a while as DNS propagates.
 //
 // Takes any type of body and a specified content type.
 //
@@ -6854,7 +7959,7 @@ func (c *Client) CloudflareConnectWithBody(ctx context.Context, contentType stri
 //
 // Requires an active Cloudflare connection (`CLOUDFLARE_NOT_CONNECTED` otherwise). Limits: 500 domains per call, 2000 domains per account per hour.
 //
-// After queueing, poll `/cloudflare/get/{domain}`: the row moves `queued` → `working` → `activating` → `connected`. `activating` means the nameservers are already repointed and Cloudflare is confirming the zone, which can take a while as DNS propagates.
+// After queueing, poll `/cloudflare/get/{domain}`: the row moves `queued` → `working` → `setup` → `activating` → `connected`. `setup` means Cloudflare has the zone but has not provisioned it yet, so the nameservers have deliberately not been touched. `activating` means the nameservers are already repointed and Cloudflare is confirming the zone, which can take a while as DNS propagates.
 //
 // Takes a body of the `application/json` content type.
 //
@@ -7024,12 +8129,14 @@ func (c *Client) CloudflareEditRecord(ctx context.Context, domain string, record
 // |--------|---------|----------|
 // | `queued` | accepted, waiting for the worker | no |
 // | `working` | a run is touching this row right now | no |
-// | `activating` | nameservers repointed; waiting for Cloudflare to mark the zone active. Legitimately slow (registry + resolver propagation) — allow up to 24h | no |
+// | `setup` | the zone exists in the customer's Cloudflare account but Cloudflare has not provisioned it yet (`initializing`). **The nameservers have not been touched** — the domain still resolves from Porkbun. Cloudflare can sit here for hours when an account has a backlog of zones it never activated | no |
+// | `activating` | nameservers repointed; waiting for Cloudflare to mark the zone active. Legitimately slow (registry + resolver propagation) — allow up to 72h, and a real move has been observed taking 59h | no |
 // | `connected` / `done` | the move finished | **yes** |
 // | `skipped` | not moved, and `message` says why (DNSSEC live, custom nameservers, no longer in the account) | **yes** |
-// | `failed` / `error` | the move did not complete; `message` says why. Re-queue with `/cloudflare/retry/{domain}` | **yes** |
+// | `failed` / `error` | the move did not complete; `message` says why. Re-queue with `/cloudflare/retry/{domain}` | **yes**, with one exception: a row that failed waiting on Cloudflare is re-checked for up to 30 days, so it can still close out as `connected` (or have its `message` updated to say it is now retryable) if Cloudflare activates the zone late |
+// | `undone` | the nameservers were put back on Porkbun — either the customer undid the move, or the domain stopped resolving while Cloudflare had not activated it yet and we restored it without waiting for the deadline | **yes** |
 //
-// Poll on a sensible interval (a few seconds early on, then back off) — a zone typically leaves `queued` within seconds but can sit in `activating` while DNS propagates.
+// Poll on a sensible interval (a few seconds early on, then back off) — a zone typically leaves `queued` within seconds but can sit in `setup` or `activating` while Cloudflare provisions the zone and DNS propagates.
 //
 // Corresponds with GET /cloudflare/get/{domain} (the `CloudflareGet` operationId).
 func (c *Client) CloudflareGet(ctx context.Context, domain string, reqEditors ...RequestEditorFn) (*http.Response, error) {
@@ -7075,12 +8182,14 @@ func (c *Client) CloudflareGetConnection(ctx context.Context, reqEditors ...Requ
 // |--------|---------|----------|
 // | `queued` | accepted, waiting for the worker | no |
 // | `working` | a run is touching this row right now | no |
-// | `activating` | nameservers repointed; waiting for Cloudflare to mark the zone active. Legitimately slow (registry + resolver propagation) — allow up to 24h | no |
+// | `setup` | the zone exists in the customer's Cloudflare account but Cloudflare has not provisioned it yet (`initializing`). **The nameservers have not been touched** — the domain still resolves from Porkbun. Cloudflare can sit here for hours when an account has a backlog of zones it never activated | no |
+// | `activating` | nameservers repointed; waiting for Cloudflare to mark the zone active. Legitimately slow (registry + resolver propagation) — allow up to 72h, and a real move has been observed taking 59h | no |
 // | `connected` / `done` | the move finished | **yes** |
 // | `skipped` | not moved, and `message` says why (DNSSEC live, custom nameservers, no longer in the account) | **yes** |
-// | `failed` / `error` | the move did not complete; `message` says why. Re-queue with `/cloudflare/retry/{domain}` | **yes** |
+// | `failed` / `error` | the move did not complete; `message` says why. Re-queue with `/cloudflare/retry/{domain}` | **yes**, with one exception: a row that failed waiting on Cloudflare is re-checked for up to 30 days, so it can still close out as `connected` (or have its `message` updated to say it is now retryable) if Cloudflare activates the zone late |
+// | `undone` | the nameservers were put back on Porkbun — either the customer undid the move, or the domain stopped resolving while Cloudflare had not activated it yet and we restored it without waiting for the deadline | **yes** |
 //
-// Poll on a sensible interval (a few seconds early on, then back off) — a zone typically leaves `queued` within seconds but can sit in `activating` while DNS propagates.
+// Poll on a sensible interval (a few seconds early on, then back off) — a zone typically leaves `queued` within seconds but can sit in `setup` or `activating` while Cloudflare provisions the zone and DNS propagates.
 //
 // Corresponds with GET /cloudflare/getQueue (the `CloudflareGetQueue` operationId).
 func (c *Client) CloudflareGetQueue(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
@@ -7370,6 +8479,8 @@ func (c *Client) DnsCreate(ctx context.Context, domain string, body DnsCreateJSO
 //
 // Create a DNSSEC DS or key record at the registry. DNSSEC requirements vary by registry — `keyTag`, `alg`, `digestType`, and `digest` are the minimum required fields. Key data fields are optional and will be omitted if not accepted by the registry.
 //
+// Algorithm and digest type are validated against the registry's own policy before the request is sent. Registries are retiring the values deprecated by RFC 9904/9905/9906 on different schedules, so what is accepted depends on the TLD: a value one registry has already dropped may still be accepted by another. A value the registry no longer accepts returns `DNSSEC_ALGORITHM_DEPRECATED`; one that still works but is being retired returns `status: SUCCESS` with a `warnings` array. Use algorithm 8 (RSA/SHA-256) or 13 (ECDSA/SHA-256) with digest type 2 (SHA-256) to be accepted everywhere. Existing DNSSEC records keep resolving regardless, and can always be deleted.
+//
 // Takes any type of body and a specified content type.
 //
 // Corresponds with POST /dns/createDnssecRecord/{domain} (the `DnsCreateDnssecRecord` operationId).
@@ -7388,6 +8499,8 @@ func (c *Client) DnsCreateDnssecRecordWithBody(ctx context.Context, domain strin
 // DnsCreateDnssecRecord Create DNSSEC record
 //
 // Create a DNSSEC DS or key record at the registry. DNSSEC requirements vary by registry — `keyTag`, `alg`, `digestType`, and `digest` are the minimum required fields. Key data fields are optional and will be omitted if not accepted by the registry.
+//
+// Algorithm and digest type are validated against the registry's own policy before the request is sent. Registries are retiring the values deprecated by RFC 9904/9905/9906 on different schedules, so what is accepted depends on the TLD: a value one registry has already dropped may still be accepted by another. A value the registry no longer accepts returns `DNSSEC_ALGORITHM_DEPRECATED`; one that still works but is being retired returns `status: SUCCESS` with a `warnings` array. Use algorithm 8 (RSA/SHA-256) or 13 (ECDSA/SHA-256) with digest type 2 (SHA-256) to be accepted everywhere. Existing DNSSEC records keep resolving regardless, and can always be deleted.
 //
 // Takes a body of the `application/json` content type.
 //
@@ -7508,6 +8621,60 @@ func (c *Client) DnsDeleteDnssecRecordWithBody(ctx context.Context, domain strin
 // Corresponds with POST /dns/deleteDnssecRecord/{domain}/{keytag} (the `DnsDeleteDnssecRecord` operationId).
 func (c *Client) DnsDeleteDnssecRecord(ctx context.Context, domain string, keytag string, body DnsDeleteDnssecRecordJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewDnsDeleteDnssecRecordRequest(c.Server, domain, keytag, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// DnsDiffWithBody Compare a restore point with the live zone
+//
+// What changed between a restore point and the zone as it stands now.
+//
+// - `missing` -- in the restore point, not live. These are the records a restore would add back.
+// - `extra` -- live, not in the restore point. A restore leaves these alone unless you pass `prune`.
+// - `inSync` -- true when neither list has anything in it.
+//
+// Records are compared on **name, type, content and priority**, not on id: an id means nothing across a delete and re-create, and what anyone means by "the same record" is the data. SOA and NS are excluded from both lists because they are the zone's own scaffolding.
+//
+// For masked records (parking, `ALIAS`, `HTTPS`) the value shown is the one you configured, not the internal host it resolves to.
+//
+// Takes any type of body and a specified content type.
+//
+// Corresponds with GET /dns/diff/{domain}/{snapshotId} (the `DnsDiff` operationId).
+func (c *Client) DnsDiffWithBody(ctx context.Context, domain string, snapshotId int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDnsDiffRequestWithBody(c.Server, domain, snapshotId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// DnsDiff Compare a restore point with the live zone
+//
+// What changed between a restore point and the zone as it stands now.
+//
+// - `missing` -- in the restore point, not live. These are the records a restore would add back.
+// - `extra` -- live, not in the restore point. A restore leaves these alone unless you pass `prune`.
+// - `inSync` -- true when neither list has anything in it.
+//
+// Records are compared on **name, type, content and priority**, not on id: an id means nothing across a delete and re-create, and what anyone means by "the same record" is the data. SOA and NS are excluded from both lists because they are the zone's own scaffolding.
+//
+// For masked records (parking, `ALIAS`, `HTTPS`) the value shown is the one you configured, not the internal host it resolves to.
+//
+// Takes a body of the `application/json` content type.
+//
+// Corresponds with GET /dns/diff/{domain}/{snapshotId} (the `DnsDiff` operationId).
+func (c *Client) DnsDiff(ctx context.Context, domain string, snapshotId int64, body DnsDiffJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDnsDiffRequest(c.Server, domain, snapshotId, body)
 	if err != nil {
 		return nil, err
 	}
@@ -7639,6 +8806,238 @@ func (c *Client) DnsGetDnssecRecordsWithBody(ctx context.Context, domain string,
 // Corresponds with POST /dns/getDnssecRecords/{domain} (the `DnsGetDnssecRecords` operationId).
 func (c *Client) DnsGetDnssecRecords(ctx context.Context, domain string, body DnsGetDnssecRecordsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewDnsGetDnssecRecordsRequest(c.Server, domain, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// DnsHistoryWithBody List restore points for a zone
+//
+// Every version of a zone we still hold, newest first.
+//
+// **DNS is the only part of a stack with no undo, and this is it.** If a record was deleted or edited by mistake, you do not have to know what it used to say -- ask for the restore points, diff one against the live zone, and put it back.
+//
+// Restore points are taken automatically: before the **first** write to a zone in each hour (so a session of edits costs one point, not one per record), before any bulk import or zone wipe, and before any restore. `recordCount` is the size of the zone **as it was at that moment**, not now.
+//
+// `matchesLive` tells you which point the zone currently sits on without diffing each one. Up to 50 are returned.
+//
+// Takes any type of body and a specified content type.
+//
+// Corresponds with GET /dns/history/{domain} (the `DnsHistory` operationId).
+func (c *Client) DnsHistoryWithBody(ctx context.Context, domain string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDnsHistoryRequestWithBody(c.Server, domain, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// DnsHistory List restore points for a zone
+//
+// Every version of a zone we still hold, newest first.
+//
+// **DNS is the only part of a stack with no undo, and this is it.** If a record was deleted or edited by mistake, you do not have to know what it used to say -- ask for the restore points, diff one against the live zone, and put it back.
+//
+// Restore points are taken automatically: before the **first** write to a zone in each hour (so a session of edits costs one point, not one per record), before any bulk import or zone wipe, and before any restore. `recordCount` is the size of the zone **as it was at that moment**, not now.
+//
+// `matchesLive` tells you which point the zone currently sits on without diffing each one. Up to 50 are returned.
+//
+// Takes a body of the `application/json` content type.
+//
+// Corresponds with GET /dns/history/{domain} (the `DnsHistory` operationId).
+func (c *Client) DnsHistory(ctx context.Context, domain string, body DnsHistoryJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDnsHistoryRequest(c.Server, domain, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// DnsImportWithBody Bulk-create DNS records (transfer restore)
+//
+// Create many records in one call, so a domain arriving from another registrar keeps resolving instead of going dark.
+//
+// Send `records` to import an exact list — the better path when the old registrar has an API you can read with your own credentials. Omit `records` entirely and whatever `/dns/scan/{domain}` can discover is imported instead.
+//
+// **Idempotent.** A record that already exists is counted in `skipped`, not `failed`, so this is safe to re-run and safe to use as a converge step. Records that fail individually are listed in `failures` while the rest still import; the call only errors outright if nothing was importable.
+//
+// Imported records do nothing until the domain actually points at the Porkbun nameservers — check `/domain/getNs/{domain}` and set them with `/domain/updateNs/{domain}`. Maximum 500 records per call. Supports `dryRun`.
+//
+// Takes any type of body and a specified content type.
+//
+// Corresponds with POST /dns/import/{domain} (the `DnsImport` operationId).
+func (c *Client) DnsImportWithBody(ctx context.Context, domain string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDnsImportRequestWithBody(c.Server, domain, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// DnsImport Bulk-create DNS records (transfer restore)
+//
+// Create many records in one call, so a domain arriving from another registrar keeps resolving instead of going dark.
+//
+// Send `records` to import an exact list — the better path when the old registrar has an API you can read with your own credentials. Omit `records` entirely and whatever `/dns/scan/{domain}` can discover is imported instead.
+//
+// **Idempotent.** A record that already exists is counted in `skipped`, not `failed`, so this is safe to re-run and safe to use as a converge step. Records that fail individually are listed in `failures` while the rest still import; the call only errors outright if nothing was importable.
+//
+// Imported records do nothing until the domain actually points at the Porkbun nameservers — check `/domain/getNs/{domain}` and set them with `/domain/updateNs/{domain}`. Maximum 500 records per call. Supports `dryRun`.
+//
+// Takes a body of the `application/json` content type.
+//
+// Corresponds with POST /dns/import/{domain} (the `DnsImport` operationId).
+func (c *Client) DnsImport(ctx context.Context, domain string, body DnsImportJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDnsImportRequest(c.Server, domain, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// DnsPreflightWithBody Check whether a change will break the domain
+//
+// Read-only. Answers the question of whether a change is about to break the domain, before you change delegation, transfer it out, or turn DNSSEC on. It changes nothing and spends nothing.
+//
+// **Every check here comes from an incident we actually had**, which is the point: these are the failures where a zone looks fine and stops working anyway, and nobody can say why afterwards. Each finding names the rule it comes from and carries a `next_action`, so it argues its case rather than asserting a verdict.
+//
+// Pass `intent` to scope it: `general` (default) runs everything applicable, `move-nameservers` adds the delegation checks, `transfer-out` adds the checks that matter when leaving, `enable-dnssec` the DNSSEC ones.
+//
+// Read `blockers` first -- those will break something. `warnings` will not break outright but are usually what the customer asks about next. `safe` is true only when both lists are empty.
+//
+// | id | severity | what it catches |
+// |----|----------|-----------------|
+// | `dnssec-active` | blocker | DS records are published, so new nameservers serve answers that do not match them and validating resolvers refuse the whole zone. The domain goes dark rather than degrading. Remove DNSSEC, wait for the DS TTL, then move. |
+// | `dnssec-unknown` | warning | the registry did not answer conclusively. Do not read that as an absence of DNSSEC. |
+// | `cname-exclusivity` | blocker | a CNAME sharing a name with another record type, which RFC 1034 forbids and resolvers handle inconsistently. |
+// | `spf-duplicate` | blocker | more than one apex SPF record: a permerror under RFC 7208 4.5 that makes receivers fail the check for every sender. |
+// | `spf-lookups` | blocker | an SPF chain over the ten DNS lookups RFC 7208 4.6.4 allows, which is also a permerror. |
+// | `mx-undeliverable` | blocker | an apex MX pointing somewhere unreachable such as localhost, so mail bounces or vanishes. |
+// | `wildcard-shadowed` | warning | names that exist only because of an MX or TXT record. Under RFC 4592 a wildcard answers only names that do NOT exist, so those names stop inheriting the wildcard address and go dark with nothing in the zone looking wrong. |
+// | `apex-resolves` | warning | nothing answers at the bare domain. |
+// | `zone-size` | warning | within 10 percent of the 2,500-record limit. |
+// | `nameservers-ours` | warning | the domain is delegated to nameservers we do not operate, or to a mix of ours and someone else's -- so the zone you are inspecting is not what the world resolves. Writes to it keep succeeding and change nothing visible. |
+// | `cloudflare-zone` | info | the zone is served through Cloudflare, which can lag briefly after a delegation change. |
+//
+// Takes any type of body and a specified content type.
+//
+// Corresponds with GET /dns/preflight/{domain} (the `DnsPreflight` operationId).
+func (c *Client) DnsPreflightWithBody(ctx context.Context, domain string, params *DnsPreflightParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDnsPreflightRequestWithBody(c.Server, domain, params, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// DnsPreflight Check whether a change will break the domain
+//
+// Read-only. Answers the question of whether a change is about to break the domain, before you change delegation, transfer it out, or turn DNSSEC on. It changes nothing and spends nothing.
+//
+// **Every check here comes from an incident we actually had**, which is the point: these are the failures where a zone looks fine and stops working anyway, and nobody can say why afterwards. Each finding names the rule it comes from and carries a `next_action`, so it argues its case rather than asserting a verdict.
+//
+// Pass `intent` to scope it: `general` (default) runs everything applicable, `move-nameservers` adds the delegation checks, `transfer-out` adds the checks that matter when leaving, `enable-dnssec` the DNSSEC ones.
+//
+// Read `blockers` first -- those will break something. `warnings` will not break outright but are usually what the customer asks about next. `safe` is true only when both lists are empty.
+//
+// | id | severity | what it catches |
+// |----|----------|-----------------|
+// | `dnssec-active` | blocker | DS records are published, so new nameservers serve answers that do not match them and validating resolvers refuse the whole zone. The domain goes dark rather than degrading. Remove DNSSEC, wait for the DS TTL, then move. |
+// | `dnssec-unknown` | warning | the registry did not answer conclusively. Do not read that as an absence of DNSSEC. |
+// | `cname-exclusivity` | blocker | a CNAME sharing a name with another record type, which RFC 1034 forbids and resolvers handle inconsistently. |
+// | `spf-duplicate` | blocker | more than one apex SPF record: a permerror under RFC 7208 4.5 that makes receivers fail the check for every sender. |
+// | `spf-lookups` | blocker | an SPF chain over the ten DNS lookups RFC 7208 4.6.4 allows, which is also a permerror. |
+// | `mx-undeliverable` | blocker | an apex MX pointing somewhere unreachable such as localhost, so mail bounces or vanishes. |
+// | `wildcard-shadowed` | warning | names that exist only because of an MX or TXT record. Under RFC 4592 a wildcard answers only names that do NOT exist, so those names stop inheriting the wildcard address and go dark with nothing in the zone looking wrong. |
+// | `apex-resolves` | warning | nothing answers at the bare domain. |
+// | `zone-size` | warning | within 10 percent of the 2,500-record limit. |
+// | `nameservers-ours` | warning | the domain is delegated to nameservers we do not operate, or to a mix of ours and someone else's -- so the zone you are inspecting is not what the world resolves. Writes to it keep succeeding and change nothing visible. |
+// | `cloudflare-zone` | info | the zone is served through Cloudflare, which can lag briefly after a delegation change. |
+//
+// Takes a body of the `application/json` content type.
+//
+// Corresponds with GET /dns/preflight/{domain} (the `DnsPreflight` operationId).
+func (c *Client) DnsPreflight(ctx context.Context, domain string, params *DnsPreflightParams, body DnsPreflightJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDnsPreflightRequest(c.Server, domain, params, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// DnsRestoreWithBody Restore a zone to a previous state
+//
+// Put a zone back to a restore point.
+//
+// **What it does by default:** adds back every record in the restore point that is not live now. It does **not** remove records you have added since -- pass `prune: true` for that. "Restore my records" usually means "put back what I lost", not "delete everything I have done since", so the destructive half is opt-in.
+//
+// **This is itself reversible.** The zone's current state is snapshotted before anything changes and the new point's id comes back as `previousStateSavedAs`, so an unwanted restore is undone by restoring that.
+//
+// **Read `failed`.** Parking records and other masked types (`ALIAS`, `HTTPS`) are managed by another part of the platform and cannot be recreated this way. They come back named in `failed` rather than being counted as restored, so `restored` is a true count. SOA and NS are never touched.
+//
+// Supports `dryRun: true`, which reports exactly what would be added and removed and changes nothing.
+//
+// Takes any type of body and a specified content type.
+//
+// Corresponds with POST /dns/restore/{domain} (the `DnsRestore` operationId).
+func (c *Client) DnsRestoreWithBody(ctx context.Context, domain string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDnsRestoreRequestWithBody(c.Server, domain, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// DnsRestore Restore a zone to a previous state
+//
+// Put a zone back to a restore point.
+//
+// **What it does by default:** adds back every record in the restore point that is not live now. It does **not** remove records you have added since -- pass `prune: true` for that. "Restore my records" usually means "put back what I lost", not "delete everything I have done since", so the destructive half is opt-in.
+//
+// **This is itself reversible.** The zone's current state is snapshotted before anything changes and the new point's id comes back as `previousStateSavedAs`, so an unwanted restore is undone by restoring that.
+//
+// **Read `failed`.** Parking records and other masked types (`ALIAS`, `HTTPS`) are managed by another part of the platform and cannot be recreated this way. They come back named in `failed` rather than being counted as restored, so `restored` is a true count. SOA and NS are never touched.
+//
+// Supports `dryRun: true`, which reports exactly what would be added and removed and changes nothing.
+//
+// Takes a body of the `application/json` content type.
+//
+// Corresponds with POST /dns/restore/{domain} (the `DnsRestore` operationId).
+func (c *Client) DnsRestore(ctx context.Context, domain string, body DnsRestoreJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDnsRestoreRequest(c.Server, domain, body)
 	if err != nil {
 		return nil, err
 	}
@@ -7814,6 +9213,27 @@ func (c *Client) DnsRetrieveByNameType(ctx context.Context, domain string, pType
 	return c.Client.Do(req)
 }
 
+// DnsScan Discover the records a domain currently publishes
+//
+// Query a domain's **live authoritative nameservers** and return the records they answer with, writing nothing. This is what makes an inbound transfer non-destructive: a transfer moves only the delegation — EPP carries no zone data — so once the losing registrar stops answering for the zone, whatever it published is gone and unrecoverable. Run this **before** the nameservers move, then pass the result to `/dns/import/{domain}`.
+//
+// The scan probes a wide list of well-known names (apex, common subdomains, MX, DKIM selectors, provider verification hosts) and consolidates wildcards. It cannot enumerate a zone — DNS has no listing operation and AXFR is universally refused — so treat it as thorough but **not exhaustive**. If the old registrar exposes the zone through its own API, that is authoritative: read it with your own credentials (they never need to reach Porkbun) and POST those records to `/dns/import` instead.
+//
+// Metered separately at 20 calls per hour per account, because each call is roughly 90 DNS lookups.
+//
+// Corresponds with GET /dns/scan/{domain} (the `DnsScan` operationId).
+func (c *Client) DnsScan(ctx context.Context, domain string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDnsScanRequest(c.Server, domain)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
 // DomainAddUrlForwardWithBody Add URL forward
 //
 // Add a URL forward for a domain or subdomain.
@@ -7852,11 +9272,90 @@ func (c *Client) DomainAddUrlForward(ctx context.Context, domain string, body Do
 	return c.Client.Do(req)
 }
 
+// DomainCancelTransfer Cancel an inbound transfer and refund it
+//
+// Cancel a pending inbound transfer and refund the order. The sequence is deliberate: mark the transfer cancelled locally, withdraw it at the registry, **verify** the registry actually accepted the withdrawal, and only then refund. If the registry state cannot be confirmed the local row is restored and `TRANSFER_STATE_UNCONFIRMED` is returned rather than refunding a transfer that may still be live.
+//
+// The response reports `withdrawnAtRegistry`, `registryResultCode`, `refunded` and `refundAmount` so you can see exactly how far it got. Supports `dryRun`.
+//
+// Corresponds with POST /domain/cancelTransfer/{domain} (the `DomainCancelTransfer` operationId).
+func (c *Client) DomainCancelTransfer(ctx context.Context, domain string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDomainCancelTransferRequest(c.Server, domain)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// DomainCheckDomainBulkWithBody Check several domains at once
+//
+// Check availability and pricing for up to 25 domains in one call. Same endpoint as the single check, with a `domains` array in the body and no domain in the path.
+//
+// **Prefer this over looping the single check.** Checks are chunked per registry, so a batch is materially less work for us than the same names one at a time, and the budget reflects that: this draws on a separate allowance of **200 domains per 60 seconds** per account, against 10 checks per 10 seconds for the single form. Counting is per DOMAIN, not per request, so 25 domains spends 25 of the 200.
+//
+// **Partial results are normal and must be read.** Three lists come back and they mean different things:
+// - `domains` - answered, keyed by domain name, each value identical in shape to the single-check `response`.
+// - `invalid` - entries that are not checkable at all (not a domain, unsupported TLD). One typo does not fail the call; the other names are still answered.
+// - `unresolved` - the registry did not answer in time. These are **neither available nor taken**; treating them as unavailable is wrong. Retry them.
+//
+// Duplicates are removed before the budget is charged. If more than 25 remain, nothing is checked and `BULK_CHECK_TOO_MANY` is returned rather than a truncated answer.
+//
+// **Latency.** This is synchronous: one request, one complete answer, no polling. 25 domains across 25 different TLDs measures around 3 seconds, because the connection manager fans a batch that fits under every registry's cap out as a single command. A few registries cap low and **.de accepts one domain per command**, so a batch heavy in those becomes several sequential commands; if that would need more than 4, the call is refused with `BULK_CHECK_TOO_SLOW` rather than left to time out mid-response.
+//
+// Takes any type of body and a specified content type.
+//
+// Corresponds with POST /domain/checkDomain (the `DomainCheckDomainBulk` operationId).
+func (c *Client) DomainCheckDomainBulkWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDomainCheckDomainBulkRequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// DomainCheckDomainBulk Check several domains at once
+//
+// Check availability and pricing for up to 25 domains in one call. Same endpoint as the single check, with a `domains` array in the body and no domain in the path.
+//
+// **Prefer this over looping the single check.** Checks are chunked per registry, so a batch is materially less work for us than the same names one at a time, and the budget reflects that: this draws on a separate allowance of **200 domains per 60 seconds** per account, against 10 checks per 10 seconds for the single form. Counting is per DOMAIN, not per request, so 25 domains spends 25 of the 200.
+//
+// **Partial results are normal and must be read.** Three lists come back and they mean different things:
+// - `domains` - answered, keyed by domain name, each value identical in shape to the single-check `response`.
+// - `invalid` - entries that are not checkable at all (not a domain, unsupported TLD). One typo does not fail the call; the other names are still answered.
+// - `unresolved` - the registry did not answer in time. These are **neither available nor taken**; treating them as unavailable is wrong. Retry them.
+//
+// Duplicates are removed before the budget is charged. If more than 25 remain, nothing is checked and `BULK_CHECK_TOO_MANY` is returned rather than a truncated answer.
+//
+// **Latency.** This is synchronous: one request, one complete answer, no polling. 25 domains across 25 different TLDs measures around 3 seconds, because the connection manager fans a batch that fits under every registry's cap out as a single command. A few registries cap low and **.de accepts one domain per command**, so a batch heavy in those becomes several sequential commands; if that would need more than 4, the call is refused with `BULK_CHECK_TOO_SLOW` rather than left to time out mid-response.
+//
+// Takes a body of the `application/json` content type.
+//
+// Corresponds with POST /domain/checkDomain (the `DomainCheckDomainBulk` operationId).
+func (c *Client) DomainCheckDomainBulk(ctx context.Context, body DomainCheckDomainBulkJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDomainCheckDomainBulkRequest(c.Server, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
 // DomainCheckDomainWithBody Check domain availability
 //
 // Check if a domain is available for registration and retrieve current pricing. Includes registration, renewal, and transfer prices.
 //
-// **Rate limit:** Configurable per API key. Default is 1 check per 10 seconds per account. Rate limit usage is returned in the `limits` field of the response.
+// **Rate limit:** Configurable per API key. Default is 10 checks per 10 seconds per account (raised from 1 per 10 seconds in 3.29). The window is intentionally 10 seconds rather than 1, so a batch of candidate names can be checked back-to-back. `/domain/checkSingleDomain` draws on the same budget. Rate limit usage is returned in the `limits` field of the response.
 //
 // Takes any type of body and a specified content type.
 //
@@ -7877,7 +9376,7 @@ func (c *Client) DomainCheckDomainWithBody(ctx context.Context, domain string, c
 //
 // Check if a domain is available for registration and retrieve current pricing. Includes registration, renewal, and transfer prices.
 //
-// **Rate limit:** Configurable per API key. Default is 1 check per 10 seconds per account. Rate limit usage is returned in the `limits` field of the response.
+// **Rate limit:** Configurable per API key. Default is 10 checks per 10 seconds per account (raised from 1 per 10 seconds in 3.29). The window is intentionally 10 seconds rather than 1, so a batch of candidate names can be checked back-to-back. `/domain/checkSingleDomain` draws on the same budget. Rate limit usage is returned in the `limits` field of the response.
 //
 // Takes a body of the `application/json` content type.
 //
@@ -7909,8 +9408,8 @@ func (c *Client) DomainCheckDomain(ctx context.Context, domain string, body Doma
 // **WHOIS privacy.** WHOIS privacy is automatically enabled on new registrations (when the TLD supports it). Pass the optional `whoisPrivacy` field to override this on a per-registration basis, or change the account-level default under Account Security Settings on porkbun.com/account.
 //
 // **Rate limits (both apply):**
-// - Attempt limit (default: 1 attempt per 10 seconds per account)
-// - Success limit (default: 50 successful registrations per 86400 seconds per account)
+// - Attempt limit (default: 1 attempt per second per account)
+// - Success limit (default: 1000 successful registrations per 86400 seconds per account)
 //
 // Both limits are configurable per API key and their current values are returned in the `limits` field of the response.
 //
@@ -7970,8 +9469,8 @@ func (c *Client) DomainCreateWithBody(ctx context.Context, domain string, conten
 // **WHOIS privacy.** WHOIS privacy is automatically enabled on new registrations (when the TLD supports it). Pass the optional `whoisPrivacy` field to override this on a per-registration basis, or change the account-level default under Account Security Settings on porkbun.com/account.
 //
 // **Rate limits (both apply):**
-// - Attempt limit (default: 1 attempt per 10 seconds per account)
-// - Success limit (default: 50 successful registrations per 86400 seconds per account)
+// - Attempt limit (default: 1 attempt per second per account)
+// - Success limit (default: 1000 successful registrations per 86400 seconds per account)
 //
 // Both limits are configurable per API key and their current values are returned in the `limits` field of the response.
 //
@@ -8221,7 +9720,7 @@ func (c *Client) DomainGetGlue(ctx context.Context, domain string, body DomainGe
 
 // GetDomainNs Get nameservers
 //
-// Retrieve the authoritative nameservers listed at the registry for the domain. Supports both GET (with header auth) and POST (with body or header auth).
+// Retrieve the authoritative nameservers listed at the registry for the domain. Supports both GET (with header auth) and POST (with body or header auth). **Nameservers are an unordered set.** This reads live from the registry, and registries are free to return the set in any order — so the order here will often differ from the order you sent to `/domain/updateNs`. Order carries no meaning in DNS (an NS RRset is unordered, RFC 1034/2181) and is not preserved by the parent zone. Compare nameservers as a set; if you are writing a Terraform provider or similar, model this as a set, not an ordered list, or every plan will show phantom drift.
 //
 // Corresponds with GET /domain/getNs/{domain} (the `GetDomainNs` operationId).
 func (c *Client) GetDomainNs(ctx context.Context, domain string, params *GetDomainNsParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
@@ -8238,7 +9737,7 @@ func (c *Client) GetDomainNs(ctx context.Context, domain string, params *GetDoma
 
 // DomainGetNsWithBody Get nameservers
 //
-// Retrieve the authoritative nameservers listed at the registry for the domain. Supports both GET (with header auth) and POST (with body or header auth).
+// Retrieve the authoritative nameservers listed at the registry for the domain. Supports both GET (with header auth) and POST (with body or header auth). **Nameservers are an unordered set.** This reads live from the registry, and registries are free to return the set in any order — so the order here will often differ from the order you sent to `/domain/updateNs`. Order carries no meaning in DNS (an NS RRset is unordered, RFC 1034/2181) and is not preserved by the parent zone. Compare nameservers as a set; if you are writing a Terraform provider or similar, model this as a set, not an ordered list, or every plan will show phantom drift.
 //
 // Takes any type of body and a specified content type.
 //
@@ -8257,7 +9756,7 @@ func (c *Client) DomainGetNsWithBody(ctx context.Context, domain string, content
 
 // DomainGetNs Get nameservers
 //
-// Retrieve the authoritative nameservers listed at the registry for the domain. Supports both GET (with header auth) and POST (with body or header auth).
+// Retrieve the authoritative nameservers listed at the registry for the domain. Supports both GET (with header auth) and POST (with body or header auth). **Nameservers are an unordered set.** This reads live from the registry, and registries are free to return the set in any order — so the order here will often differ from the order you sent to `/domain/updateNs`. Order carries no meaning in DNS (an NS RRset is unordered, RFC 1034/2181) and is not preserved by the parent zone. Compare nameservers as a set; if you are writing a Terraform provider or similar, model this as a set, not an ordered list, or every plan will show phantom drift.
 //
 // Takes a body of the `application/json` content type.
 //
@@ -8298,6 +9797,23 @@ func (c *Client) DomainGetRegistrationRequirements(ctx context.Context, tld stri
 // Corresponds with GET /domain/getTransfer/{domain} (the `GetTransferGet` operationId).
 func (c *Client) GetTransferGet(ctx context.Context, domain string, params *GetTransferGetParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewGetTransferGetRequest(c.Server, domain, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// DomainGetTransferSetup State of an in-flight inbound transfer
+//
+// Where a pending inbound transfer is and what it is waiting on: whether it is held at `PENDINGDNS`, whether its DNS zone exists, how many records are in it, what the domain currently delegates to, and the next step to take. Use it to resume a no-downtime transfer without keeping state of your own.
+//
+// Corresponds with GET /domain/getTransferSetup/{domain} (the `DomainGetTransferSetup` operationId).
+func (c *Client) DomainGetTransferSetup(ctx context.Context, domain string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDomainGetTransferSetupRequest(c.Server, domain)
 	if err != nil {
 		return nil, err
 	}
@@ -8474,6 +9990,23 @@ func (c *Client) ListTransfersGet(ctx context.Context, params *ListTransfersGetP
 	return c.Client.Do(req)
 }
 
+// DomainPrepareTransfer Create the DNS zone for a held transfer
+//
+// Create the Porkbun DNS zone for a domain whose inbound transfer is held at `PENDINGDNS`, so records can be added **before** the domain moves. The zone is created deliberately rather than as a side effect of the first record write. Returns the Porkbun nameservers to point the domain at. Then load the zone with `/dns/import/{domain}` (or the `/dns/*` endpoints) and release with `/domain/startTransfer/{domain}`. Supports `dryRun`.
+//
+// Corresponds with POST /domain/prepareTransfer/{domain} (the `DomainPrepareTransfer` operationId).
+func (c *Client) DomainPrepareTransfer(ctx context.Context, domain string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDomainPrepareTransferRequest(c.Server, domain)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
 // DomainRenewWithBody Renew a domain
 //
 // Renew a domain using account credit. Requirements:
@@ -8489,8 +10022,8 @@ func (c *Client) ListTransfersGet(ctx context.Context, params *ListTransfersGetP
 // Renewals are always for the registry-minimum duration (usually 1 year). Use `/domain/checkDomain/{domain}` with `priceType=renewal` to get the current price before renewing.
 //
 // **Rate limits (both apply):**
-// - Attempt limit (default: 1 attempt per 10 seconds per account)
-// - Success limit (default: 50 successful renewals per 86400 seconds per account)
+// - Attempt limit (default: 1 attempt per second per account)
+// - Success limit (default: 1000 successful renewals per 86400 seconds per account)
 //
 // Both limits are configurable per API key and their current values are returned in the `limits` field of the response.
 //
@@ -8550,8 +10083,8 @@ func (c *Client) DomainRenewWithBody(ctx context.Context, domain string, content
 // Renewals are always for the registry-minimum duration (usually 1 year). Use `/domain/checkDomain/{domain}` with `priceType=renewal` to get the current price before renewing.
 //
 // **Rate limits (both apply):**
-// - Attempt limit (default: 1 attempt per 10 seconds per account)
-// - Success limit (default: 50 successful renewals per 86400 seconds per account)
+// - Attempt limit (default: 1 attempt per second per account)
+// - Success limit (default: 1000 successful renewals per 86400 seconds per account)
 //
 // Both limits are configurable per API key and their current values are returned in the `limits` field of the response.
 //
@@ -8586,6 +10119,48 @@ func (c *Client) DomainRenewWithBody(ctx context.Context, domain string, content
 // Corresponds with POST /domain/renew/{domain} (the `DomainRenew` operationId).
 func (c *Client) DomainRenew(ctx context.Context, domain string, body DomainRenewJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewDomainRenewRequest(c.Server, domain, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// DomainStartTransferWithBody Release a held transfer to the registry
+//
+// Release a transfer held at `PENDINGDNS` into the registry pipeline. Nothing releases a held transfer on a timer — this call is the only thing that does.
+//
+// Refuses with `TRANSFER_ZONE_EMPTY` if the zone has no records, which is the outage the hold exists to prevent. Pass `force: true` only if the domain genuinely needs no DNS at Porkbun. Supports `dryRun`.
+//
+// Takes any type of body and a specified content type.
+//
+// Corresponds with POST /domain/startTransfer/{domain} (the `DomainStartTransfer` operationId).
+func (c *Client) DomainStartTransferWithBody(ctx context.Context, domain string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDomainStartTransferRequestWithBody(c.Server, domain, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// DomainStartTransfer Release a held transfer to the registry
+//
+// Release a transfer held at `PENDINGDNS` into the registry pipeline. Nothing releases a held transfer on a timer — this call is the only thing that does.
+//
+// Refuses with `TRANSFER_ZONE_EMPTY` if the zone has no records, which is the outage the hold exists to prevent. Pass `force: true` only if the domain genuinely needs no DNS at Porkbun. Supports `dryRun`.
+//
+// Takes a body of the `application/json` content type.
+//
+// Corresponds with POST /domain/startTransfer/{domain} (the `DomainStartTransfer` operationId).
+func (c *Client) DomainStartTransfer(ctx context.Context, domain string, body DomainStartTransferJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDomainStartTransferRequest(c.Server, domain, body)
 	if err != nil {
 		return nil, err
 	}
@@ -8822,7 +10397,7 @@ func (c *Client) DomainUpdateGlue(ctx context.Context, domain string, subdomain 
 
 // DomainUpdateNsWithBody Update nameservers
 //
-// Update the nameservers for the domain at the registry.
+// Update the nameservers for the domain at the registry. The list you send is applied as a set — the registry may store and return it in a different order, so do not expect `/domain/getNs` to echo your ordering back. See `/domain/getNs`.
 //
 // Takes any type of body and a specified content type.
 //
@@ -8841,13 +10416,55 @@ func (c *Client) DomainUpdateNsWithBody(ctx context.Context, domain string, cont
 
 // DomainUpdateNs Update nameservers
 //
-// Update the nameservers for the domain at the registry.
+// Update the nameservers for the domain at the registry. The list you send is applied as a set — the registry may store and return it in a different order, so do not expect `/domain/getNs` to echo your ordering back. See `/domain/getNs`.
 //
 // Takes a body of the `application/json` content type.
 //
 // Corresponds with POST /domain/updateNs/{domain} (the `DomainUpdateNs` operationId).
 func (c *Client) DomainUpdateNs(ctx context.Context, domain string, body DomainUpdateNsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewDomainUpdateNsRequest(c.Server, domain, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// DomainUpdateTransferAuthCodeWithBody Replace the auth code on a stuck transfer
+//
+// Replace the authorization code on an inbound transfer that stalled because the code was wrong, and re-queue it — instead of cancelling, refunding and re-submitting.
+//
+// The new code is validated against the registry before it is stored, so a bad code is rejected here (`INVALID_AUTH_CODE`) rather than failing again later. Only transfers in a repairable state qualify; anything else returns `TRANSFER_NOT_REPAIRABLE`. Supports `dryRun`.
+//
+// Takes any type of body and a specified content type.
+//
+// Corresponds with POST /domain/updateTransferAuthCode/{domain} (the `DomainUpdateTransferAuthCode` operationId).
+func (c *Client) DomainUpdateTransferAuthCodeWithBody(ctx context.Context, domain string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDomainUpdateTransferAuthCodeRequestWithBody(c.Server, domain, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// DomainUpdateTransferAuthCode Replace the auth code on a stuck transfer
+//
+// Replace the authorization code on an inbound transfer that stalled because the code was wrong, and re-queue it — instead of cancelling, refunding and re-submitting.
+//
+// The new code is validated against the registry before it is stored, so a bad code is rejected here (`INVALID_AUTH_CODE`) rather than failing again later. Only transfers in a repairable state qualify; anything else returns `TRANSFER_NOT_REPAIRABLE`. Supports `dryRun`.
+//
+// Takes a body of the `application/json` content type.
+//
+// Corresponds with POST /domain/updateTransferAuthCode/{domain} (the `DomainUpdateTransferAuthCode` operationId).
+func (c *Client) DomainUpdateTransferAuthCode(ctx context.Context, domain string, body DomainUpdateTransferAuthCodeJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDomainUpdateTransferAuthCodeRequest(c.Server, domain, body)
 	if err != nil {
 		return nil, err
 	}
@@ -10362,6 +11979,261 @@ func NewApikeyRetrieveRequestWithBody(server string, contentType string, body io
 	return req, nil
 }
 
+// NewCloseoutBuyRequest calls the generic CloseoutBuy builder with application/json body
+func NewCloseoutBuyRequest(server string, domain string, body CloseoutBuyJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewCloseoutBuyRequestWithBody(server, domain, "application/json", bodyReader)
+}
+
+// NewCloseoutBuyRequestWithBody constructs an http.Request for the CloseoutBuy method, with any body, and a specified content type
+func NewCloseoutBuyRequestWithBody(server string, domain string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "domain", domain, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/closeout/buy/%s", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPost, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewCloseoutGetRequest constructs an http.Request for the CloseoutGet method
+func NewCloseoutGetRequest(server string, domain string) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "domain", domain, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/closeout/get/%s", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewCloseoutSearchRequest constructs an http.Request for the CloseoutSearch method
+func NewCloseoutSearchRequest(server string, params *CloseoutSearchParams) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/closeout/search")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		// queryValues collects non-styled parameters (passthrough, JSON)
+		// that are safe to round-trip through url.Values.Encode().
+		queryValues := queryURL.Query()
+		// rawQueryFragments collects pre-encoded query fragments from
+		// styled parameters, preserving literal commas as delimiters
+		// per the OpenAPI spec (e.g. "color=blue,black,brown").
+		var rawQueryFragments []string
+
+		if params.Query != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "query", *params.Query, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.Tld != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "tld", *params.Tld, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.NameLength != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "nameLength", *params.NameLength, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.AgeMin != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "ageMin", *params.AgeMin, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.AgeMax != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "ageMax", *params.AgeMax, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.PriceMin != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "priceMin", *params.PriceMin, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.PriceMax != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "priceMax", *params.PriceMax, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.SortName != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "sortName", *params.SortName, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.SortDirection != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "sortDirection", *params.SortDirection, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.Start != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "start", *params.Start, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.Limit != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "limit", *params.Limit, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if encoded := queryValues.Encode(); encoded != "" {
+			rawQueryFragments = append(rawQueryFragments, encoded)
+		}
+		queryURL.RawQuery = strings.Join(rawQueryFragments, "&")
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
 // NewCloudflareConnectRequest calls the generic CloudflareConnect builder with application/json body
 func NewCloudflareConnectRequest(server string, body CloudflareConnectJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
@@ -11260,6 +13132,60 @@ func NewDnsDeleteDnssecRecordRequestWithBody(server string, domain string, keyta
 	return req, nil
 }
 
+// NewDnsDiffRequest calls the generic DnsDiff builder with application/json body
+func NewDnsDiffRequest(server string, domain string, snapshotId int64, body DnsDiffJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewDnsDiffRequestWithBody(server, domain, snapshotId, "application/json", bodyReader)
+}
+
+// NewDnsDiffRequestWithBody constructs an http.Request for the DnsDiff method, with any body, and a specified content type
+func NewDnsDiffRequestWithBody(server string, domain string, snapshotId int64, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "domain", domain, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithOptions("simple", false, "snapshotId", snapshotId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "integer", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/dns/diff/%s/%s", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
 // NewDnsEditRequest calls the generic DnsEdit builder with application/json body
 func NewDnsEditRequest(server string, domain string, id string, body DnsEditJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
@@ -11463,6 +13389,221 @@ func NewDnsGetDnssecRecordsRequestWithBody(server string, domain string, content
 	}
 
 	operationPath := fmt.Sprintf("/dns/getDnssecRecords/%s", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPost, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewDnsHistoryRequest calls the generic DnsHistory builder with application/json body
+func NewDnsHistoryRequest(server string, domain string, body DnsHistoryJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewDnsHistoryRequestWithBody(server, domain, "application/json", bodyReader)
+}
+
+// NewDnsHistoryRequestWithBody constructs an http.Request for the DnsHistory method, with any body, and a specified content type
+func NewDnsHistoryRequestWithBody(server string, domain string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "domain", domain, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/dns/history/%s", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewDnsImportRequest calls the generic DnsImport builder with application/json body
+func NewDnsImportRequest(server string, domain string, body DnsImportJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewDnsImportRequestWithBody(server, domain, "application/json", bodyReader)
+}
+
+// NewDnsImportRequestWithBody constructs an http.Request for the DnsImport method, with any body, and a specified content type
+func NewDnsImportRequestWithBody(server string, domain string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "domain", domain, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/dns/import/%s", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPost, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewDnsPreflightRequest calls the generic DnsPreflight builder with application/json body
+func NewDnsPreflightRequest(server string, domain string, params *DnsPreflightParams, body DnsPreflightJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewDnsPreflightRequestWithBody(server, domain, params, "application/json", bodyReader)
+}
+
+// NewDnsPreflightRequestWithBody constructs an http.Request for the DnsPreflight method, with any body, and a specified content type
+func NewDnsPreflightRequestWithBody(server string, domain string, params *DnsPreflightParams, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "domain", domain, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/dns/preflight/%s", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		// queryValues collects non-styled parameters (passthrough, JSON)
+		// that are safe to round-trip through url.Values.Encode().
+		queryValues := queryURL.Query()
+		// rawQueryFragments collects pre-encoded query fragments from
+		// styled parameters, preserving literal commas as delimiters
+		// per the OpenAPI spec (e.g. "color=blue,black,brown").
+		var rawQueryFragments []string
+
+		if params.Intent != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "intent", *params.Intent, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if encoded := queryValues.Encode(); encoded != "" {
+			rawQueryFragments = append(rawQueryFragments, encoded)
+		}
+		queryURL.RawQuery = strings.Join(rawQueryFragments, "&")
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewDnsRestoreRequest calls the generic DnsRestore builder with application/json body
+func NewDnsRestoreRequest(server string, domain string, body DnsRestoreJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewDnsRestoreRequestWithBody(server, domain, "application/json", bodyReader)
+}
+
+// NewDnsRestoreRequestWithBody constructs an http.Request for the DnsRestore method, with any body, and a specified content type
+func NewDnsRestoreRequestWithBody(server string, domain string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "domain", domain, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/dns/restore/%s", pathParam0)
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -11845,6 +13986,40 @@ func NewDnsRetrieveByNameTypeRequestWithBody(server string, domain string, pType
 	return req, nil
 }
 
+// NewDnsScanRequest constructs an http.Request for the DnsScan method
+func NewDnsScanRequest(server string, domain string) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "domain", domain, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/dns/scan/%s", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
 // NewDomainAddUrlForwardRequest calls the generic DomainAddUrlForward builder with application/json body
 func NewDomainAddUrlForwardRequest(server string, domain string, body DomainAddUrlForwardJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
@@ -11873,6 +14048,80 @@ func NewDomainAddUrlForwardRequestWithBody(server string, domain string, content
 	}
 
 	operationPath := fmt.Sprintf("/domain/addUrlForward/%s", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPost, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewDomainCancelTransferRequest constructs an http.Request for the DomainCancelTransfer method
+func NewDomainCancelTransferRequest(server string, domain string) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "domain", domain, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/domain/cancelTransfer/%s", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPost, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewDomainCheckDomainBulkRequest calls the generic DomainCheckDomainBulk builder with application/json body
+func NewDomainCheckDomainBulkRequest(server string, body DomainCheckDomainBulkJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewDomainCheckDomainBulkRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewDomainCheckDomainBulkRequestWithBody constructs an http.Request for the DomainCheckDomainBulk method, with any body, and a specified content type
+func NewDomainCheckDomainBulkRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/domain/checkDomain")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -12603,6 +14852,40 @@ func NewGetTransferGetRequest(server string, domain string, params *GetTransferG
 	return req, nil
 }
 
+// NewDomainGetTransferSetupRequest constructs an http.Request for the DomainGetTransferSetup method
+func NewDomainGetTransferSetupRequest(server string, domain string) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "domain", domain, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/domain/getTransferSetup/%s", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
 // NewGetDomainUrlForwardingRequest constructs an http.Request for the GetDomainUrlForwarding method
 func NewGetDomainUrlForwardingRequest(server string, domain string, params *GetDomainUrlForwardingParams) (*http.Request, error) {
 	var err error
@@ -12991,6 +15274,40 @@ func NewListTransfersGetRequest(server string, params *ListTransfersGetParams) (
 	return req, nil
 }
 
+// NewDomainPrepareTransferRequest constructs an http.Request for the DomainPrepareTransfer method
+func NewDomainPrepareTransferRequest(server string, domain string) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "domain", domain, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/domain/prepareTransfer/%s", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPost, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
 // NewDomainRenewRequest calls the generic DomainRenew builder with application/json body
 func NewDomainRenewRequest(server string, domain string, body DomainRenewJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
@@ -13019,6 +15336,53 @@ func NewDomainRenewRequestWithBody(server string, domain string, contentType str
 	}
 
 	operationPath := fmt.Sprintf("/domain/renew/%s", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPost, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewDomainStartTransferRequest calls the generic DomainStartTransfer builder with application/json body
+func NewDomainStartTransferRequest(server string, domain string, body DomainStartTransferJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewDomainStartTransferRequestWithBody(server, domain, "application/json", bodyReader)
+}
+
+// NewDomainStartTransferRequestWithBody constructs an http.Request for the DomainStartTransfer method, with any body, and a specified content type
+func NewDomainStartTransferRequestWithBody(server string, domain string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "domain", domain, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/domain/startTransfer/%s", pathParam0)
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -13261,6 +15625,53 @@ func NewDomainUpdateNsRequestWithBody(server string, domain string, contentType 
 	}
 
 	operationPath := fmt.Sprintf("/domain/updateNs/%s", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPost, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewDomainUpdateTransferAuthCodeRequest calls the generic DomainUpdateTransferAuthCode builder with application/json body
+func NewDomainUpdateTransferAuthCodeRequest(server string, domain string, body DomainUpdateTransferAuthCodeJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewDomainUpdateTransferAuthCodeRequestWithBody(server, domain, "application/json", bodyReader)
+}
+
+// NewDomainUpdateTransferAuthCodeRequestWithBody constructs an http.Request for the DomainUpdateTransferAuthCode method, with any body, and a specified content type
+func NewDomainUpdateTransferAuthCodeRequestWithBody(server string, domain string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "domain", domain, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/domain/updateTransferAuthCode/%s", pathParam0)
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -15288,6 +17699,66 @@ type ClientWithResponsesInterface interface {
 	// Corresponds with POST /apikey/retrieve (the `ApikeyRetrieve` operationId).
 	ApikeyRetrieveWithResponse(ctx context.Context, body ApikeyRetrieveJSONRequestBody, reqEditors ...RequestEditorFn) (*ApikeyRetrieveResponse, error)
 
+	// CloseoutBuyWithBodyWithResponse Buy a closeout outright
+	//
+	// **Spends account credit.** Buys a closeout at its current price and claims the name with the provider in one call. Send `cost` as the exact `totalPrice` from `/closeout/get/{domain}`; any other value is refused with `COST_MISMATCH` so a caller can never be charged a price it did not name. `dryRun: true` with `cost: 0` returns a quote and charges nothing. Honours `Idempotency-Key`.
+	//
+	// **The domain does not arrive immediately.** Claiming reserves it; the provider then has to release it, which usually takes a few days. Poll `/domain/listAll` or subscribe to the `domain.registered` webhook rather than expecting it in your account when this returns.
+	//
+	// Every post-charge failure refunds automatically and says so via `refunded: true` — including losing the race to another buyer (`CLOSEOUT_UNAVAILABLE`) and the price moving between quote and claim (`COST_MISMATCH`). Closeouts are first-come at a fixed price, so a lost race is not worth retrying on the same name.
+	//
+	// Not available with a sandbox key (`SANDBOX_UNSUPPORTED`): the inventory provider has no test environment, so a purchase cannot be rehearsed without claiming a real name. Use `dryRun` against a live key instead — it validates and prices without charging.
+	//
+	// Eligibility is the same as registering a domain, plus verified email and phone. There is no account-age or prior-order requirement — a first-time customer can buy a closeout, which matters because listings are first-come and often gone within minutes. An account that support has blocked from auctions and closeouts (past-due invoices, or an auction terms violation) returns `CLOSEOUT_NOT_ELIGIBLE`, which is not retryable.
+	//
+	// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with POST /closeout/buy/{domain} (the `CloseoutBuy` operationId).
+	CloseoutBuyWithBodyWithResponse(ctx context.Context, domain string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CloseoutBuyResponse, error)
+
+	// CloseoutBuyWithResponse Buy a closeout outright
+	//
+	// **Spends account credit.** Buys a closeout at its current price and claims the name with the provider in one call. Send `cost` as the exact `totalPrice` from `/closeout/get/{domain}`; any other value is refused with `COST_MISMATCH` so a caller can never be charged a price it did not name. `dryRun: true` with `cost: 0` returns a quote and charges nothing. Honours `Idempotency-Key`.
+	//
+	// **The domain does not arrive immediately.** Claiming reserves it; the provider then has to release it, which usually takes a few days. Poll `/domain/listAll` or subscribe to the `domain.registered` webhook rather than expecting it in your account when this returns.
+	//
+	// Every post-charge failure refunds automatically and says so via `refunded: true` — including losing the race to another buyer (`CLOSEOUT_UNAVAILABLE`) and the price moving between quote and claim (`COST_MISMATCH`). Closeouts are first-come at a fixed price, so a lost race is not worth retrying on the same name.
+	//
+	// Not available with a sandbox key (`SANDBOX_UNSUPPORTED`): the inventory provider has no test environment, so a purchase cannot be rehearsed without claiming a real name. Use `dryRun` against a live key instead — it validates and prices without charging.
+	//
+	// Eligibility is the same as registering a domain, plus verified email and phone. There is no account-age or prior-order requirement — a first-time customer can buy a closeout, which matters because listings are first-come and often gone within minutes. An account that support has blocked from auctions and closeouts (past-due invoices, or an auction terms violation) returns `CLOSEOUT_NOT_ELIGIBLE`, which is not retryable.
+	//
+	// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with POST /closeout/buy/{domain} (the `CloseoutBuy` operationId).
+	CloseoutBuyWithResponse(ctx context.Context, domain string, body CloseoutBuyJSONRequestBody, reqEditors ...RequestEditorFn) (*CloseoutBuyResponse, error)
+
+	// CloseoutGetWithResponse One closeout, with the binding total
+	//
+	// A single closeout plus `totalPrice` — the closeout price plus the registration year that comes with it. That total is what `/closeout/buy` will charge and what it expects back as `cost`.
+	//
+	// `localDomain` tells you which side of the pricing you are on: true means the name is already at Porkbun and is renewed, false means it is transferred in. `available` is false once somebody has claimed it.
+	//
+	// Returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with GET /closeout/get/{domain} (the `CloseoutGet` operationId).
+	CloseoutGetWithResponse(ctx context.Context, domain string, reqEditors ...RequestEditorFn) (*CloseoutGetResponse, error)
+
+	// CloseoutSearchWithResponse Search expired-domain closeouts
+	//
+	// Search the closeout inventory. Closeouts are expired domains that did not sell at auction and are now offered at a fixed, descending price — there is no bidding, the first buyer at the current price takes the name.
+	//
+	// Every filter is optional; with none you get the first page of the whole list plus `totalAvailable`. Page with `start`/`limit` until `start >= totalAvailable`.
+	//
+	// **`age` and `registrationDate` are on every row and both are sortable.** On the website the inventory is paginated by price tier and registration date is not shown, so finding aged names means walking several tier pages and then doing a WHOIS lookup per candidate. `sortName=registrationDate&sortDirection=asc` returns the oldest registrations first in one call.
+	//
+	// `price` is the closeout price alone. The binding total adds the renewal or transfer year you are also buying, and comes from `/closeout/get/{domain}` — it cannot be derived from search results, because a domain already at Porkbun is renewed while anything else is transferred in, and those are priced differently.
+	//
+	// Returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with GET /closeout/search (the `CloseoutSearch` operationId).
+	CloseoutSearchWithResponse(ctx context.Context, params *CloseoutSearchParams, reqEditors ...RequestEditorFn) (*CloseoutSearchResponse, error)
+
 	// CloudflareConnectWithBodyWithResponse Queue domains to move to the customer's Cloudflare account
 	//
 	// Queue one or many domains. For each one we create the zone in the customer's own Cloudflare account, copy across the DNS records we hold, and repoint the registry nameservers at Cloudflare.
@@ -15304,7 +17775,7 @@ type ClientWithResponsesInterface interface {
 	//
 	// Requires an active Cloudflare connection (`CLOUDFLARE_NOT_CONNECTED` otherwise). Limits: 500 domains per call, 2000 domains per account per hour.
 	//
-	// After queueing, poll `/cloudflare/get/{domain}`: the row moves `queued` → `working` → `activating` → `connected`. `activating` means the nameservers are already repointed and Cloudflare is confirming the zone, which can take a while as DNS propagates.
+	// After queueing, poll `/cloudflare/get/{domain}`: the row moves `queued` → `working` → `setup` → `activating` → `connected`. `setup` means Cloudflare has the zone but has not provisioned it yet, so the nameservers have deliberately not been touched. `activating` means the nameservers are already repointed and Cloudflare is confirming the zone, which can take a while as DNS propagates.
 	//
 	// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
 	//
@@ -15327,7 +17798,7 @@ type ClientWithResponsesInterface interface {
 	//
 	// Requires an active Cloudflare connection (`CLOUDFLARE_NOT_CONNECTED` otherwise). Limits: 500 domains per call, 2000 domains per account per hour.
 	//
-	// After queueing, poll `/cloudflare/get/{domain}`: the row moves `queued` → `working` → `activating` → `connected`. `activating` means the nameservers are already repointed and Cloudflare is confirming the zone, which can take a while as DNS propagates.
+	// After queueing, poll `/cloudflare/get/{domain}`: the row moves `queued` → `working` → `setup` → `activating` → `connected`. `setup` means Cloudflare has the zone but has not provisioned it yet, so the nameservers have deliberately not been touched. `activating` means the nameservers are already repointed and Cloudflare is confirming the zone, which can take a while as DNS propagates.
 	//
 	// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
 	//
@@ -15419,12 +17890,14 @@ type ClientWithResponsesInterface interface {
 	// |--------|---------|----------|
 	// | `queued` | accepted, waiting for the worker | no |
 	// | `working` | a run is touching this row right now | no |
-	// | `activating` | nameservers repointed; waiting for Cloudflare to mark the zone active. Legitimately slow (registry + resolver propagation) — allow up to 24h | no |
+	// | `setup` | the zone exists in the customer's Cloudflare account but Cloudflare has not provisioned it yet (`initializing`). **The nameservers have not been touched** — the domain still resolves from Porkbun. Cloudflare can sit here for hours when an account has a backlog of zones it never activated | no |
+	// | `activating` | nameservers repointed; waiting for Cloudflare to mark the zone active. Legitimately slow (registry + resolver propagation) — allow up to 72h, and a real move has been observed taking 59h | no |
 	// | `connected` / `done` | the move finished | **yes** |
 	// | `skipped` | not moved, and `message` says why (DNSSEC live, custom nameservers, no longer in the account) | **yes** |
-	// | `failed` / `error` | the move did not complete; `message` says why. Re-queue with `/cloudflare/retry/{domain}` | **yes** |
+	// | `failed` / `error` | the move did not complete; `message` says why. Re-queue with `/cloudflare/retry/{domain}` | **yes**, with one exception: a row that failed waiting on Cloudflare is re-checked for up to 30 days, so it can still close out as `connected` (or have its `message` updated to say it is now retryable) if Cloudflare activates the zone late |
+	// | `undone` | the nameservers were put back on Porkbun — either the customer undid the move, or the domain stopped resolving while Cloudflare had not activated it yet and we restored it without waiting for the deadline | **yes** |
 	//
-	// Poll on a sensible interval (a few seconds early on, then back off) — a zone typically leaves `queued` within seconds but can sit in `activating` while DNS propagates.
+	// Poll on a sensible interval (a few seconds early on, then back off) — a zone typically leaves `queued` within seconds but can sit in `setup` or `activating` while Cloudflare provisions the zone and DNS propagates.
 	//
 	// Returns a wrapper object for the known response body format(s).
 	//
@@ -15454,12 +17927,14 @@ type ClientWithResponsesInterface interface {
 	// |--------|---------|----------|
 	// | `queued` | accepted, waiting for the worker | no |
 	// | `working` | a run is touching this row right now | no |
-	// | `activating` | nameservers repointed; waiting for Cloudflare to mark the zone active. Legitimately slow (registry + resolver propagation) — allow up to 24h | no |
+	// | `setup` | the zone exists in the customer's Cloudflare account but Cloudflare has not provisioned it yet (`initializing`). **The nameservers have not been touched** — the domain still resolves from Porkbun. Cloudflare can sit here for hours when an account has a backlog of zones it never activated | no |
+	// | `activating` | nameservers repointed; waiting for Cloudflare to mark the zone active. Legitimately slow (registry + resolver propagation) — allow up to 72h, and a real move has been observed taking 59h | no |
 	// | `connected` / `done` | the move finished | **yes** |
 	// | `skipped` | not moved, and `message` says why (DNSSEC live, custom nameservers, no longer in the account) | **yes** |
-	// | `failed` / `error` | the move did not complete; `message` says why. Re-queue with `/cloudflare/retry/{domain}` | **yes** |
+	// | `failed` / `error` | the move did not complete; `message` says why. Re-queue with `/cloudflare/retry/{domain}` | **yes**, with one exception: a row that failed waiting on Cloudflare is re-checked for up to 30 days, so it can still close out as `connected` (or have its `message` updated to say it is now retryable) if Cloudflare activates the zone late |
+	// | `undone` | the nameservers were put back on Porkbun — either the customer undid the move, or the domain stopped resolving while Cloudflare had not activated it yet and we restored it without waiting for the deadline | **yes** |
 	//
-	// Poll on a sensible interval (a few seconds early on, then back off) — a zone typically leaves `queued` within seconds but can sit in `activating` while DNS propagates.
+	// Poll on a sensible interval (a few seconds early on, then back off) — a zone typically leaves `queued` within seconds but can sit in `setup` or `activating` while Cloudflare provisions the zone and DNS propagates.
 	//
 	// Returns a wrapper object for the known response body format(s).
 	//
@@ -15625,6 +18100,8 @@ type ClientWithResponsesInterface interface {
 	//
 	// Create a DNSSEC DS or key record at the registry. DNSSEC requirements vary by registry — `keyTag`, `alg`, `digestType`, and `digest` are the minimum required fields. Key data fields are optional and will be omitted if not accepted by the registry.
 	//
+	// Algorithm and digest type are validated against the registry's own policy before the request is sent. Registries are retiring the values deprecated by RFC 9904/9905/9906 on different schedules, so what is accepted depends on the TLD: a value one registry has already dropped may still be accepted by another. A value the registry no longer accepts returns `DNSSEC_ALGORITHM_DEPRECATED`; one that still works but is being retired returns `status: SUCCESS` with a `warnings` array. Use algorithm 8 (RSA/SHA-256) or 13 (ECDSA/SHA-256) with digest type 2 (SHA-256) to be accepted everywhere. Existing DNSSEC records keep resolving regardless, and can always be deleted.
+	//
 	// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
 	//
 	// Corresponds with POST /dns/createDnssecRecord/{domain} (the `DnsCreateDnssecRecord` operationId).
@@ -15633,6 +18110,8 @@ type ClientWithResponsesInterface interface {
 	// DnsCreateDnssecRecordWithResponse Create DNSSEC record
 	//
 	// Create a DNSSEC DS or key record at the registry. DNSSEC requirements vary by registry — `keyTag`, `alg`, `digestType`, and `digest` are the minimum required fields. Key data fields are optional and will be omitted if not accepted by the registry.
+	//
+	// Algorithm and digest type are validated against the registry's own policy before the request is sent. Registries are retiring the values deprecated by RFC 9904/9905/9906 on different schedules, so what is accepted depends on the TLD: a value one registry has already dropped may still be accepted by another. A value the registry no longer accepts returns `DNSSEC_ALGORITHM_DEPRECATED`; one that still works but is being retired returns `status: SUCCESS` with a `warnings` array. Use algorithm 8 (RSA/SHA-256) or 13 (ECDSA/SHA-256) with digest type 2 (SHA-256) to be accepted everywhere. Existing DNSSEC records keep resolving regardless, and can always be deleted.
 	//
 	// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
 	//
@@ -15692,6 +18171,40 @@ type ClientWithResponsesInterface interface {
 	//
 	// Corresponds with POST /dns/deleteDnssecRecord/{domain}/{keytag} (the `DnsDeleteDnssecRecord` operationId).
 	DnsDeleteDnssecRecordWithResponse(ctx context.Context, domain string, keytag string, body DnsDeleteDnssecRecordJSONRequestBody, reqEditors ...RequestEditorFn) (*DnsDeleteDnssecRecordResponse, error)
+
+	// DnsDiffWithBodyWithResponse Compare a restore point with the live zone
+	//
+	// What changed between a restore point and the zone as it stands now.
+	//
+	// - `missing` -- in the restore point, not live. These are the records a restore would add back.
+	// - `extra` -- live, not in the restore point. A restore leaves these alone unless you pass `prune`.
+	// - `inSync` -- true when neither list has anything in it.
+	//
+	// Records are compared on **name, type, content and priority**, not on id: an id means nothing across a delete and re-create, and what anyone means by "the same record" is the data. SOA and NS are excluded from both lists because they are the zone's own scaffolding.
+	//
+	// For masked records (parking, `ALIAS`, `HTTPS`) the value shown is the one you configured, not the internal host it resolves to.
+	//
+	// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with GET /dns/diff/{domain}/{snapshotId} (the `DnsDiff` operationId).
+	DnsDiffWithBodyWithResponse(ctx context.Context, domain string, snapshotId int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*DnsDiffResponse2, error)
+
+	// DnsDiffWithResponse Compare a restore point with the live zone
+	//
+	// What changed between a restore point and the zone as it stands now.
+	//
+	// - `missing` -- in the restore point, not live. These are the records a restore would add back.
+	// - `extra` -- live, not in the restore point. A restore leaves these alone unless you pass `prune`.
+	// - `inSync` -- true when neither list has anything in it.
+	//
+	// Records are compared on **name, type, content and priority**, not on id: an id means nothing across a delete and re-create, and what anyone means by "the same record" is the data. SOA and NS are excluded from both lists because they are the zone's own scaffolding.
+	//
+	// For masked records (parking, `ALIAS`, `HTTPS`) the value shown is the one you configured, not the internal host it resolves to.
+	//
+	// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with GET /dns/diff/{domain}/{snapshotId} (the `DnsDiff` operationId).
+	DnsDiffWithResponse(ctx context.Context, domain string, snapshotId int64, body DnsDiffJSONRequestBody, reqEditors ...RequestEditorFn) (*DnsDiffResponse2, error)
 
 	// DnsEditWithBodyWithResponse Edit DNS record by ID
 	//
@@ -15755,6 +18268,158 @@ type ClientWithResponsesInterface interface {
 	//
 	// Corresponds with POST /dns/getDnssecRecords/{domain} (the `DnsGetDnssecRecords` operationId).
 	DnsGetDnssecRecordsWithResponse(ctx context.Context, domain string, body DnsGetDnssecRecordsJSONRequestBody, reqEditors ...RequestEditorFn) (*DnsGetDnssecRecordsResponse, error)
+
+	// DnsHistoryWithBodyWithResponse List restore points for a zone
+	//
+	// Every version of a zone we still hold, newest first.
+	//
+	// **DNS is the only part of a stack with no undo, and this is it.** If a record was deleted or edited by mistake, you do not have to know what it used to say -- ask for the restore points, diff one against the live zone, and put it back.
+	//
+	// Restore points are taken automatically: before the **first** write to a zone in each hour (so a session of edits costs one point, not one per record), before any bulk import or zone wipe, and before any restore. `recordCount` is the size of the zone **as it was at that moment**, not now.
+	//
+	// `matchesLive` tells you which point the zone currently sits on without diffing each one. Up to 50 are returned.
+	//
+	// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with GET /dns/history/{domain} (the `DnsHistory` operationId).
+	DnsHistoryWithBodyWithResponse(ctx context.Context, domain string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*DnsHistoryResponse2, error)
+
+	// DnsHistoryWithResponse List restore points for a zone
+	//
+	// Every version of a zone we still hold, newest first.
+	//
+	// **DNS is the only part of a stack with no undo, and this is it.** If a record was deleted or edited by mistake, you do not have to know what it used to say -- ask for the restore points, diff one against the live zone, and put it back.
+	//
+	// Restore points are taken automatically: before the **first** write to a zone in each hour (so a session of edits costs one point, not one per record), before any bulk import or zone wipe, and before any restore. `recordCount` is the size of the zone **as it was at that moment**, not now.
+	//
+	// `matchesLive` tells you which point the zone currently sits on without diffing each one. Up to 50 are returned.
+	//
+	// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with GET /dns/history/{domain} (the `DnsHistory` operationId).
+	DnsHistoryWithResponse(ctx context.Context, domain string, body DnsHistoryJSONRequestBody, reqEditors ...RequestEditorFn) (*DnsHistoryResponse2, error)
+
+	// DnsImportWithBodyWithResponse Bulk-create DNS records (transfer restore)
+	//
+	// Create many records in one call, so a domain arriving from another registrar keeps resolving instead of going dark.
+	//
+	// Send `records` to import an exact list — the better path when the old registrar has an API you can read with your own credentials. Omit `records` entirely and whatever `/dns/scan/{domain}` can discover is imported instead.
+	//
+	// **Idempotent.** A record that already exists is counted in `skipped`, not `failed`, so this is safe to re-run and safe to use as a converge step. Records that fail individually are listed in `failures` while the rest still import; the call only errors outright if nothing was importable.
+	//
+	// Imported records do nothing until the domain actually points at the Porkbun nameservers — check `/domain/getNs/{domain}` and set them with `/domain/updateNs/{domain}`. Maximum 500 records per call. Supports `dryRun`.
+	//
+	// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with POST /dns/import/{domain} (the `DnsImport` operationId).
+	DnsImportWithBodyWithResponse(ctx context.Context, domain string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*DnsImportResponse, error)
+
+	// DnsImportWithResponse Bulk-create DNS records (transfer restore)
+	//
+	// Create many records in one call, so a domain arriving from another registrar keeps resolving instead of going dark.
+	//
+	// Send `records` to import an exact list — the better path when the old registrar has an API you can read with your own credentials. Omit `records` entirely and whatever `/dns/scan/{domain}` can discover is imported instead.
+	//
+	// **Idempotent.** A record that already exists is counted in `skipped`, not `failed`, so this is safe to re-run and safe to use as a converge step. Records that fail individually are listed in `failures` while the rest still import; the call only errors outright if nothing was importable.
+	//
+	// Imported records do nothing until the domain actually points at the Porkbun nameservers — check `/domain/getNs/{domain}` and set them with `/domain/updateNs/{domain}`. Maximum 500 records per call. Supports `dryRun`.
+	//
+	// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with POST /dns/import/{domain} (the `DnsImport` operationId).
+	DnsImportWithResponse(ctx context.Context, domain string, body DnsImportJSONRequestBody, reqEditors ...RequestEditorFn) (*DnsImportResponse, error)
+
+	// DnsPreflightWithBodyWithResponse Check whether a change will break the domain
+	//
+	// Read-only. Answers the question of whether a change is about to break the domain, before you change delegation, transfer it out, or turn DNSSEC on. It changes nothing and spends nothing.
+	//
+	// **Every check here comes from an incident we actually had**, which is the point: these are the failures where a zone looks fine and stops working anyway, and nobody can say why afterwards. Each finding names the rule it comes from and carries a `next_action`, so it argues its case rather than asserting a verdict.
+	//
+	// Pass `intent` to scope it: `general` (default) runs everything applicable, `move-nameservers` adds the delegation checks, `transfer-out` adds the checks that matter when leaving, `enable-dnssec` the DNSSEC ones.
+	//
+	// Read `blockers` first -- those will break something. `warnings` will not break outright but are usually what the customer asks about next. `safe` is true only when both lists are empty.
+	//
+	// | id | severity | what it catches |
+	// |----|----------|-----------------|
+	// | `dnssec-active` | blocker | DS records are published, so new nameservers serve answers that do not match them and validating resolvers refuse the whole zone. The domain goes dark rather than degrading. Remove DNSSEC, wait for the DS TTL, then move. |
+	// | `dnssec-unknown` | warning | the registry did not answer conclusively. Do not read that as an absence of DNSSEC. |
+	// | `cname-exclusivity` | blocker | a CNAME sharing a name with another record type, which RFC 1034 forbids and resolvers handle inconsistently. |
+	// | `spf-duplicate` | blocker | more than one apex SPF record: a permerror under RFC 7208 4.5 that makes receivers fail the check for every sender. |
+	// | `spf-lookups` | blocker | an SPF chain over the ten DNS lookups RFC 7208 4.6.4 allows, which is also a permerror. |
+	// | `mx-undeliverable` | blocker | an apex MX pointing somewhere unreachable such as localhost, so mail bounces or vanishes. |
+	// | `wildcard-shadowed` | warning | names that exist only because of an MX or TXT record. Under RFC 4592 a wildcard answers only names that do NOT exist, so those names stop inheriting the wildcard address and go dark with nothing in the zone looking wrong. |
+	// | `apex-resolves` | warning | nothing answers at the bare domain. |
+	// | `zone-size` | warning | within 10 percent of the 2,500-record limit. |
+	// | `nameservers-ours` | warning | the domain is delegated to nameservers we do not operate, or to a mix of ours and someone else's -- so the zone you are inspecting is not what the world resolves. Writes to it keep succeeding and change nothing visible. |
+	// | `cloudflare-zone` | info | the zone is served through Cloudflare, which can lag briefly after a delegation change. |
+	//
+	// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with GET /dns/preflight/{domain} (the `DnsPreflight` operationId).
+	DnsPreflightWithBodyWithResponse(ctx context.Context, domain string, params *DnsPreflightParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*DnsPreflightResponse2, error)
+
+	// DnsPreflightWithResponse Check whether a change will break the domain
+	//
+	// Read-only. Answers the question of whether a change is about to break the domain, before you change delegation, transfer it out, or turn DNSSEC on. It changes nothing and spends nothing.
+	//
+	// **Every check here comes from an incident we actually had**, which is the point: these are the failures where a zone looks fine and stops working anyway, and nobody can say why afterwards. Each finding names the rule it comes from and carries a `next_action`, so it argues its case rather than asserting a verdict.
+	//
+	// Pass `intent` to scope it: `general` (default) runs everything applicable, `move-nameservers` adds the delegation checks, `transfer-out` adds the checks that matter when leaving, `enable-dnssec` the DNSSEC ones.
+	//
+	// Read `blockers` first -- those will break something. `warnings` will not break outright but are usually what the customer asks about next. `safe` is true only when both lists are empty.
+	//
+	// | id | severity | what it catches |
+	// |----|----------|-----------------|
+	// | `dnssec-active` | blocker | DS records are published, so new nameservers serve answers that do not match them and validating resolvers refuse the whole zone. The domain goes dark rather than degrading. Remove DNSSEC, wait for the DS TTL, then move. |
+	// | `dnssec-unknown` | warning | the registry did not answer conclusively. Do not read that as an absence of DNSSEC. |
+	// | `cname-exclusivity` | blocker | a CNAME sharing a name with another record type, which RFC 1034 forbids and resolvers handle inconsistently. |
+	// | `spf-duplicate` | blocker | more than one apex SPF record: a permerror under RFC 7208 4.5 that makes receivers fail the check for every sender. |
+	// | `spf-lookups` | blocker | an SPF chain over the ten DNS lookups RFC 7208 4.6.4 allows, which is also a permerror. |
+	// | `mx-undeliverable` | blocker | an apex MX pointing somewhere unreachable such as localhost, so mail bounces or vanishes. |
+	// | `wildcard-shadowed` | warning | names that exist only because of an MX or TXT record. Under RFC 4592 a wildcard answers only names that do NOT exist, so those names stop inheriting the wildcard address and go dark with nothing in the zone looking wrong. |
+	// | `apex-resolves` | warning | nothing answers at the bare domain. |
+	// | `zone-size` | warning | within 10 percent of the 2,500-record limit. |
+	// | `nameservers-ours` | warning | the domain is delegated to nameservers we do not operate, or to a mix of ours and someone else's -- so the zone you are inspecting is not what the world resolves. Writes to it keep succeeding and change nothing visible. |
+	// | `cloudflare-zone` | info | the zone is served through Cloudflare, which can lag briefly after a delegation change. |
+	//
+	// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with GET /dns/preflight/{domain} (the `DnsPreflight` operationId).
+	DnsPreflightWithResponse(ctx context.Context, domain string, params *DnsPreflightParams, body DnsPreflightJSONRequestBody, reqEditors ...RequestEditorFn) (*DnsPreflightResponse2, error)
+
+	// DnsRestoreWithBodyWithResponse Restore a zone to a previous state
+	//
+	// Put a zone back to a restore point.
+	//
+	// **What it does by default:** adds back every record in the restore point that is not live now. It does **not** remove records you have added since -- pass `prune: true` for that. "Restore my records" usually means "put back what I lost", not "delete everything I have done since", so the destructive half is opt-in.
+	//
+	// **This is itself reversible.** The zone's current state is snapshotted before anything changes and the new point's id comes back as `previousStateSavedAs`, so an unwanted restore is undone by restoring that.
+	//
+	// **Read `failed`.** Parking records and other masked types (`ALIAS`, `HTTPS`) are managed by another part of the platform and cannot be recreated this way. They come back named in `failed` rather than being counted as restored, so `restored` is a true count. SOA and NS are never touched.
+	//
+	// Supports `dryRun: true`, which reports exactly what would be added and removed and changes nothing.
+	//
+	// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with POST /dns/restore/{domain} (the `DnsRestore` operationId).
+	DnsRestoreWithBodyWithResponse(ctx context.Context, domain string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*DnsRestoreResponse2, error)
+
+	// DnsRestoreWithResponse Restore a zone to a previous state
+	//
+	// Put a zone back to a restore point.
+	//
+	// **What it does by default:** adds back every record in the restore point that is not live now. It does **not** remove records you have added since -- pass `prune: true` for that. "Restore my records" usually means "put back what I lost", not "delete everything I have done since", so the destructive half is opt-in.
+	//
+	// **This is itself reversible.** The zone's current state is snapshotted before anything changes and the new point's id comes back as `previousStateSavedAs`, so an unwanted restore is undone by restoring that.
+	//
+	// **Read `failed`.** Parking records and other masked types (`ALIAS`, `HTTPS`) are managed by another part of the platform and cannot be recreated this way. They come back named in `failed` rather than being counted as restored, so `restored` is a true count. SOA and NS are never touched.
+	//
+	// Supports `dryRun: true`, which reports exactly what would be added and removed and changes nothing.
+	//
+	// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with POST /dns/restore/{domain} (the `DnsRestore` operationId).
+	DnsRestoreWithResponse(ctx context.Context, domain string, body DnsRestoreJSONRequestBody, reqEditors ...RequestEditorFn) (*DnsRestoreResponse2, error)
 
 	// GetDnsRecordsWithResponse Retrieve all DNS records
 	//
@@ -15837,6 +18502,19 @@ type ClientWithResponsesInterface interface {
 	// Corresponds with POST /dns/retrieveByNameType/{domain}/{type}/{subdomain} (the `DnsRetrieveByNameType` operationId).
 	DnsRetrieveByNameTypeWithResponse(ctx context.Context, domain string, pType string, subdomain string, body DnsRetrieveByNameTypeJSONRequestBody, reqEditors ...RequestEditorFn) (*DnsRetrieveByNameTypeResponse, error)
 
+	// DnsScanWithResponse Discover the records a domain currently publishes
+	//
+	// Query a domain's **live authoritative nameservers** and return the records they answer with, writing nothing. This is what makes an inbound transfer non-destructive: a transfer moves only the delegation — EPP carries no zone data — so once the losing registrar stops answering for the zone, whatever it published is gone and unrecoverable. Run this **before** the nameservers move, then pass the result to `/dns/import/{domain}`.
+	//
+	// The scan probes a wide list of well-known names (apex, common subdomains, MX, DKIM selectors, provider verification hosts) and consolidates wildcards. It cannot enumerate a zone — DNS has no listing operation and AXFR is universally refused — so treat it as thorough but **not exhaustive**. If the old registrar exposes the zone through its own API, that is authoritative: read it with your own credentials (they never need to reach Porkbun) and POST those records to `/dns/import` instead.
+	//
+	// Metered separately at 20 calls per hour per account, because each call is roughly 90 DNS lookups.
+	//
+	// Returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with GET /dns/scan/{domain} (the `DnsScan` operationId).
+	DnsScanWithResponse(ctx context.Context, domain string, reqEditors ...RequestEditorFn) (*DnsScanResponse, error)
+
 	// DomainAddUrlForwardWithBodyWithResponse Add URL forward
 	//
 	// Add a URL forward for a domain or subdomain.
@@ -15855,11 +18533,62 @@ type ClientWithResponsesInterface interface {
 	// Corresponds with POST /domain/addUrlForward/{domain} (the `DomainAddUrlForward` operationId).
 	DomainAddUrlForwardWithResponse(ctx context.Context, domain string, body DomainAddUrlForwardJSONRequestBody, reqEditors ...RequestEditorFn) (*DomainAddUrlForwardResponse, error)
 
+	// DomainCancelTransferWithResponse Cancel an inbound transfer and refund it
+	//
+	// Cancel a pending inbound transfer and refund the order. The sequence is deliberate: mark the transfer cancelled locally, withdraw it at the registry, **verify** the registry actually accepted the withdrawal, and only then refund. If the registry state cannot be confirmed the local row is restored and `TRANSFER_STATE_UNCONFIRMED` is returned rather than refunding a transfer that may still be live.
+	//
+	// The response reports `withdrawnAtRegistry`, `registryResultCode`, `refunded` and `refundAmount` so you can see exactly how far it got. Supports `dryRun`.
+	//
+	// Returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with POST /domain/cancelTransfer/{domain} (the `DomainCancelTransfer` operationId).
+	DomainCancelTransferWithResponse(ctx context.Context, domain string, reqEditors ...RequestEditorFn) (*DomainCancelTransferResponse, error)
+
+	// DomainCheckDomainBulkWithBodyWithResponse Check several domains at once
+	//
+	// Check availability and pricing for up to 25 domains in one call. Same endpoint as the single check, with a `domains` array in the body and no domain in the path.
+	//
+	// **Prefer this over looping the single check.** Checks are chunked per registry, so a batch is materially less work for us than the same names one at a time, and the budget reflects that: this draws on a separate allowance of **200 domains per 60 seconds** per account, against 10 checks per 10 seconds for the single form. Counting is per DOMAIN, not per request, so 25 domains spends 25 of the 200.
+	//
+	// **Partial results are normal and must be read.** Three lists come back and they mean different things:
+	// - `domains` - answered, keyed by domain name, each value identical in shape to the single-check `response`.
+	// - `invalid` - entries that are not checkable at all (not a domain, unsupported TLD). One typo does not fail the call; the other names are still answered.
+	// - `unresolved` - the registry did not answer in time. These are **neither available nor taken**; treating them as unavailable is wrong. Retry them.
+	//
+	// Duplicates are removed before the budget is charged. If more than 25 remain, nothing is checked and `BULK_CHECK_TOO_MANY` is returned rather than a truncated answer.
+	//
+	// **Latency.** This is synchronous: one request, one complete answer, no polling. 25 domains across 25 different TLDs measures around 3 seconds, because the connection manager fans a batch that fits under every registry's cap out as a single command. A few registries cap low and **.de accepts one domain per command**, so a batch heavy in those becomes several sequential commands; if that would need more than 4, the call is refused with `BULK_CHECK_TOO_SLOW` rather than left to time out mid-response.
+	//
+	// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with POST /domain/checkDomain (the `DomainCheckDomainBulk` operationId).
+	DomainCheckDomainBulkWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*DomainCheckDomainBulkResponse, error)
+
+	// DomainCheckDomainBulkWithResponse Check several domains at once
+	//
+	// Check availability and pricing for up to 25 domains in one call. Same endpoint as the single check, with a `domains` array in the body and no domain in the path.
+	//
+	// **Prefer this over looping the single check.** Checks are chunked per registry, so a batch is materially less work for us than the same names one at a time, and the budget reflects that: this draws on a separate allowance of **200 domains per 60 seconds** per account, against 10 checks per 10 seconds for the single form. Counting is per DOMAIN, not per request, so 25 domains spends 25 of the 200.
+	//
+	// **Partial results are normal and must be read.** Three lists come back and they mean different things:
+	// - `domains` - answered, keyed by domain name, each value identical in shape to the single-check `response`.
+	// - `invalid` - entries that are not checkable at all (not a domain, unsupported TLD). One typo does not fail the call; the other names are still answered.
+	// - `unresolved` - the registry did not answer in time. These are **neither available nor taken**; treating them as unavailable is wrong. Retry them.
+	//
+	// Duplicates are removed before the budget is charged. If more than 25 remain, nothing is checked and `BULK_CHECK_TOO_MANY` is returned rather than a truncated answer.
+	//
+	// **Latency.** This is synchronous: one request, one complete answer, no polling. 25 domains across 25 different TLDs measures around 3 seconds, because the connection manager fans a batch that fits under every registry's cap out as a single command. A few registries cap low and **.de accepts one domain per command**, so a batch heavy in those becomes several sequential commands; if that would need more than 4, the call is refused with `BULK_CHECK_TOO_SLOW` rather than left to time out mid-response.
+	//
+	// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with POST /domain/checkDomain (the `DomainCheckDomainBulk` operationId).
+	DomainCheckDomainBulkWithResponse(ctx context.Context, body DomainCheckDomainBulkJSONRequestBody, reqEditors ...RequestEditorFn) (*DomainCheckDomainBulkResponse, error)
+
 	// DomainCheckDomainWithBodyWithResponse Check domain availability
 	//
 	// Check if a domain is available for registration and retrieve current pricing. Includes registration, renewal, and transfer prices.
 	//
-	// **Rate limit:** Configurable per API key. Default is 1 check per 10 seconds per account. Rate limit usage is returned in the `limits` field of the response.
+	// **Rate limit:** Configurable per API key. Default is 10 checks per 10 seconds per account (raised from 1 per 10 seconds in 3.29). The window is intentionally 10 seconds rather than 1, so a batch of candidate names can be checked back-to-back. `/domain/checkSingleDomain` draws on the same budget. Rate limit usage is returned in the `limits` field of the response.
 	//
 	// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
 	//
@@ -15870,7 +18599,7 @@ type ClientWithResponsesInterface interface {
 	//
 	// Check if a domain is available for registration and retrieve current pricing. Includes registration, renewal, and transfer prices.
 	//
-	// **Rate limit:** Configurable per API key. Default is 1 check per 10 seconds per account. Rate limit usage is returned in the `limits` field of the response.
+	// **Rate limit:** Configurable per API key. Default is 10 checks per 10 seconds per account (raised from 1 per 10 seconds in 3.29). The window is intentionally 10 seconds rather than 1, so a batch of candidate names can be checked back-to-back. `/domain/checkSingleDomain` draws on the same budget. Rate limit usage is returned in the `limits` field of the response.
 	//
 	// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
 	//
@@ -15892,8 +18621,8 @@ type ClientWithResponsesInterface interface {
 	// **WHOIS privacy.** WHOIS privacy is automatically enabled on new registrations (when the TLD supports it). Pass the optional `whoisPrivacy` field to override this on a per-registration basis, or change the account-level default under Account Security Settings on porkbun.com/account.
 	//
 	// **Rate limits (both apply):**
-	// - Attempt limit (default: 1 attempt per 10 seconds per account)
-	// - Success limit (default: 50 successful registrations per 86400 seconds per account)
+	// - Attempt limit (default: 1 attempt per second per account)
+	// - Success limit (default: 1000 successful registrations per 86400 seconds per account)
 	//
 	// Both limits are configurable per API key and their current values are returned in the `limits` field of the response.
 	//
@@ -15941,8 +18670,8 @@ type ClientWithResponsesInterface interface {
 	// **WHOIS privacy.** WHOIS privacy is automatically enabled on new registrations (when the TLD supports it). Pass the optional `whoisPrivacy` field to override this on a per-registration basis, or change the account-level default under Account Security Settings on porkbun.com/account.
 	//
 	// **Rate limits (both apply):**
-	// - Attempt limit (default: 1 attempt per 10 seconds per account)
-	// - Success limit (default: 50 successful registrations per 86400 seconds per account)
+	// - Attempt limit (default: 1 attempt per second per account)
+	// - Success limit (default: 1000 successful registrations per 86400 seconds per account)
 	//
 	// Both limits are configurable per API key and their current values are returned in the `limits` field of the response.
 	//
@@ -16076,7 +18805,7 @@ type ClientWithResponsesInterface interface {
 
 	// GetDomainNsWithResponse Get nameservers
 	//
-	// Retrieve the authoritative nameservers listed at the registry for the domain. Supports both GET (with header auth) and POST (with body or header auth).
+	// Retrieve the authoritative nameservers listed at the registry for the domain. Supports both GET (with header auth) and POST (with body or header auth). **Nameservers are an unordered set.** This reads live from the registry, and registries are free to return the set in any order — so the order here will often differ from the order you sent to `/domain/updateNs`. Order carries no meaning in DNS (an NS RRset is unordered, RFC 1034/2181) and is not preserved by the parent zone. Compare nameservers as a set; if you are writing a Terraform provider or similar, model this as a set, not an ordered list, or every plan will show phantom drift.
 	//
 	// Returns a wrapper object for the known response body format(s).
 	//
@@ -16085,7 +18814,7 @@ type ClientWithResponsesInterface interface {
 
 	// DomainGetNsWithBodyWithResponse Get nameservers
 	//
-	// Retrieve the authoritative nameservers listed at the registry for the domain. Supports both GET (with header auth) and POST (with body or header auth).
+	// Retrieve the authoritative nameservers listed at the registry for the domain. Supports both GET (with header auth) and POST (with body or header auth). **Nameservers are an unordered set.** This reads live from the registry, and registries are free to return the set in any order — so the order here will often differ from the order you sent to `/domain/updateNs`. Order carries no meaning in DNS (an NS RRset is unordered, RFC 1034/2181) and is not preserved by the parent zone. Compare nameservers as a set; if you are writing a Terraform provider or similar, model this as a set, not an ordered list, or every plan will show phantom drift.
 	//
 	// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
 	//
@@ -16094,7 +18823,7 @@ type ClientWithResponsesInterface interface {
 
 	// DomainGetNsWithResponse Get nameservers
 	//
-	// Retrieve the authoritative nameservers listed at the registry for the domain. Supports both GET (with header auth) and POST (with body or header auth).
+	// Retrieve the authoritative nameservers listed at the registry for the domain. Supports both GET (with header auth) and POST (with body or header auth). **Nameservers are an unordered set.** This reads live from the registry, and registries are free to return the set in any order — so the order here will often differ from the order you sent to `/domain/updateNs`. Order carries no meaning in DNS (an NS RRset is unordered, RFC 1034/2181) and is not preserved by the parent zone. Compare nameservers as a set; if you are writing a Terraform provider or similar, model this as a set, not an ordered list, or every plan will show phantom drift.
 	//
 	// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
 	//
@@ -16118,6 +18847,15 @@ type ClientWithResponsesInterface interface {
 	//
 	// Corresponds with GET /domain/getTransfer/{domain} (the `GetTransferGet` operationId).
 	GetTransferGetWithResponse(ctx context.Context, domain string, params *GetTransferGetParams, reqEditors ...RequestEditorFn) (*GetTransferGetResponse, error)
+
+	// DomainGetTransferSetupWithResponse State of an in-flight inbound transfer
+	//
+	// Where a pending inbound transfer is and what it is waiting on: whether it is held at `PENDINGDNS`, whether its DNS zone exists, how many records are in it, what the domain currently delegates to, and the next step to take. Use it to resume a no-downtime transfer without keeping state of your own.
+	//
+	// Returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with GET /domain/getTransferSetup/{domain} (the `DomainGetTransferSetup` operationId).
+	DomainGetTransferSetupWithResponse(ctx context.Context, domain string, reqEditors ...RequestEditorFn) (*DomainGetTransferSetupResponse, error)
 
 	// GetDomainUrlForwardingWithResponse List URL forwards
 	//
@@ -16221,6 +18959,15 @@ type ClientWithResponsesInterface interface {
 	// Corresponds with GET /domain/listTransfers (the `ListTransfersGet` operationId).
 	ListTransfersGetWithResponse(ctx context.Context, params *ListTransfersGetParams, reqEditors ...RequestEditorFn) (*ListTransfersGetResponse, error)
 
+	// DomainPrepareTransferWithResponse Create the DNS zone for a held transfer
+	//
+	// Create the Porkbun DNS zone for a domain whose inbound transfer is held at `PENDINGDNS`, so records can be added **before** the domain moves. The zone is created deliberately rather than as a side effect of the first record write. Returns the Porkbun nameservers to point the domain at. Then load the zone with `/dns/import/{domain}` (or the `/dns/*` endpoints) and release with `/domain/startTransfer/{domain}`. Supports `dryRun`.
+	//
+	// Returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with POST /domain/prepareTransfer/{domain} (the `DomainPrepareTransfer` operationId).
+	DomainPrepareTransferWithResponse(ctx context.Context, domain string, reqEditors ...RequestEditorFn) (*DomainPrepareTransferResponse, error)
+
 	// DomainRenewWithBodyWithResponse Renew a domain
 	//
 	// Renew a domain using account credit. Requirements:
@@ -16236,8 +18983,8 @@ type ClientWithResponsesInterface interface {
 	// Renewals are always for the registry-minimum duration (usually 1 year). Use `/domain/checkDomain/{domain}` with `priceType=renewal` to get the current price before renewing.
 	//
 	// **Rate limits (both apply):**
-	// - Attempt limit (default: 1 attempt per 10 seconds per account)
-	// - Success limit (default: 50 successful renewals per 86400 seconds per account)
+	// - Attempt limit (default: 1 attempt per second per account)
+	// - Success limit (default: 1000 successful renewals per 86400 seconds per account)
 	//
 	// Both limits are configurable per API key and their current values are returned in the `limits` field of the response.
 	//
@@ -16285,8 +19032,8 @@ type ClientWithResponsesInterface interface {
 	// Renewals are always for the registry-minimum duration (usually 1 year). Use `/domain/checkDomain/{domain}` with `priceType=renewal` to get the current price before renewing.
 	//
 	// **Rate limits (both apply):**
-	// - Attempt limit (default: 1 attempt per 10 seconds per account)
-	// - Success limit (default: 50 successful renewals per 86400 seconds per account)
+	// - Attempt limit (default: 1 attempt per second per account)
+	// - Success limit (default: 1000 successful renewals per 86400 seconds per account)
 	//
 	// Both limits are configurable per API key and their current values are returned in the `limits` field of the response.
 	//
@@ -16318,6 +19065,28 @@ type ClientWithResponsesInterface interface {
 	//
 	// Corresponds with POST /domain/renew/{domain} (the `DomainRenew` operationId).
 	DomainRenewWithResponse(ctx context.Context, domain string, body DomainRenewJSONRequestBody, reqEditors ...RequestEditorFn) (*DomainRenewResponse, error)
+
+	// DomainStartTransferWithBodyWithResponse Release a held transfer to the registry
+	//
+	// Release a transfer held at `PENDINGDNS` into the registry pipeline. Nothing releases a held transfer on a timer — this call is the only thing that does.
+	//
+	// Refuses with `TRANSFER_ZONE_EMPTY` if the zone has no records, which is the outage the hold exists to prevent. Pass `force: true` only if the domain genuinely needs no DNS at Porkbun. Supports `dryRun`.
+	//
+	// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with POST /domain/startTransfer/{domain} (the `DomainStartTransfer` operationId).
+	DomainStartTransferWithBodyWithResponse(ctx context.Context, domain string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*DomainStartTransferResponse, error)
+
+	// DomainStartTransferWithResponse Release a held transfer to the registry
+	//
+	// Release a transfer held at `PENDINGDNS` into the registry pipeline. Nothing releases a held transfer on a timer — this call is the only thing that does.
+	//
+	// Refuses with `TRANSFER_ZONE_EMPTY` if the zone has no records, which is the outage the hold exists to prevent. Pass `force: true` only if the domain genuinely needs no DNS at Porkbun. Supports `dryRun`.
+	//
+	// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with POST /domain/startTransfer/{domain} (the `DomainStartTransfer` operationId).
+	DomainStartTransferWithResponse(ctx context.Context, domain string, body DomainStartTransferJSONRequestBody, reqEditors ...RequestEditorFn) (*DomainStartTransferResponse, error)
 
 	// TransferDomainWithBodyWithResponse Initiate a domain transfer
 	//
@@ -16461,7 +19230,7 @@ type ClientWithResponsesInterface interface {
 
 	// DomainUpdateNsWithBodyWithResponse Update nameservers
 	//
-	// Update the nameservers for the domain at the registry.
+	// Update the nameservers for the domain at the registry. The list you send is applied as a set — the registry may store and return it in a different order, so do not expect `/domain/getNs` to echo your ordering back. See `/domain/getNs`.
 	//
 	// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
 	//
@@ -16470,12 +19239,34 @@ type ClientWithResponsesInterface interface {
 
 	// DomainUpdateNsWithResponse Update nameservers
 	//
-	// Update the nameservers for the domain at the registry.
+	// Update the nameservers for the domain at the registry. The list you send is applied as a set — the registry may store and return it in a different order, so do not expect `/domain/getNs` to echo your ordering back. See `/domain/getNs`.
 	//
 	// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
 	//
 	// Corresponds with POST /domain/updateNs/{domain} (the `DomainUpdateNs` operationId).
 	DomainUpdateNsWithResponse(ctx context.Context, domain string, body DomainUpdateNsJSONRequestBody, reqEditors ...RequestEditorFn) (*DomainUpdateNsResponse, error)
+
+	// DomainUpdateTransferAuthCodeWithBodyWithResponse Replace the auth code on a stuck transfer
+	//
+	// Replace the authorization code on an inbound transfer that stalled because the code was wrong, and re-queue it — instead of cancelling, refunding and re-submitting.
+	//
+	// The new code is validated against the registry before it is stored, so a bad code is rejected here (`INVALID_AUTH_CODE`) rather than failing again later. Only transfers in a repairable state qualify; anything else returns `TRANSFER_NOT_REPAIRABLE`. Supports `dryRun`.
+	//
+	// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with POST /domain/updateTransferAuthCode/{domain} (the `DomainUpdateTransferAuthCode` operationId).
+	DomainUpdateTransferAuthCodeWithBodyWithResponse(ctx context.Context, domain string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*DomainUpdateTransferAuthCodeResponse, error)
+
+	// DomainUpdateTransferAuthCodeWithResponse Replace the auth code on a stuck transfer
+	//
+	// Replace the authorization code on an inbound transfer that stalled because the code was wrong, and re-queue it — instead of cancelling, refunding and re-submitting.
+	//
+	// The new code is validated against the registry before it is stored, so a bad code is rejected here (`INVALID_AUTH_CODE`) rather than failing again later. Only transfers in a repairable state qualify; anything else returns `TRANSFER_NOT_REPAIRABLE`. Supports `dryRun`.
+	//
+	// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+	//
+	// Corresponds with POST /domain/updateTransferAuthCode/{domain} (the `DomainUpdateTransferAuthCode` operationId).
+	DomainUpdateTransferAuthCodeWithResponse(ctx context.Context, domain string, body DomainUpdateTransferAuthCodeJSONRequestBody, reqEditors ...RequestEditorFn) (*DomainUpdateTransferAuthCodeResponse, error)
 
 	// EmailSetPasswordWithBodyWithResponse Set email hosting password
 	//
@@ -17436,6 +20227,185 @@ func (r ApikeyRetrieveResponse) ContentType() string {
 	return ""
 }
 
+type CloseoutBuyResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *CloseoutBuy200JSONResponseBody
+	// JSON400 the response for an HTTP 400 `application/json` response
+	JSON400 *ErrorResponse
+	// JSON403 the response for an HTTP 403 `application/json` response
+	JSON403 *ErrorResponse
+	// JSON404 the response for an HTTP 404 `application/json` response
+	JSON404 *ErrorResponse
+	// JSON409 the response for an HTTP 409 `application/json` response
+	JSON409 *ErrorResponse
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r CloseoutBuyResponse) GetJSON200() *CloseoutBuy200JSONResponseBody {
+	return r.JSON200
+}
+
+// GetJSON400 returns the response for an HTTP 400 `application/json` response
+func (r CloseoutBuyResponse) GetJSON400() *ErrorResponse {
+	return r.JSON400
+}
+
+// GetJSON403 returns the response for an HTTP 403 `application/json` response
+func (r CloseoutBuyResponse) GetJSON403() *ErrorResponse {
+	return r.JSON403
+}
+
+// GetJSON404 returns the response for an HTTP 404 `application/json` response
+func (r CloseoutBuyResponse) GetJSON404() *ErrorResponse {
+	return r.JSON404
+}
+
+// GetJSON409 returns the response for an HTTP 409 `application/json` response
+func (r CloseoutBuyResponse) GetJSON409() *ErrorResponse {
+	return r.JSON409
+}
+
+// GetBody returns the raw response body bytes
+func (r CloseoutBuyResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r CloseoutBuyResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r CloseoutBuyResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r CloseoutBuyResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type CloseoutGetResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *CloseoutGet200JSONResponseBody
+	// JSON404 the response for an HTTP 404 `application/json` response
+	JSON404 *ErrorResponse
+	// JSON502 the response for an HTTP 502 `application/json` response
+	JSON502 *ErrorResponse
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r CloseoutGetResponse) GetJSON200() *CloseoutGet200JSONResponseBody {
+	return r.JSON200
+}
+
+// GetJSON404 returns the response for an HTTP 404 `application/json` response
+func (r CloseoutGetResponse) GetJSON404() *ErrorResponse {
+	return r.JSON404
+}
+
+// GetJSON502 returns the response for an HTTP 502 `application/json` response
+func (r CloseoutGetResponse) GetJSON502() *ErrorResponse {
+	return r.JSON502
+}
+
+// GetBody returns the raw response body bytes
+func (r CloseoutGetResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r CloseoutGetResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r CloseoutGetResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r CloseoutGetResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type CloseoutSearchResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *CloseoutSearch200JSONResponseBody
+	// JSON400 the response for an HTTP 400 `application/json` response
+	JSON400 *ErrorResponse
+	// JSON502 the response for an HTTP 502 `application/json` response
+	JSON502 *ErrorResponse
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r CloseoutSearchResponse) GetJSON200() *CloseoutSearch200JSONResponseBody {
+	return r.JSON200
+}
+
+// GetJSON400 returns the response for an HTTP 400 `application/json` response
+func (r CloseoutSearchResponse) GetJSON400() *ErrorResponse {
+	return r.JSON400
+}
+
+// GetJSON502 returns the response for an HTTP 502 `application/json` response
+func (r CloseoutSearchResponse) GetJSON502() *ErrorResponse {
+	return r.JSON502
+}
+
+// GetBody returns the raw response body bytes
+func (r CloseoutSearchResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r CloseoutSearchResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r CloseoutSearchResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r CloseoutSearchResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
 type CloudflareConnectResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -18185,13 +21155,13 @@ type DnsCreateDnssecRecordResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	// JSON200 the response for an HTTP 200 `application/json` response
-	JSON200 *BasicResponse
+	JSON200 *DnsCreateDnssecRecord200JSONResponseBody
 	// JSON400 the response for an HTTP 400 `application/json` response
 	JSON400 *ErrorResponse
 }
 
 // GetJSON200 returns the response for an HTTP 200 `application/json` response
-func (r DnsCreateDnssecRecordResponse) GetJSON200() *BasicResponse {
+func (r DnsCreateDnssecRecordResponse) GetJSON200() *DnsCreateDnssecRecord200JSONResponseBody {
 	return r.JSON200
 }
 
@@ -18367,6 +21337,54 @@ func (r DnsDeleteDnssecRecordResponse) StatusCode() int {
 
 // ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
 func (r DnsDeleteDnssecRecordResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type DnsDiffResponse2 struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *DnsDiffResponse
+	// JSON404 the response for an HTTP 404 `application/json` response
+	JSON404 *ErrorResponse
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r DnsDiffResponse2) GetJSON200() *DnsDiffResponse {
+	return r.JSON200
+}
+
+// GetJSON404 returns the response for an HTTP 404 `application/json` response
+func (r DnsDiffResponse2) GetJSON404() *ErrorResponse {
+	return r.JSON404
+}
+
+// GetBody returns the raw response body bytes
+func (r DnsDiffResponse2) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r DnsDiffResponse2) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r DnsDiffResponse2) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r DnsDiffResponse2) ContentType() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Header.Get("Content-Type")
 	}
@@ -18559,6 +21577,184 @@ func (r DnsGetDnssecRecordsResponse) StatusCode() int {
 
 // ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
 func (r DnsGetDnssecRecordsResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type DnsHistoryResponse2 struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *DnsHistoryResponse
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r DnsHistoryResponse2) GetJSON200() *DnsHistoryResponse {
+	return r.JSON200
+}
+
+// GetBody returns the raw response body bytes
+func (r DnsHistoryResponse2) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r DnsHistoryResponse2) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r DnsHistoryResponse2) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r DnsHistoryResponse2) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type DnsImportResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *DnsImport200JSONResponseBody
+	// JSON400 the response for an HTTP 400 `application/json` response
+	JSON400 *ErrorResponse
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r DnsImportResponse) GetJSON200() *DnsImport200JSONResponseBody {
+	return r.JSON200
+}
+
+// GetJSON400 returns the response for an HTTP 400 `application/json` response
+func (r DnsImportResponse) GetJSON400() *ErrorResponse {
+	return r.JSON400
+}
+
+// GetBody returns the raw response body bytes
+func (r DnsImportResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r DnsImportResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r DnsImportResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r DnsImportResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type DnsPreflightResponse2 struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *DnsPreflightResponse
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r DnsPreflightResponse2) GetJSON200() *DnsPreflightResponse {
+	return r.JSON200
+}
+
+// GetBody returns the raw response body bytes
+func (r DnsPreflightResponse2) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r DnsPreflightResponse2) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r DnsPreflightResponse2) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r DnsPreflightResponse2) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type DnsRestoreResponse2 struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *DnsRestoreResponse
+	// JSON404 the response for an HTTP 404 `application/json` response
+	JSON404 *ErrorResponse
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r DnsRestoreResponse2) GetJSON200() *DnsRestoreResponse {
+	return r.JSON200
+}
+
+// GetJSON404 returns the response for an HTTP 404 `application/json` response
+func (r DnsRestoreResponse2) GetJSON404() *ErrorResponse {
+	return r.JSON404
+}
+
+// GetBody returns the raw response body bytes
+func (r DnsRestoreResponse2) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r DnsRestoreResponse2) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r DnsRestoreResponse2) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r DnsRestoreResponse2) ContentType() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Header.Get("Content-Type")
 	}
@@ -18853,6 +22049,61 @@ func (r DnsRetrieveByNameTypeResponse) ContentType() string {
 	return ""
 }
 
+type DnsScanResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *DnsScan200JSONResponseBody
+	// JSON400 the response for an HTTP 400 `application/json` response
+	JSON400 *ErrorResponse
+	// JSON429 the response for an HTTP 429 `application/json` response
+	JSON429 *ErrorResponse
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r DnsScanResponse) GetJSON200() *DnsScan200JSONResponseBody {
+	return r.JSON200
+}
+
+// GetJSON400 returns the response for an HTTP 400 `application/json` response
+func (r DnsScanResponse) GetJSON400() *ErrorResponse {
+	return r.JSON400
+}
+
+// GetJSON429 returns the response for an HTTP 429 `application/json` response
+func (r DnsScanResponse) GetJSON429() *ErrorResponse {
+	return r.JSON429
+}
+
+// GetBody returns the raw response body bytes
+func (r DnsScanResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r DnsScanResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r DnsScanResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r DnsScanResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
 type DomainAddUrlForwardResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -18895,6 +22146,109 @@ func (r DomainAddUrlForwardResponse) StatusCode() int {
 
 // ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
 func (r DomainAddUrlForwardResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type DomainCancelTransferResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *DomainCancelTransfer200JSONResponseBody
+	// JSON400 the response for an HTTP 400 `application/json` response
+	JSON400 *ErrorResponse
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r DomainCancelTransferResponse) GetJSON200() *DomainCancelTransfer200JSONResponseBody {
+	return r.JSON200
+}
+
+// GetJSON400 returns the response for an HTTP 400 `application/json` response
+func (r DomainCancelTransferResponse) GetJSON400() *ErrorResponse {
+	return r.JSON400
+}
+
+// GetBody returns the raw response body bytes
+func (r DomainCancelTransferResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r DomainCancelTransferResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r DomainCancelTransferResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r DomainCancelTransferResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type DomainCheckDomainBulkResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *DomainCheckDomainBulk200JSONResponseBody
+	// JSON400 the response for an HTTP 400 `application/json` response
+	JSON400 *ErrorResponse
+	// JSON429 the response for an HTTP 429 `application/json` response
+	JSON429 *RateLimitExceeded
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r DomainCheckDomainBulkResponse) GetJSON200() *DomainCheckDomainBulk200JSONResponseBody {
+	return r.JSON200
+}
+
+// GetJSON400 returns the response for an HTTP 400 `application/json` response
+func (r DomainCheckDomainBulkResponse) GetJSON400() *ErrorResponse {
+	return r.JSON400
+}
+
+// GetJSON429 returns the response for an HTTP 429 `application/json` response
+func (r DomainCheckDomainBulkResponse) GetJSON429() *RateLimitExceeded {
+	return r.JSON429
+}
+
+// GetBody returns the raw response body bytes
+func (r DomainCheckDomainBulkResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r DomainCheckDomainBulkResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r DomainCheckDomainBulkResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r DomainCheckDomainBulkResponse) ContentType() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Header.Get("Content-Type")
 	}
@@ -19532,6 +22886,54 @@ func (r GetTransferGetResponse) ContentType() string {
 	return ""
 }
 
+type DomainGetTransferSetupResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *DomainGetTransferSetup200JSONResponseBody
+	// JSON400 the response for an HTTP 400 `application/json` response
+	JSON400 *ErrorResponse
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r DomainGetTransferSetupResponse) GetJSON200() *DomainGetTransferSetup200JSONResponseBody {
+	return r.JSON200
+}
+
+// GetJSON400 returns the response for an HTTP 400 `application/json` response
+func (r DomainGetTransferSetupResponse) GetJSON400() *ErrorResponse {
+	return r.JSON400
+}
+
+// GetBody returns the raw response body bytes
+func (r DomainGetTransferSetupResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r DomainGetTransferSetupResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r DomainGetTransferSetupResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r DomainGetTransferSetupResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
 type GetDomainUrlForwardingResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -19765,6 +23167,54 @@ func (r ListTransfersGetResponse) ContentType() string {
 	return ""
 }
 
+type DomainPrepareTransferResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *DomainPrepareTransfer200JSONResponseBody
+	// JSON400 the response for an HTTP 400 `application/json` response
+	JSON400 *ErrorResponse
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r DomainPrepareTransferResponse) GetJSON200() *DomainPrepareTransfer200JSONResponseBody {
+	return r.JSON200
+}
+
+// GetJSON400 returns the response for an HTTP 400 `application/json` response
+func (r DomainPrepareTransferResponse) GetJSON400() *ErrorResponse {
+	return r.JSON400
+}
+
+// GetBody returns the raw response body bytes
+func (r DomainPrepareTransferResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r DomainPrepareTransferResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r DomainPrepareTransferResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r DomainPrepareTransferResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
 type DomainRenewResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -19814,6 +23264,54 @@ func (r DomainRenewResponse) StatusCode() int {
 
 // ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
 func (r DomainRenewResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type DomainStartTransferResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *DomainStartTransfer200JSONResponseBody
+	// JSON400 the response for an HTTP 400 `application/json` response
+	JSON400 *ErrorResponse
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r DomainStartTransferResponse) GetJSON200() *DomainStartTransfer200JSONResponseBody {
+	return r.JSON200
+}
+
+// GetJSON400 returns the response for an HTTP 400 `application/json` response
+func (r DomainStartTransferResponse) GetJSON400() *ErrorResponse {
+	return r.JSON400
+}
+
+// GetBody returns the raw response body bytes
+func (r DomainStartTransferResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r DomainStartTransferResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r DomainStartTransferResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r DomainStartTransferResponse) ContentType() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Header.Get("Content-Type")
 	}
@@ -20047,6 +23545,54 @@ func (r DomainUpdateNsResponse) StatusCode() int {
 
 // ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
 func (r DomainUpdateNsResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type DomainUpdateTransferAuthCodeResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *DomainUpdateTransferAuthCode200JSONResponseBody
+	// JSON400 the response for an HTTP 400 `application/json` response
+	JSON400 *ErrorResponse
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r DomainUpdateTransferAuthCodeResponse) GetJSON200() *DomainUpdateTransferAuthCode200JSONResponseBody {
+	return r.JSON200
+}
+
+// GetJSON400 returns the response for an HTTP 400 `application/json` response
+func (r DomainUpdateTransferAuthCodeResponse) GetJSON400() *ErrorResponse {
+	return r.JSON400
+}
+
+// GetBody returns the raw response body bytes
+func (r DomainUpdateTransferAuthCodeResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r DomainUpdateTransferAuthCodeResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r DomainUpdateTransferAuthCodeResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r DomainUpdateTransferAuthCodeResponse) ContentType() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Header.Get("Content-Type")
 	}
@@ -22000,6 +25546,90 @@ func (c *ClientWithResponses) ApikeyRetrieveWithResponse(ctx context.Context, bo
 	return ParseApikeyRetrieveResponse(rsp)
 }
 
+// CloseoutBuyWithBodyWithResponse Buy a closeout outright
+//
+// **Spends account credit.** Buys a closeout at its current price and claims the name with the provider in one call. Send `cost` as the exact `totalPrice` from `/closeout/get/{domain}`; any other value is refused with `COST_MISMATCH` so a caller can never be charged a price it did not name. `dryRun: true` with `cost: 0` returns a quote and charges nothing. Honours `Idempotency-Key`.
+//
+// **The domain does not arrive immediately.** Claiming reserves it; the provider then has to release it, which usually takes a few days. Poll `/domain/listAll` or subscribe to the `domain.registered` webhook rather than expecting it in your account when this returns.
+//
+// Every post-charge failure refunds automatically and says so via `refunded: true` — including losing the race to another buyer (`CLOSEOUT_UNAVAILABLE`) and the price moving between quote and claim (`COST_MISMATCH`). Closeouts are first-come at a fixed price, so a lost race is not worth retrying on the same name.
+//
+// Not available with a sandbox key (`SANDBOX_UNSUPPORTED`): the inventory provider has no test environment, so a purchase cannot be rehearsed without claiming a real name. Use `dryRun` against a live key instead — it validates and prices without charging.
+//
+// Eligibility is the same as registering a domain, plus verified email and phone. There is no account-age or prior-order requirement — a first-time customer can buy a closeout, which matters because listings are first-come and often gone within minutes. An account that support has blocked from auctions and closeouts (past-due invoices, or an auction terms violation) returns `CLOSEOUT_NOT_ELIGIBLE`, which is not retryable.
+//
+// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
+//
+// Corresponds with POST /closeout/buy/{domain} (the `CloseoutBuy` operationId).
+func (c *ClientWithResponses) CloseoutBuyWithBodyWithResponse(ctx context.Context, domain string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CloseoutBuyResponse, error) {
+	rsp, err := c.CloseoutBuyWithBody(ctx, domain, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCloseoutBuyResponse(rsp)
+}
+
+// CloseoutBuyWithResponse Buy a closeout outright
+//
+// **Spends account credit.** Buys a closeout at its current price and claims the name with the provider in one call. Send `cost` as the exact `totalPrice` from `/closeout/get/{domain}`; any other value is refused with `COST_MISMATCH` so a caller can never be charged a price it did not name. `dryRun: true` with `cost: 0` returns a quote and charges nothing. Honours `Idempotency-Key`.
+//
+// **The domain does not arrive immediately.** Claiming reserves it; the provider then has to release it, which usually takes a few days. Poll `/domain/listAll` or subscribe to the `domain.registered` webhook rather than expecting it in your account when this returns.
+//
+// Every post-charge failure refunds automatically and says so via `refunded: true` — including losing the race to another buyer (`CLOSEOUT_UNAVAILABLE`) and the price moving between quote and claim (`COST_MISMATCH`). Closeouts are first-come at a fixed price, so a lost race is not worth retrying on the same name.
+//
+// Not available with a sandbox key (`SANDBOX_UNSUPPORTED`): the inventory provider has no test environment, so a purchase cannot be rehearsed without claiming a real name. Use `dryRun` against a live key instead — it validates and prices without charging.
+//
+// Eligibility is the same as registering a domain, plus verified email and phone. There is no account-age or prior-order requirement — a first-time customer can buy a closeout, which matters because listings are first-come and often gone within minutes. An account that support has blocked from auctions and closeouts (past-due invoices, or an auction terms violation) returns `CLOSEOUT_NOT_ELIGIBLE`, which is not retryable.
+//
+// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+//
+// Corresponds with POST /closeout/buy/{domain} (the `CloseoutBuy` operationId).
+func (c *ClientWithResponses) CloseoutBuyWithResponse(ctx context.Context, domain string, body CloseoutBuyJSONRequestBody, reqEditors ...RequestEditorFn) (*CloseoutBuyResponse, error) {
+	rsp, err := c.CloseoutBuy(ctx, domain, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCloseoutBuyResponse(rsp)
+}
+
+// CloseoutGetWithResponse One closeout, with the binding total
+//
+// A single closeout plus `totalPrice` — the closeout price plus the registration year that comes with it. That total is what `/closeout/buy` will charge and what it expects back as `cost`.
+//
+// `localDomain` tells you which side of the pricing you are on: true means the name is already at Porkbun and is renewed, false means it is transferred in. `available` is false once somebody has claimed it.
+//
+// Returns a wrapper object for the known response body format(s).
+//
+// Corresponds with GET /closeout/get/{domain} (the `CloseoutGet` operationId).
+func (c *ClientWithResponses) CloseoutGetWithResponse(ctx context.Context, domain string, reqEditors ...RequestEditorFn) (*CloseoutGetResponse, error) {
+	rsp, err := c.CloseoutGet(ctx, domain, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCloseoutGetResponse(rsp)
+}
+
+// CloseoutSearchWithResponse Search expired-domain closeouts
+//
+// Search the closeout inventory. Closeouts are expired domains that did not sell at auction and are now offered at a fixed, descending price — there is no bidding, the first buyer at the current price takes the name.
+//
+// Every filter is optional; with none you get the first page of the whole list plus `totalAvailable`. Page with `start`/`limit` until `start >= totalAvailable`.
+//
+// **`age` and `registrationDate` are on every row and both are sortable.** On the website the inventory is paginated by price tier and registration date is not shown, so finding aged names means walking several tier pages and then doing a WHOIS lookup per candidate. `sortName=registrationDate&sortDirection=asc` returns the oldest registrations first in one call.
+//
+// `price` is the closeout price alone. The binding total adds the renewal or transfer year you are also buying, and comes from `/closeout/get/{domain}` — it cannot be derived from search results, because a domain already at Porkbun is renewed while anything else is transferred in, and those are priced differently.
+//
+// Returns a wrapper object for the known response body format(s).
+//
+// Corresponds with GET /closeout/search (the `CloseoutSearch` operationId).
+func (c *ClientWithResponses) CloseoutSearchWithResponse(ctx context.Context, params *CloseoutSearchParams, reqEditors ...RequestEditorFn) (*CloseoutSearchResponse, error) {
+	rsp, err := c.CloseoutSearch(ctx, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCloseoutSearchResponse(rsp)
+}
+
 // CloudflareConnectWithBodyWithResponse Queue domains to move to the customer's Cloudflare account
 //
 // Queue one or many domains. For each one we create the zone in the customer's own Cloudflare account, copy across the DNS records we hold, and repoint the registry nameservers at Cloudflare.
@@ -22016,7 +25646,7 @@ func (c *ClientWithResponses) ApikeyRetrieveWithResponse(ctx context.Context, bo
 //
 // Requires an active Cloudflare connection (`CLOUDFLARE_NOT_CONNECTED` otherwise). Limits: 500 domains per call, 2000 domains per account per hour.
 //
-// After queueing, poll `/cloudflare/get/{domain}`: the row moves `queued` → `working` → `activating` → `connected`. `activating` means the nameservers are already repointed and Cloudflare is confirming the zone, which can take a while as DNS propagates.
+// After queueing, poll `/cloudflare/get/{domain}`: the row moves `queued` → `working` → `setup` → `activating` → `connected`. `setup` means Cloudflare has the zone but has not provisioned it yet, so the nameservers have deliberately not been touched. `activating` means the nameservers are already repointed and Cloudflare is confirming the zone, which can take a while as DNS propagates.
 //
 // Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
 //
@@ -22045,7 +25675,7 @@ func (c *ClientWithResponses) CloudflareConnectWithBodyWithResponse(ctx context.
 //
 // Requires an active Cloudflare connection (`CLOUDFLARE_NOT_CONNECTED` otherwise). Limits: 500 domains per call, 2000 domains per account per hour.
 //
-// After queueing, poll `/cloudflare/get/{domain}`: the row moves `queued` → `working` → `activating` → `connected`. `activating` means the nameservers are already repointed and Cloudflare is confirming the zone, which can take a while as DNS propagates.
+// After queueing, poll `/cloudflare/get/{domain}`: the row moves `queued` → `working` → `setup` → `activating` → `connected`. `setup` means Cloudflare has the zone but has not provisioned it yet, so the nameservers have deliberately not been touched. `activating` means the nameservers are already repointed and Cloudflare is confirming the zone, which can take a while as DNS propagates.
 //
 // Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
 //
@@ -22185,12 +25815,14 @@ func (c *ClientWithResponses) CloudflareEditRecordWithResponse(ctx context.Conte
 // |--------|---------|----------|
 // | `queued` | accepted, waiting for the worker | no |
 // | `working` | a run is touching this row right now | no |
-// | `activating` | nameservers repointed; waiting for Cloudflare to mark the zone active. Legitimately slow (registry + resolver propagation) — allow up to 24h | no |
+// | `setup` | the zone exists in the customer's Cloudflare account but Cloudflare has not provisioned it yet (`initializing`). **The nameservers have not been touched** — the domain still resolves from Porkbun. Cloudflare can sit here for hours when an account has a backlog of zones it never activated | no |
+// | `activating` | nameservers repointed; waiting for Cloudflare to mark the zone active. Legitimately slow (registry + resolver propagation) — allow up to 72h, and a real move has been observed taking 59h | no |
 // | `connected` / `done` | the move finished | **yes** |
 // | `skipped` | not moved, and `message` says why (DNSSEC live, custom nameservers, no longer in the account) | **yes** |
-// | `failed` / `error` | the move did not complete; `message` says why. Re-queue with `/cloudflare/retry/{domain}` | **yes** |
+// | `failed` / `error` | the move did not complete; `message` says why. Re-queue with `/cloudflare/retry/{domain}` | **yes**, with one exception: a row that failed waiting on Cloudflare is re-checked for up to 30 days, so it can still close out as `connected` (or have its `message` updated to say it is now retryable) if Cloudflare activates the zone late |
+// | `undone` | the nameservers were put back on Porkbun — either the customer undid the move, or the domain stopped resolving while Cloudflare had not activated it yet and we restored it without waiting for the deadline | **yes** |
 //
-// Poll on a sensible interval (a few seconds early on, then back off) — a zone typically leaves `queued` within seconds but can sit in `activating` while DNS propagates.
+// Poll on a sensible interval (a few seconds early on, then back off) — a zone typically leaves `queued` within seconds but can sit in `setup` or `activating` while Cloudflare provisions the zone and DNS propagates.
 //
 // Returns a wrapper object for the known response body format(s).
 //
@@ -22232,12 +25864,14 @@ func (c *ClientWithResponses) CloudflareGetConnectionWithResponse(ctx context.Co
 // |--------|---------|----------|
 // | `queued` | accepted, waiting for the worker | no |
 // | `working` | a run is touching this row right now | no |
-// | `activating` | nameservers repointed; waiting for Cloudflare to mark the zone active. Legitimately slow (registry + resolver propagation) — allow up to 24h | no |
+// | `setup` | the zone exists in the customer's Cloudflare account but Cloudflare has not provisioned it yet (`initializing`). **The nameservers have not been touched** — the domain still resolves from Porkbun. Cloudflare can sit here for hours when an account has a backlog of zones it never activated | no |
+// | `activating` | nameservers repointed; waiting for Cloudflare to mark the zone active. Legitimately slow (registry + resolver propagation) — allow up to 72h, and a real move has been observed taking 59h | no |
 // | `connected` / `done` | the move finished | **yes** |
 // | `skipped` | not moved, and `message` says why (DNSSEC live, custom nameservers, no longer in the account) | **yes** |
-// | `failed` / `error` | the move did not complete; `message` says why. Re-queue with `/cloudflare/retry/{domain}` | **yes** |
+// | `failed` / `error` | the move did not complete; `message` says why. Re-queue with `/cloudflare/retry/{domain}` | **yes**, with one exception: a row that failed waiting on Cloudflare is re-checked for up to 30 days, so it can still close out as `connected` (or have its `message` updated to say it is now retryable) if Cloudflare activates the zone late |
+// | `undone` | the nameservers were put back on Porkbun — either the customer undid the move, or the domain stopped resolving while Cloudflare had not activated it yet and we restored it without waiting for the deadline | **yes** |
 //
-// Poll on a sensible interval (a few seconds early on, then back off) — a zone typically leaves `queued` within seconds but can sit in `activating` while DNS propagates.
+// Poll on a sensible interval (a few seconds early on, then back off) — a zone typically leaves `queued` within seconds but can sit in `setup` or `activating` while Cloudflare provisions the zone and DNS propagates.
 //
 // Returns a wrapper object for the known response body format(s).
 //
@@ -22487,6 +26121,8 @@ func (c *ClientWithResponses) DnsCreateWithResponse(ctx context.Context, domain 
 //
 // Create a DNSSEC DS or key record at the registry. DNSSEC requirements vary by registry — `keyTag`, `alg`, `digestType`, and `digest` are the minimum required fields. Key data fields are optional and will be omitted if not accepted by the registry.
 //
+// Algorithm and digest type are validated against the registry's own policy before the request is sent. Registries are retiring the values deprecated by RFC 9904/9905/9906 on different schedules, so what is accepted depends on the TLD: a value one registry has already dropped may still be accepted by another. A value the registry no longer accepts returns `DNSSEC_ALGORITHM_DEPRECATED`; one that still works but is being retired returns `status: SUCCESS` with a `warnings` array. Use algorithm 8 (RSA/SHA-256) or 13 (ECDSA/SHA-256) with digest type 2 (SHA-256) to be accepted everywhere. Existing DNSSEC records keep resolving regardless, and can always be deleted.
+//
 // Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
 //
 // Corresponds with POST /dns/createDnssecRecord/{domain} (the `DnsCreateDnssecRecord` operationId).
@@ -22501,6 +26137,8 @@ func (c *ClientWithResponses) DnsCreateDnssecRecordWithBodyWithResponse(ctx cont
 // DnsCreateDnssecRecordWithResponse Create DNSSEC record
 //
 // Create a DNSSEC DS or key record at the registry. DNSSEC requirements vary by registry — `keyTag`, `alg`, `digestType`, and `digest` are the minimum required fields. Key data fields are optional and will be omitted if not accepted by the registry.
+//
+// Algorithm and digest type are validated against the registry's own policy before the request is sent. Registries are retiring the values deprecated by RFC 9904/9905/9906 on different schedules, so what is accepted depends on the TLD: a value one registry has already dropped may still be accepted by another. A value the registry no longer accepts returns `DNSSEC_ALGORITHM_DEPRECATED`; one that still works but is being retired returns `status: SUCCESS` with a `warnings` array. Use algorithm 8 (RSA/SHA-256) or 13 (ECDSA/SHA-256) with digest type 2 (SHA-256) to be accepted everywhere. Existing DNSSEC records keep resolving regardless, and can always be deleted.
 //
 // Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
 //
@@ -22601,6 +26239,52 @@ func (c *ClientWithResponses) DnsDeleteDnssecRecordWithResponse(ctx context.Cont
 		return nil, err
 	}
 	return ParseDnsDeleteDnssecRecordResponse(rsp)
+}
+
+// DnsDiffWithBodyWithResponse Compare a restore point with the live zone
+//
+// What changed between a restore point and the zone as it stands now.
+//
+// - `missing` -- in the restore point, not live. These are the records a restore would add back.
+// - `extra` -- live, not in the restore point. A restore leaves these alone unless you pass `prune`.
+// - `inSync` -- true when neither list has anything in it.
+//
+// Records are compared on **name, type, content and priority**, not on id: an id means nothing across a delete and re-create, and what anyone means by "the same record" is the data. SOA and NS are excluded from both lists because they are the zone's own scaffolding.
+//
+// For masked records (parking, `ALIAS`, `HTTPS`) the value shown is the one you configured, not the internal host it resolves to.
+//
+// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
+//
+// Corresponds with GET /dns/diff/{domain}/{snapshotId} (the `DnsDiff` operationId).
+func (c *ClientWithResponses) DnsDiffWithBodyWithResponse(ctx context.Context, domain string, snapshotId int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*DnsDiffResponse2, error) {
+	rsp, err := c.DnsDiffWithBody(ctx, domain, snapshotId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDnsDiffResponse2(rsp)
+}
+
+// DnsDiffWithResponse Compare a restore point with the live zone
+//
+// What changed between a restore point and the zone as it stands now.
+//
+// - `missing` -- in the restore point, not live. These are the records a restore would add back.
+// - `extra` -- live, not in the restore point. A restore leaves these alone unless you pass `prune`.
+// - `inSync` -- true when neither list has anything in it.
+//
+// Records are compared on **name, type, content and priority**, not on id: an id means nothing across a delete and re-create, and what anyone means by "the same record" is the data. SOA and NS are excluded from both lists because they are the zone's own scaffolding.
+//
+// For masked records (parking, `ALIAS`, `HTTPS`) the value shown is the one you configured, not the internal host it resolves to.
+//
+// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+//
+// Corresponds with GET /dns/diff/{domain}/{snapshotId} (the `DnsDiff` operationId).
+func (c *ClientWithResponses) DnsDiffWithResponse(ctx context.Context, domain string, snapshotId int64, body DnsDiffJSONRequestBody, reqEditors ...RequestEditorFn) (*DnsDiffResponse2, error) {
+	rsp, err := c.DnsDiff(ctx, domain, snapshotId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDnsDiffResponse2(rsp)
 }
 
 // DnsEditWithBodyWithResponse Edit DNS record by ID
@@ -22706,6 +26390,206 @@ func (c *ClientWithResponses) DnsGetDnssecRecordsWithResponse(ctx context.Contex
 		return nil, err
 	}
 	return ParseDnsGetDnssecRecordsResponse(rsp)
+}
+
+// DnsHistoryWithBodyWithResponse List restore points for a zone
+//
+// Every version of a zone we still hold, newest first.
+//
+// **DNS is the only part of a stack with no undo, and this is it.** If a record was deleted or edited by mistake, you do not have to know what it used to say -- ask for the restore points, diff one against the live zone, and put it back.
+//
+// Restore points are taken automatically: before the **first** write to a zone in each hour (so a session of edits costs one point, not one per record), before any bulk import or zone wipe, and before any restore. `recordCount` is the size of the zone **as it was at that moment**, not now.
+//
+// `matchesLive` tells you which point the zone currently sits on without diffing each one. Up to 50 are returned.
+//
+// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
+//
+// Corresponds with GET /dns/history/{domain} (the `DnsHistory` operationId).
+func (c *ClientWithResponses) DnsHistoryWithBodyWithResponse(ctx context.Context, domain string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*DnsHistoryResponse2, error) {
+	rsp, err := c.DnsHistoryWithBody(ctx, domain, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDnsHistoryResponse2(rsp)
+}
+
+// DnsHistoryWithResponse List restore points for a zone
+//
+// Every version of a zone we still hold, newest first.
+//
+// **DNS is the only part of a stack with no undo, and this is it.** If a record was deleted or edited by mistake, you do not have to know what it used to say -- ask for the restore points, diff one against the live zone, and put it back.
+//
+// Restore points are taken automatically: before the **first** write to a zone in each hour (so a session of edits costs one point, not one per record), before any bulk import or zone wipe, and before any restore. `recordCount` is the size of the zone **as it was at that moment**, not now.
+//
+// `matchesLive` tells you which point the zone currently sits on without diffing each one. Up to 50 are returned.
+//
+// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+//
+// Corresponds with GET /dns/history/{domain} (the `DnsHistory` operationId).
+func (c *ClientWithResponses) DnsHistoryWithResponse(ctx context.Context, domain string, body DnsHistoryJSONRequestBody, reqEditors ...RequestEditorFn) (*DnsHistoryResponse2, error) {
+	rsp, err := c.DnsHistory(ctx, domain, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDnsHistoryResponse2(rsp)
+}
+
+// DnsImportWithBodyWithResponse Bulk-create DNS records (transfer restore)
+//
+// Create many records in one call, so a domain arriving from another registrar keeps resolving instead of going dark.
+//
+// Send `records` to import an exact list — the better path when the old registrar has an API you can read with your own credentials. Omit `records` entirely and whatever `/dns/scan/{domain}` can discover is imported instead.
+//
+// **Idempotent.** A record that already exists is counted in `skipped`, not `failed`, so this is safe to re-run and safe to use as a converge step. Records that fail individually are listed in `failures` while the rest still import; the call only errors outright if nothing was importable.
+//
+// Imported records do nothing until the domain actually points at the Porkbun nameservers — check `/domain/getNs/{domain}` and set them with `/domain/updateNs/{domain}`. Maximum 500 records per call. Supports `dryRun`.
+//
+// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
+//
+// Corresponds with POST /dns/import/{domain} (the `DnsImport` operationId).
+func (c *ClientWithResponses) DnsImportWithBodyWithResponse(ctx context.Context, domain string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*DnsImportResponse, error) {
+	rsp, err := c.DnsImportWithBody(ctx, domain, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDnsImportResponse(rsp)
+}
+
+// DnsImportWithResponse Bulk-create DNS records (transfer restore)
+//
+// Create many records in one call, so a domain arriving from another registrar keeps resolving instead of going dark.
+//
+// Send `records` to import an exact list — the better path when the old registrar has an API you can read with your own credentials. Omit `records` entirely and whatever `/dns/scan/{domain}` can discover is imported instead.
+//
+// **Idempotent.** A record that already exists is counted in `skipped`, not `failed`, so this is safe to re-run and safe to use as a converge step. Records that fail individually are listed in `failures` while the rest still import; the call only errors outright if nothing was importable.
+//
+// Imported records do nothing until the domain actually points at the Porkbun nameservers — check `/domain/getNs/{domain}` and set them with `/domain/updateNs/{domain}`. Maximum 500 records per call. Supports `dryRun`.
+//
+// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+//
+// Corresponds with POST /dns/import/{domain} (the `DnsImport` operationId).
+func (c *ClientWithResponses) DnsImportWithResponse(ctx context.Context, domain string, body DnsImportJSONRequestBody, reqEditors ...RequestEditorFn) (*DnsImportResponse, error) {
+	rsp, err := c.DnsImport(ctx, domain, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDnsImportResponse(rsp)
+}
+
+// DnsPreflightWithBodyWithResponse Check whether a change will break the domain
+//
+// Read-only. Answers the question of whether a change is about to break the domain, before you change delegation, transfer it out, or turn DNSSEC on. It changes nothing and spends nothing.
+//
+// **Every check here comes from an incident we actually had**, which is the point: these are the failures where a zone looks fine and stops working anyway, and nobody can say why afterwards. Each finding names the rule it comes from and carries a `next_action`, so it argues its case rather than asserting a verdict.
+//
+// Pass `intent` to scope it: `general` (default) runs everything applicable, `move-nameservers` adds the delegation checks, `transfer-out` adds the checks that matter when leaving, `enable-dnssec` the DNSSEC ones.
+//
+// Read `blockers` first -- those will break something. `warnings` will not break outright but are usually what the customer asks about next. `safe` is true only when both lists are empty.
+//
+// | id | severity | what it catches |
+// |----|----------|-----------------|
+// | `dnssec-active` | blocker | DS records are published, so new nameservers serve answers that do not match them and validating resolvers refuse the whole zone. The domain goes dark rather than degrading. Remove DNSSEC, wait for the DS TTL, then move. |
+// | `dnssec-unknown` | warning | the registry did not answer conclusively. Do not read that as an absence of DNSSEC. |
+// | `cname-exclusivity` | blocker | a CNAME sharing a name with another record type, which RFC 1034 forbids and resolvers handle inconsistently. |
+// | `spf-duplicate` | blocker | more than one apex SPF record: a permerror under RFC 7208 4.5 that makes receivers fail the check for every sender. |
+// | `spf-lookups` | blocker | an SPF chain over the ten DNS lookups RFC 7208 4.6.4 allows, which is also a permerror. |
+// | `mx-undeliverable` | blocker | an apex MX pointing somewhere unreachable such as localhost, so mail bounces or vanishes. |
+// | `wildcard-shadowed` | warning | names that exist only because of an MX or TXT record. Under RFC 4592 a wildcard answers only names that do NOT exist, so those names stop inheriting the wildcard address and go dark with nothing in the zone looking wrong. |
+// | `apex-resolves` | warning | nothing answers at the bare domain. |
+// | `zone-size` | warning | within 10 percent of the 2,500-record limit. |
+// | `nameservers-ours` | warning | the domain is delegated to nameservers we do not operate, or to a mix of ours and someone else's -- so the zone you are inspecting is not what the world resolves. Writes to it keep succeeding and change nothing visible. |
+// | `cloudflare-zone` | info | the zone is served through Cloudflare, which can lag briefly after a delegation change. |
+//
+// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
+//
+// Corresponds with GET /dns/preflight/{domain} (the `DnsPreflight` operationId).
+func (c *ClientWithResponses) DnsPreflightWithBodyWithResponse(ctx context.Context, domain string, params *DnsPreflightParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*DnsPreflightResponse2, error) {
+	rsp, err := c.DnsPreflightWithBody(ctx, domain, params, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDnsPreflightResponse2(rsp)
+}
+
+// DnsPreflightWithResponse Check whether a change will break the domain
+//
+// Read-only. Answers the question of whether a change is about to break the domain, before you change delegation, transfer it out, or turn DNSSEC on. It changes nothing and spends nothing.
+//
+// **Every check here comes from an incident we actually had**, which is the point: these are the failures where a zone looks fine and stops working anyway, and nobody can say why afterwards. Each finding names the rule it comes from and carries a `next_action`, so it argues its case rather than asserting a verdict.
+//
+// Pass `intent` to scope it: `general` (default) runs everything applicable, `move-nameservers` adds the delegation checks, `transfer-out` adds the checks that matter when leaving, `enable-dnssec` the DNSSEC ones.
+//
+// Read `blockers` first -- those will break something. `warnings` will not break outright but are usually what the customer asks about next. `safe` is true only when both lists are empty.
+//
+// | id | severity | what it catches |
+// |----|----------|-----------------|
+// | `dnssec-active` | blocker | DS records are published, so new nameservers serve answers that do not match them and validating resolvers refuse the whole zone. The domain goes dark rather than degrading. Remove DNSSEC, wait for the DS TTL, then move. |
+// | `dnssec-unknown` | warning | the registry did not answer conclusively. Do not read that as an absence of DNSSEC. |
+// | `cname-exclusivity` | blocker | a CNAME sharing a name with another record type, which RFC 1034 forbids and resolvers handle inconsistently. |
+// | `spf-duplicate` | blocker | more than one apex SPF record: a permerror under RFC 7208 4.5 that makes receivers fail the check for every sender. |
+// | `spf-lookups` | blocker | an SPF chain over the ten DNS lookups RFC 7208 4.6.4 allows, which is also a permerror. |
+// | `mx-undeliverable` | blocker | an apex MX pointing somewhere unreachable such as localhost, so mail bounces or vanishes. |
+// | `wildcard-shadowed` | warning | names that exist only because of an MX or TXT record. Under RFC 4592 a wildcard answers only names that do NOT exist, so those names stop inheriting the wildcard address and go dark with nothing in the zone looking wrong. |
+// | `apex-resolves` | warning | nothing answers at the bare domain. |
+// | `zone-size` | warning | within 10 percent of the 2,500-record limit. |
+// | `nameservers-ours` | warning | the domain is delegated to nameservers we do not operate, or to a mix of ours and someone else's -- so the zone you are inspecting is not what the world resolves. Writes to it keep succeeding and change nothing visible. |
+// | `cloudflare-zone` | info | the zone is served through Cloudflare, which can lag briefly after a delegation change. |
+//
+// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+//
+// Corresponds with GET /dns/preflight/{domain} (the `DnsPreflight` operationId).
+func (c *ClientWithResponses) DnsPreflightWithResponse(ctx context.Context, domain string, params *DnsPreflightParams, body DnsPreflightJSONRequestBody, reqEditors ...RequestEditorFn) (*DnsPreflightResponse2, error) {
+	rsp, err := c.DnsPreflight(ctx, domain, params, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDnsPreflightResponse2(rsp)
+}
+
+// DnsRestoreWithBodyWithResponse Restore a zone to a previous state
+//
+// Put a zone back to a restore point.
+//
+// **What it does by default:** adds back every record in the restore point that is not live now. It does **not** remove records you have added since -- pass `prune: true` for that. "Restore my records" usually means "put back what I lost", not "delete everything I have done since", so the destructive half is opt-in.
+//
+// **This is itself reversible.** The zone's current state is snapshotted before anything changes and the new point's id comes back as `previousStateSavedAs`, so an unwanted restore is undone by restoring that.
+//
+// **Read `failed`.** Parking records and other masked types (`ALIAS`, `HTTPS`) are managed by another part of the platform and cannot be recreated this way. They come back named in `failed` rather than being counted as restored, so `restored` is a true count. SOA and NS are never touched.
+//
+// Supports `dryRun: true`, which reports exactly what would be added and removed and changes nothing.
+//
+// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
+//
+// Corresponds with POST /dns/restore/{domain} (the `DnsRestore` operationId).
+func (c *ClientWithResponses) DnsRestoreWithBodyWithResponse(ctx context.Context, domain string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*DnsRestoreResponse2, error) {
+	rsp, err := c.DnsRestoreWithBody(ctx, domain, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDnsRestoreResponse2(rsp)
+}
+
+// DnsRestoreWithResponse Restore a zone to a previous state
+//
+// Put a zone back to a restore point.
+//
+// **What it does by default:** adds back every record in the restore point that is not live now. It does **not** remove records you have added since -- pass `prune: true` for that. "Restore my records" usually means "put back what I lost", not "delete everything I have done since", so the destructive half is opt-in.
+//
+// **This is itself reversible.** The zone's current state is snapshotted before anything changes and the new point's id comes back as `previousStateSavedAs`, so an unwanted restore is undone by restoring that.
+//
+// **Read `failed`.** Parking records and other masked types (`ALIAS`, `HTTPS`) are managed by another part of the platform and cannot be recreated this way. They come back named in `failed` rather than being counted as restored, so `restored` is a true count. SOA and NS are never touched.
+//
+// Supports `dryRun: true`, which reports exactly what would be added and removed and changes nothing.
+//
+// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+//
+// Corresponds with POST /dns/restore/{domain} (the `DnsRestore` operationId).
+func (c *ClientWithResponses) DnsRestoreWithResponse(ctx context.Context, domain string, body DnsRestoreJSONRequestBody, reqEditors ...RequestEditorFn) (*DnsRestoreResponse2, error) {
+	rsp, err := c.DnsRestore(ctx, domain, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDnsRestoreResponse2(rsp)
 }
 
 // GetDnsRecordsWithResponse Retrieve all DNS records
@@ -22843,6 +26727,25 @@ func (c *ClientWithResponses) DnsRetrieveByNameTypeWithResponse(ctx context.Cont
 	return ParseDnsRetrieveByNameTypeResponse(rsp)
 }
 
+// DnsScanWithResponse Discover the records a domain currently publishes
+//
+// Query a domain's **live authoritative nameservers** and return the records they answer with, writing nothing. This is what makes an inbound transfer non-destructive: a transfer moves only the delegation — EPP carries no zone data — so once the losing registrar stops answering for the zone, whatever it published is gone and unrecoverable. Run this **before** the nameservers move, then pass the result to `/dns/import/{domain}`.
+//
+// The scan probes a wide list of well-known names (apex, common subdomains, MX, DKIM selectors, provider verification hosts) and consolidates wildcards. It cannot enumerate a zone — DNS has no listing operation and AXFR is universally refused — so treat it as thorough but **not exhaustive**. If the old registrar exposes the zone through its own API, that is authoritative: read it with your own credentials (they never need to reach Porkbun) and POST those records to `/dns/import` instead.
+//
+// Metered separately at 20 calls per hour per account, because each call is roughly 90 DNS lookups.
+//
+// Returns a wrapper object for the known response body format(s).
+//
+// Corresponds with GET /dns/scan/{domain} (the `DnsScan` operationId).
+func (c *ClientWithResponses) DnsScanWithResponse(ctx context.Context, domain string, reqEditors ...RequestEditorFn) (*DnsScanResponse, error) {
+	rsp, err := c.DnsScan(ctx, domain, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDnsScanResponse(rsp)
+}
+
 // DomainAddUrlForwardWithBodyWithResponse Add URL forward
 //
 // Add a URL forward for a domain or subdomain.
@@ -22873,11 +26776,80 @@ func (c *ClientWithResponses) DomainAddUrlForwardWithResponse(ctx context.Contex
 	return ParseDomainAddUrlForwardResponse(rsp)
 }
 
+// DomainCancelTransferWithResponse Cancel an inbound transfer and refund it
+//
+// Cancel a pending inbound transfer and refund the order. The sequence is deliberate: mark the transfer cancelled locally, withdraw it at the registry, **verify** the registry actually accepted the withdrawal, and only then refund. If the registry state cannot be confirmed the local row is restored and `TRANSFER_STATE_UNCONFIRMED` is returned rather than refunding a transfer that may still be live.
+//
+// The response reports `withdrawnAtRegistry`, `registryResultCode`, `refunded` and `refundAmount` so you can see exactly how far it got. Supports `dryRun`.
+//
+// Returns a wrapper object for the known response body format(s).
+//
+// Corresponds with POST /domain/cancelTransfer/{domain} (the `DomainCancelTransfer` operationId).
+func (c *ClientWithResponses) DomainCancelTransferWithResponse(ctx context.Context, domain string, reqEditors ...RequestEditorFn) (*DomainCancelTransferResponse, error) {
+	rsp, err := c.DomainCancelTransfer(ctx, domain, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDomainCancelTransferResponse(rsp)
+}
+
+// DomainCheckDomainBulkWithBodyWithResponse Check several domains at once
+//
+// Check availability and pricing for up to 25 domains in one call. Same endpoint as the single check, with a `domains` array in the body and no domain in the path.
+//
+// **Prefer this over looping the single check.** Checks are chunked per registry, so a batch is materially less work for us than the same names one at a time, and the budget reflects that: this draws on a separate allowance of **200 domains per 60 seconds** per account, against 10 checks per 10 seconds for the single form. Counting is per DOMAIN, not per request, so 25 domains spends 25 of the 200.
+//
+// **Partial results are normal and must be read.** Three lists come back and they mean different things:
+// - `domains` - answered, keyed by domain name, each value identical in shape to the single-check `response`.
+// - `invalid` - entries that are not checkable at all (not a domain, unsupported TLD). One typo does not fail the call; the other names are still answered.
+// - `unresolved` - the registry did not answer in time. These are **neither available nor taken**; treating them as unavailable is wrong. Retry them.
+//
+// Duplicates are removed before the budget is charged. If more than 25 remain, nothing is checked and `BULK_CHECK_TOO_MANY` is returned rather than a truncated answer.
+//
+// **Latency.** This is synchronous: one request, one complete answer, no polling. 25 domains across 25 different TLDs measures around 3 seconds, because the connection manager fans a batch that fits under every registry's cap out as a single command. A few registries cap low and **.de accepts one domain per command**, so a batch heavy in those becomes several sequential commands; if that would need more than 4, the call is refused with `BULK_CHECK_TOO_SLOW` rather than left to time out mid-response.
+//
+// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
+//
+// Corresponds with POST /domain/checkDomain (the `DomainCheckDomainBulk` operationId).
+func (c *ClientWithResponses) DomainCheckDomainBulkWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*DomainCheckDomainBulkResponse, error) {
+	rsp, err := c.DomainCheckDomainBulkWithBody(ctx, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDomainCheckDomainBulkResponse(rsp)
+}
+
+// DomainCheckDomainBulkWithResponse Check several domains at once
+//
+// Check availability and pricing for up to 25 domains in one call. Same endpoint as the single check, with a `domains` array in the body and no domain in the path.
+//
+// **Prefer this over looping the single check.** Checks are chunked per registry, so a batch is materially less work for us than the same names one at a time, and the budget reflects that: this draws on a separate allowance of **200 domains per 60 seconds** per account, against 10 checks per 10 seconds for the single form. Counting is per DOMAIN, not per request, so 25 domains spends 25 of the 200.
+//
+// **Partial results are normal and must be read.** Three lists come back and they mean different things:
+// - `domains` - answered, keyed by domain name, each value identical in shape to the single-check `response`.
+// - `invalid` - entries that are not checkable at all (not a domain, unsupported TLD). One typo does not fail the call; the other names are still answered.
+// - `unresolved` - the registry did not answer in time. These are **neither available nor taken**; treating them as unavailable is wrong. Retry them.
+//
+// Duplicates are removed before the budget is charged. If more than 25 remain, nothing is checked and `BULK_CHECK_TOO_MANY` is returned rather than a truncated answer.
+//
+// **Latency.** This is synchronous: one request, one complete answer, no polling. 25 domains across 25 different TLDs measures around 3 seconds, because the connection manager fans a batch that fits under every registry's cap out as a single command. A few registries cap low and **.de accepts one domain per command**, so a batch heavy in those becomes several sequential commands; if that would need more than 4, the call is refused with `BULK_CHECK_TOO_SLOW` rather than left to time out mid-response.
+//
+// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+//
+// Corresponds with POST /domain/checkDomain (the `DomainCheckDomainBulk` operationId).
+func (c *ClientWithResponses) DomainCheckDomainBulkWithResponse(ctx context.Context, body DomainCheckDomainBulkJSONRequestBody, reqEditors ...RequestEditorFn) (*DomainCheckDomainBulkResponse, error) {
+	rsp, err := c.DomainCheckDomainBulk(ctx, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDomainCheckDomainBulkResponse(rsp)
+}
+
 // DomainCheckDomainWithBodyWithResponse Check domain availability
 //
 // Check if a domain is available for registration and retrieve current pricing. Includes registration, renewal, and transfer prices.
 //
-// **Rate limit:** Configurable per API key. Default is 1 check per 10 seconds per account. Rate limit usage is returned in the `limits` field of the response.
+// **Rate limit:** Configurable per API key. Default is 10 checks per 10 seconds per account (raised from 1 per 10 seconds in 3.29). The window is intentionally 10 seconds rather than 1, so a batch of candidate names can be checked back-to-back. `/domain/checkSingleDomain` draws on the same budget. Rate limit usage is returned in the `limits` field of the response.
 //
 // Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
 //
@@ -22894,7 +26866,7 @@ func (c *ClientWithResponses) DomainCheckDomainWithBodyWithResponse(ctx context.
 //
 // Check if a domain is available for registration and retrieve current pricing. Includes registration, renewal, and transfer prices.
 //
-// **Rate limit:** Configurable per API key. Default is 1 check per 10 seconds per account. Rate limit usage is returned in the `limits` field of the response.
+// **Rate limit:** Configurable per API key. Default is 10 checks per 10 seconds per account (raised from 1 per 10 seconds in 3.29). The window is intentionally 10 seconds rather than 1, so a batch of candidate names can be checked back-to-back. `/domain/checkSingleDomain` draws on the same budget. Rate limit usage is returned in the `limits` field of the response.
 //
 // Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
 //
@@ -22922,8 +26894,8 @@ func (c *ClientWithResponses) DomainCheckDomainWithResponse(ctx context.Context,
 // **WHOIS privacy.** WHOIS privacy is automatically enabled on new registrations (when the TLD supports it). Pass the optional `whoisPrivacy` field to override this on a per-registration basis, or change the account-level default under Account Security Settings on porkbun.com/account.
 //
 // **Rate limits (both apply):**
-// - Attempt limit (default: 1 attempt per 10 seconds per account)
-// - Success limit (default: 50 successful registrations per 86400 seconds per account)
+// - Attempt limit (default: 1 attempt per second per account)
+// - Success limit (default: 1000 successful registrations per 86400 seconds per account)
 //
 // Both limits are configurable per API key and their current values are returned in the `limits` field of the response.
 //
@@ -22979,8 +26951,8 @@ func (c *ClientWithResponses) DomainCreateWithBodyWithResponse(ctx context.Conte
 // **WHOIS privacy.** WHOIS privacy is automatically enabled on new registrations (when the TLD supports it). Pass the optional `whoisPrivacy` field to override this on a per-registration basis, or change the account-level default under Account Security Settings on porkbun.com/account.
 //
 // **Rate limits (both apply):**
-// - Attempt limit (default: 1 attempt per 10 seconds per account)
-// - Success limit (default: 50 successful registrations per 86400 seconds per account)
+// - Attempt limit (default: 1 attempt per second per account)
+// - Success limit (default: 1000 successful registrations per 86400 seconds per account)
 //
 // Both limits are configurable per API key and their current values are returned in the `limits` field of the response.
 //
@@ -23188,7 +27160,7 @@ func (c *ClientWithResponses) DomainGetGlueWithResponse(ctx context.Context, dom
 
 // GetDomainNsWithResponse Get nameservers
 //
-// Retrieve the authoritative nameservers listed at the registry for the domain. Supports both GET (with header auth) and POST (with body or header auth).
+// Retrieve the authoritative nameservers listed at the registry for the domain. Supports both GET (with header auth) and POST (with body or header auth). **Nameservers are an unordered set.** This reads live from the registry, and registries are free to return the set in any order — so the order here will often differ from the order you sent to `/domain/updateNs`. Order carries no meaning in DNS (an NS RRset is unordered, RFC 1034/2181) and is not preserved by the parent zone. Compare nameservers as a set; if you are writing a Terraform provider or similar, model this as a set, not an ordered list, or every plan will show phantom drift.
 //
 // Returns a wrapper object for the known response body format(s).
 //
@@ -23203,7 +27175,7 @@ func (c *ClientWithResponses) GetDomainNsWithResponse(ctx context.Context, domai
 
 // DomainGetNsWithBodyWithResponse Get nameservers
 //
-// Retrieve the authoritative nameservers listed at the registry for the domain. Supports both GET (with header auth) and POST (with body or header auth).
+// Retrieve the authoritative nameservers listed at the registry for the domain. Supports both GET (with header auth) and POST (with body or header auth). **Nameservers are an unordered set.** This reads live from the registry, and registries are free to return the set in any order — so the order here will often differ from the order you sent to `/domain/updateNs`. Order carries no meaning in DNS (an NS RRset is unordered, RFC 1034/2181) and is not preserved by the parent zone. Compare nameservers as a set; if you are writing a Terraform provider or similar, model this as a set, not an ordered list, or every plan will show phantom drift.
 //
 // Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
 //
@@ -23218,7 +27190,7 @@ func (c *ClientWithResponses) DomainGetNsWithBodyWithResponse(ctx context.Contex
 
 // DomainGetNsWithResponse Get nameservers
 //
-// Retrieve the authoritative nameservers listed at the registry for the domain. Supports both GET (with header auth) and POST (with body or header auth).
+// Retrieve the authoritative nameservers listed at the registry for the domain. Supports both GET (with header auth) and POST (with body or header auth). **Nameservers are an unordered set.** This reads live from the registry, and registries are free to return the set in any order — so the order here will often differ from the order you sent to `/domain/updateNs`. Order carries no meaning in DNS (an NS RRset is unordered, RFC 1034/2181) and is not preserved by the parent zone. Compare nameservers as a set; if you are writing a Terraform provider or similar, model this as a set, not an ordered list, or every plan will show phantom drift.
 //
 // Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
 //
@@ -23259,6 +27231,21 @@ func (c *ClientWithResponses) GetTransferGetWithResponse(ctx context.Context, do
 		return nil, err
 	}
 	return ParseGetTransferGetResponse(rsp)
+}
+
+// DomainGetTransferSetupWithResponse State of an in-flight inbound transfer
+//
+// Where a pending inbound transfer is and what it is waiting on: whether it is held at `PENDINGDNS`, whether its DNS zone exists, how many records are in it, what the domain currently delegates to, and the next step to take. Use it to resume a no-downtime transfer without keeping state of your own.
+//
+// Returns a wrapper object for the known response body format(s).
+//
+// Corresponds with GET /domain/getTransferSetup/{domain} (the `DomainGetTransferSetup` operationId).
+func (c *ClientWithResponses) DomainGetTransferSetupWithResponse(ctx context.Context, domain string, reqEditors ...RequestEditorFn) (*DomainGetTransferSetupResponse, error) {
+	rsp, err := c.DomainGetTransferSetup(ctx, domain, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDomainGetTransferSetupResponse(rsp)
 }
 
 // GetDomainUrlForwardingWithResponse List URL forwards
@@ -23405,6 +27392,21 @@ func (c *ClientWithResponses) ListTransfersGetWithResponse(ctx context.Context, 
 	return ParseListTransfersGetResponse(rsp)
 }
 
+// DomainPrepareTransferWithResponse Create the DNS zone for a held transfer
+//
+// Create the Porkbun DNS zone for a domain whose inbound transfer is held at `PENDINGDNS`, so records can be added **before** the domain moves. The zone is created deliberately rather than as a side effect of the first record write. Returns the Porkbun nameservers to point the domain at. Then load the zone with `/dns/import/{domain}` (or the `/dns/*` endpoints) and release with `/domain/startTransfer/{domain}`. Supports `dryRun`.
+//
+// Returns a wrapper object for the known response body format(s).
+//
+// Corresponds with POST /domain/prepareTransfer/{domain} (the `DomainPrepareTransfer` operationId).
+func (c *ClientWithResponses) DomainPrepareTransferWithResponse(ctx context.Context, domain string, reqEditors ...RequestEditorFn) (*DomainPrepareTransferResponse, error) {
+	rsp, err := c.DomainPrepareTransfer(ctx, domain, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDomainPrepareTransferResponse(rsp)
+}
+
 // DomainRenewWithBodyWithResponse Renew a domain
 //
 // Renew a domain using account credit. Requirements:
@@ -23420,8 +27422,8 @@ func (c *ClientWithResponses) ListTransfersGetWithResponse(ctx context.Context, 
 // Renewals are always for the registry-minimum duration (usually 1 year). Use `/domain/checkDomain/{domain}` with `priceType=renewal` to get the current price before renewing.
 //
 // **Rate limits (both apply):**
-// - Attempt limit (default: 1 attempt per 10 seconds per account)
-// - Success limit (default: 50 successful renewals per 86400 seconds per account)
+// - Attempt limit (default: 1 attempt per second per account)
+// - Success limit (default: 1000 successful renewals per 86400 seconds per account)
 //
 // Both limits are configurable per API key and their current values are returned in the `limits` field of the response.
 //
@@ -23477,8 +27479,8 @@ func (c *ClientWithResponses) DomainRenewWithBodyWithResponse(ctx context.Contex
 // Renewals are always for the registry-minimum duration (usually 1 year). Use `/domain/checkDomain/{domain}` with `priceType=renewal` to get the current price before renewing.
 //
 // **Rate limits (both apply):**
-// - Attempt limit (default: 1 attempt per 10 seconds per account)
-// - Success limit (default: 50 successful renewals per 86400 seconds per account)
+// - Attempt limit (default: 1 attempt per second per account)
+// - Success limit (default: 1000 successful renewals per 86400 seconds per account)
 //
 // Both limits are configurable per API key and their current values are returned in the `limits` field of the response.
 //
@@ -23517,6 +27519,40 @@ func (c *ClientWithResponses) DomainRenewWithResponse(ctx context.Context, domai
 		return nil, err
 	}
 	return ParseDomainRenewResponse(rsp)
+}
+
+// DomainStartTransferWithBodyWithResponse Release a held transfer to the registry
+//
+// Release a transfer held at `PENDINGDNS` into the registry pipeline. Nothing releases a held transfer on a timer — this call is the only thing that does.
+//
+// Refuses with `TRANSFER_ZONE_EMPTY` if the zone has no records, which is the outage the hold exists to prevent. Pass `force: true` only if the domain genuinely needs no DNS at Porkbun. Supports `dryRun`.
+//
+// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
+//
+// Corresponds with POST /domain/startTransfer/{domain} (the `DomainStartTransfer` operationId).
+func (c *ClientWithResponses) DomainStartTransferWithBodyWithResponse(ctx context.Context, domain string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*DomainStartTransferResponse, error) {
+	rsp, err := c.DomainStartTransferWithBody(ctx, domain, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDomainStartTransferResponse(rsp)
+}
+
+// DomainStartTransferWithResponse Release a held transfer to the registry
+//
+// Release a transfer held at `PENDINGDNS` into the registry pipeline. Nothing releases a held transfer on a timer — this call is the only thing that does.
+//
+// Refuses with `TRANSFER_ZONE_EMPTY` if the zone has no records, which is the outage the hold exists to prevent. Pass `force: true` only if the domain genuinely needs no DNS at Porkbun. Supports `dryRun`.
+//
+// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+//
+// Corresponds with POST /domain/startTransfer/{domain} (the `DomainStartTransfer` operationId).
+func (c *ClientWithResponses) DomainStartTransferWithResponse(ctx context.Context, domain string, body DomainStartTransferJSONRequestBody, reqEditors ...RequestEditorFn) (*DomainStartTransferResponse, error) {
+	rsp, err := c.DomainStartTransfer(ctx, domain, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDomainStartTransferResponse(rsp)
 }
 
 // TransferDomainWithBodyWithResponse Initiate a domain transfer
@@ -23713,7 +27749,7 @@ func (c *ClientWithResponses) DomainUpdateGlueWithResponse(ctx context.Context, 
 
 // DomainUpdateNsWithBodyWithResponse Update nameservers
 //
-// Update the nameservers for the domain at the registry.
+// Update the nameservers for the domain at the registry. The list you send is applied as a set — the registry may store and return it in a different order, so do not expect `/domain/getNs` to echo your ordering back. See `/domain/getNs`.
 //
 // Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
 //
@@ -23728,7 +27764,7 @@ func (c *ClientWithResponses) DomainUpdateNsWithBodyWithResponse(ctx context.Con
 
 // DomainUpdateNsWithResponse Update nameservers
 //
-// Update the nameservers for the domain at the registry.
+// Update the nameservers for the domain at the registry. The list you send is applied as a set — the registry may store and return it in a different order, so do not expect `/domain/getNs` to echo your ordering back. See `/domain/getNs`.
 //
 // Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
 //
@@ -23739,6 +27775,40 @@ func (c *ClientWithResponses) DomainUpdateNsWithResponse(ctx context.Context, do
 		return nil, err
 	}
 	return ParseDomainUpdateNsResponse(rsp)
+}
+
+// DomainUpdateTransferAuthCodeWithBodyWithResponse Replace the auth code on a stuck transfer
+//
+// Replace the authorization code on an inbound transfer that stalled because the code was wrong, and re-queue it — instead of cancelling, refunding and re-submitting.
+//
+// The new code is validated against the registry before it is stored, so a bad code is rejected here (`INVALID_AUTH_CODE`) rather than failing again later. Only transfers in a repairable state qualify; anything else returns `TRANSFER_NOT_REPAIRABLE`. Supports `dryRun`.
+//
+// Takes any type of body and a specified content type, and returns a wrapper object for the known response body format(s).
+//
+// Corresponds with POST /domain/updateTransferAuthCode/{domain} (the `DomainUpdateTransferAuthCode` operationId).
+func (c *ClientWithResponses) DomainUpdateTransferAuthCodeWithBodyWithResponse(ctx context.Context, domain string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*DomainUpdateTransferAuthCodeResponse, error) {
+	rsp, err := c.DomainUpdateTransferAuthCodeWithBody(ctx, domain, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDomainUpdateTransferAuthCodeResponse(rsp)
+}
+
+// DomainUpdateTransferAuthCodeWithResponse Replace the auth code on a stuck transfer
+//
+// Replace the authorization code on an inbound transfer that stalled because the code was wrong, and re-queue it — instead of cancelling, refunding and re-submitting.
+//
+// The new code is validated against the registry before it is stored, so a bad code is rejected here (`INVALID_AUTH_CODE`) rather than failing again later. Only transfers in a repairable state qualify; anything else returns `TRANSFER_NOT_REPAIRABLE`. Supports `dryRun`.
+//
+// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+//
+// Corresponds with POST /domain/updateTransferAuthCode/{domain} (the `DomainUpdateTransferAuthCode` operationId).
+func (c *ClientWithResponses) DomainUpdateTransferAuthCodeWithResponse(ctx context.Context, domain string, body DomainUpdateTransferAuthCodeJSONRequestBody, reqEditors ...RequestEditorFn) (*DomainUpdateTransferAuthCodeResponse, error) {
+	rsp, err := c.DomainUpdateTransferAuthCode(ctx, domain, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDomainUpdateTransferAuthCodeResponse(rsp)
 }
 
 // EmailSetPasswordWithBodyWithResponse Set email hosting password
@@ -25005,6 +29075,140 @@ func ParseApikeyRetrieveResponse(rsp *http.Response) (*ApikeyRetrieveResponse, e
 	return response, nil
 }
 
+// ParseCloseoutBuyResponse parses an HTTP response from a CloseoutBuyWithResponse call
+func ParseCloseoutBuyResponse(rsp *http.Response) (*CloseoutBuyResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &CloseoutBuyResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest CloseoutBuy200JSONResponseBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 409:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON409 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseCloseoutGetResponse parses an HTTP response from a CloseoutGetWithResponse call
+func ParseCloseoutGetResponse(rsp *http.Response) (*CloseoutGetResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &CloseoutGetResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest CloseoutGet200JSONResponseBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 502:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON502 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseCloseoutSearchResponse parses an HTTP response from a CloseoutSearchWithResponse call
+func ParseCloseoutSearchResponse(rsp *http.Response) (*CloseoutSearchResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &CloseoutSearchResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest CloseoutSearch200JSONResponseBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 502:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON502 = &dest
+
+	}
+
+	return response, nil
+}
+
 // ParseCloudflareConnectResponse parses an HTTP response from a CloudflareConnectWithResponse call
 func ParseCloudflareConnectResponse(rsp *http.Response) (*CloudflareConnectResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -25495,7 +29699,7 @@ func ParseDnsCreateDnssecRecordResponse(rsp *http.Response) (*DnsCreateDnssecRec
 
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
-		var dest BasicResponse
+		var dest DnsCreateDnssecRecord200JSONResponseBody
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -25606,6 +29810,39 @@ func ParseDnsDeleteDnssecRecordResponse(rsp *http.Response) (*DnsDeleteDnssecRec
 			return nil, err
 		}
 		response.JSON400 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseDnsDiffResponse2 parses an HTTP response from a DnsDiffWithResponse call
+func ParseDnsDiffResponse2(rsp *http.Response) (*DnsDiffResponse2, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &DnsDiffResponse2{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest DnsDiffResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
 
 	}
 
@@ -25738,6 +29975,124 @@ func ParseDnsGetDnssecRecordsResponse(rsp *http.Response) (*DnsGetDnssecRecordsR
 			return nil, err
 		}
 		response.JSON400 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseDnsHistoryResponse2 parses an HTTP response from a DnsHistoryWithResponse call
+func ParseDnsHistoryResponse2(rsp *http.Response) (*DnsHistoryResponse2, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &DnsHistoryResponse2{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest DnsHistoryResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseDnsImportResponse parses an HTTP response from a DnsImportWithResponse call
+func ParseDnsImportResponse(rsp *http.Response) (*DnsImportResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &DnsImportResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest DnsImport200JSONResponseBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseDnsPreflightResponse2 parses an HTTP response from a DnsPreflightWithResponse call
+func ParseDnsPreflightResponse2(rsp *http.Response) (*DnsPreflightResponse2, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &DnsPreflightResponse2{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest DnsPreflightResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseDnsRestoreResponse2 parses an HTTP response from a DnsRestoreWithResponse call
+func ParseDnsRestoreResponse2(rsp *http.Response) (*DnsRestoreResponse2, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &DnsRestoreResponse2{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest DnsRestoreResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
 
 	}
 
@@ -25942,6 +30297,46 @@ func ParseDnsRetrieveByNameTypeResponse(rsp *http.Response) (*DnsRetrieveByNameT
 	return response, nil
 }
 
+// ParseDnsScanResponse parses an HTTP response from a DnsScanWithResponse call
+func ParseDnsScanResponse(rsp *http.Response) (*DnsScanResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &DnsScanResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest DnsScan200JSONResponseBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON429 = &dest
+
+	}
+
+	return response, nil
+}
+
 // ParseDomainAddUrlForwardResponse parses an HTTP response from a DomainAddUrlForwardWithResponse call
 func ParseDomainAddUrlForwardResponse(rsp *http.Response) (*DomainAddUrlForwardResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -25969,6 +30364,79 @@ func ParseDomainAddUrlForwardResponse(rsp *http.Response) (*DomainAddUrlForwardR
 			return nil, err
 		}
 		response.JSON400 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseDomainCancelTransferResponse parses an HTTP response from a DomainCancelTransferWithResponse call
+func ParseDomainCancelTransferResponse(rsp *http.Response) (*DomainCancelTransferResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &DomainCancelTransferResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest DomainCancelTransfer200JSONResponseBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseDomainCheckDomainBulkResponse parses an HTTP response from a DomainCheckDomainBulkWithResponse call
+func ParseDomainCheckDomainBulkResponse(rsp *http.Response) (*DomainCheckDomainBulkResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &DomainCheckDomainBulkResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest DomainCheckDomainBulk200JSONResponseBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 429:
+		var dest RateLimitExceeded
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON429 = &dest
 
 	}
 
@@ -26411,6 +30879,39 @@ func ParseGetTransferGetResponse(rsp *http.Response) (*GetTransferGetResponse, e
 	return response, nil
 }
 
+// ParseDomainGetTransferSetupResponse parses an HTTP response from a DomainGetTransferSetupWithResponse call
+func ParseDomainGetTransferSetupResponse(rsp *http.Response) (*DomainGetTransferSetupResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &DomainGetTransferSetupResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest DomainGetTransferSetup200JSONResponseBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	}
+
+	return response, nil
+}
+
 // ParseGetDomainUrlForwardingResponse parses an HTTP response from a GetDomainUrlForwardingWithResponse call
 func ParseGetDomainUrlForwardingResponse(rsp *http.Response) (*GetDomainUrlForwardingResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -26569,6 +31070,39 @@ func ParseListTransfersGetResponse(rsp *http.Response) (*ListTransfersGetRespons
 	return response, nil
 }
 
+// ParseDomainPrepareTransferResponse parses an HTTP response from a DomainPrepareTransferWithResponse call
+func ParseDomainPrepareTransferResponse(rsp *http.Response) (*DomainPrepareTransferResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &DomainPrepareTransferResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest DomainPrepareTransfer200JSONResponseBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	}
+
+	return response, nil
+}
+
 // ParseDomainRenewResponse parses an HTTP response from a DomainRenewWithResponse call
 func ParseDomainRenewResponse(rsp *http.Response) (*DomainRenewResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -26603,6 +31137,39 @@ func ParseDomainRenewResponse(rsp *http.Response) (*DomainRenewResponse, error) 
 			return nil, err
 		}
 		response.JSON429 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseDomainStartTransferResponse parses an HTTP response from a DomainStartTransferWithResponse call
+func ParseDomainStartTransferResponse(rsp *http.Response) (*DomainStartTransferResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &DomainStartTransferResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest DomainStartTransfer200JSONResponseBody
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
 
 	}
 
@@ -26750,6 +31317,39 @@ func ParseDomainUpdateNsResponse(rsp *http.Response) (*DomainUpdateNsResponse, e
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest BasicResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 400:
+		var dest ErrorResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON400 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseDomainUpdateTransferAuthCodeResponse parses an HTTP response from a DomainUpdateTransferAuthCodeWithResponse call
+func ParseDomainUpdateTransferAuthCodeResponse(rsp *http.Response) (*DomainUpdateTransferAuthCodeResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &DomainUpdateTransferAuthCodeResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest DomainUpdateTransferAuthCode200JSONResponseBody
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
