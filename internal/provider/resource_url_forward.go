@@ -15,52 +15,8 @@ import (
 )
 
 type URLForwardResourceModel struct {
-	Id           types.String `tfsdk:"id"`
-	Domain       types.String `tfsdk:"domain"`
-	Subdomain    types.String `tfsdk:"subdomain"`
-	IncludePath  types.Bool   `tfsdk:"include_path"`
-	Location     types.String `tfsdk:"location"`
-	Type         types.String `tfsdk:"type"`
-	RedirectType types.String `tfsdk:"redirect_type"`
-	Wildcard     types.Bool   `tfsdk:"wildcard"`
-}
-
-func (m *URLForwardResourceModel) FromAPI(ctx context.Context, data apiclient.GetUrlForwardingResponse_Forwards) (diags diag.Diagnostics) {
-	m.Id = types.StringPointerValue(data.Id)
-
-	if data.IncludePath == nil {
-		m.IncludePath = types.BoolNull()
-	} else {
-		m.IncludePath = types.BoolValue(*data.IncludePath == apiclient.GetUrlForwardingResponseForwardsIncludePathYes)
-	}
-
-	m.Location = types.StringPointerValue(data.Location)
-
-	if data.RedirectType == nil {
-		m.RedirectType = types.StringNull()
-	} else {
-		m.RedirectType = types.StringValue(string(*data.RedirectType))
-	}
-
-	if data.Subdomain == nil || *data.Subdomain == "" {
-		m.Subdomain = types.StringNull()
-	} else {
-		m.Subdomain = types.StringValue(*data.Subdomain)
-	}
-
-	if data.Type == nil {
-		m.Type = types.StringNull()
-	} else {
-		m.Type = types.StringValue(string(*data.Type))
-	}
-
-	if data.Wildcard == nil {
-		m.Wildcard = types.BoolNull()
-	} else {
-		m.Wildcard = types.BoolValue(*data.Wildcard == apiclient.GetUrlForwardingResponseForwardsWildcardYes)
-	}
-
-	return
+	Domain types.String `tfsdk:"domain"`
+	URLForwardModel
 }
 
 func NewURLForwardResource() resource.Resource {
