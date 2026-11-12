@@ -3,6 +3,10 @@ info:
   title: Overlay
   version: 0.0.0
 actions:
+  # Upstream spec bug: the IdempotencyKey parameter is referenced twice on this operation
+  - target: $.paths['/linkinbio/get/{domain}'].post.parameters[2]
+    remove: true
+
   # Ensure DNS Create returns flexible id type
   - target: $.paths['/dns/create/{domain}'].post.responses['200'].content['application/json'].schema.properties.id
     update:
