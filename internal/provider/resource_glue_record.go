@@ -91,6 +91,7 @@ func (r *GlueRecordResource) Create(ctx context.Context, req resource.CreateRequ
 		ctx,
 		data.Domain.ValueString(),
 		data.Subdomain.ValueString(),
+		nil,
 		body,
 	)
 	if err != nil {
@@ -143,6 +144,7 @@ func (r *GlueRecordResource) Update(ctx context.Context, req resource.UpdateRequ
 		ctx,
 		data.Domain.ValueString(),
 		data.Subdomain.ValueString(),
+		nil,
 		body,
 	)
 	if err != nil {
@@ -173,44 +175,20 @@ func (r *GlueRecordResource) read(ctx context.Context, data *GlueRecordResourceM
 	} else if !apiclient.IsOK(httpResp) {
 		diags.Append(fwdiag.NewClientReadHTTPResponseError(httpResp))
 		return
-	} else if httpResp.JSON200.Hosts == nil {
+	} else if httpResp.JSON200.Glue == nil {
 		diags.AddError("Client error", "Unable to read, got no glue records")
 		return
 	}
 
-	for _, host := range *httpResp.JSON200.Hosts {
-		if len(host) != 2 {
-			diags.AddError("Client error", "Unable to read, got unexpected glue record format")
-			return
-		}
-
-		hostname, err := host[0].AsGetDomainGlue200JSONResponseBodyHosts0()
-		if err != nil {
-			diags.AddError("Client error", "Unable to read, got unexpected glue record format")
-			return
-		}
-
-		if hostname != fmt.Sprintf("%s.%s", data.Subdomain.ValueString(), data.Domain.ValueString()) {
+	want := fmt.Sprintf("%s.%s", data.Subdomain.ValueString(), data.Domain.ValueString())
+	for _, g := range *httpResp.JSON200.Glue {
+		if g.Host != want {
 			continue
 		}
 
-		if ipAddresses, err := host[1].AsGetDomainGlue200JSONResponseBodyHosts1(); err == nil {
-			diags.Append(data.FromAPI(ctx, ipAddresses)...)
-			return
-		} else if ipAddresses, err := host[1].AsGetDomainGlue200JSONResponseBodyHosts2(); err == nil {
-			var ips []string
-			if ipAddresses.V4 != nil {
-				ips = append(ips, *ipAddresses.V4...)
-			}
-			if ipAddresses.V6 != nil {
-				ips = append(ips, *ipAddresses.V6...)
-			}
-			diags.Append(data.FromAPI(ctx, ips)...)
-			return
-		} else {
-			diags.AddError("Client error", "Unable to read, got unexpected glue record format")
-			return
-		}
+		ips := append(append([]string{}, g.V4...), g.V6...)
+		diags.Append(data.FromAPI(ctx, ips)...)
+		return
 	}
 
 	diags.AddError("Client error", "No matching glue record found")
@@ -229,6 +207,7 @@ func (r *GlueRecordResource) Delete(ctx context.Context, req resource.DeleteRequ
 		ctx,
 		data.Domain.ValueString(),
 		data.Subdomain.ValueString(),
+		nil,
 		apiclient.DomainDeleteGlueJSONRequestBody{},
 	)
 	if err != nil {

@@ -68,14 +68,14 @@ func Setup(ctx context.Context) error {
 }
 
 func resetSandbox(ctx context.Context) error {
-	resetHttpResp, err := SharedClient.SandboxResetWithResponse(ctx, apiclient.SandboxResetJSONRequestBody{})
+	resetHttpResp, err := SharedClient.SandboxResetWithResponse(ctx, nil, apiclient.SandboxResetJSONRequestBody{})
 	if err != nil {
 		return fmt.Errorf("failed to reset sandbox: %w", err)
 	} else if resetHttpResp.StatusCode() != http.StatusOK || resetHttpResp.JSON200 == nil {
 		return fmt.Errorf("failed to reset sandbox, status: %d, body: %v", resetHttpResp.StatusCode(), string(resetHttpResp.Body))
 	}
 
-	topupHttpResp, err := SharedClient.SandboxTopupWithResponse(ctx, apiclient.SandboxTopupJSONRequestBody{
+	topupHttpResp, err := SharedClient.SandboxTopupWithResponse(ctx, nil, apiclient.SandboxTopupJSONRequestBody{
 		Amount: new(int64(1000000)),
 	})
 	if err != nil {
@@ -93,7 +93,7 @@ func ensureTestDomain(ctx context.Context) error {
 	}
 
 	searchPrefix := fmt.Sprintf("%s-", domainPrefix)
-	listDomainsHttpResp, err := SharedClient.ListDomainsWithResponse(ctx, apiclient.ListDomainsJSONRequestBody{
+	listDomainsHttpResp, err := SharedClient.ListDomainsWithResponse(ctx, nil, apiclient.ListDomainsJSONRequestBody{
 		NameContains: &searchPrefix,
 	})
 	if err != nil {
@@ -110,7 +110,7 @@ func ensureTestDomain(ctx context.Context) error {
 	}
 
 	newDomain := RandomDomain()
-	domainCheckHttpResp, err := SharedClient.DomainCheckDomainWithResponse(ctx, newDomain, apiclient.DomainCheckDomainJSONRequestBody{})
+	domainCheckHttpResp, err := SharedClient.DomainCheckDomainWithResponse(ctx, newDomain, nil, apiclient.DomainCheckDomainJSONRequestBody{})
 	if err != nil {
 		return fmt.Errorf("failed to check domain availability: %w", err)
 	} else if domainCheckHttpResp.StatusCode() != http.StatusOK || domainCheckHttpResp.JSON200 == nil || domainCheckHttpResp.JSON200.Status != "SUCCESS" {
@@ -126,7 +126,7 @@ func ensureTestDomain(ctx context.Context) error {
 		return fmt.Errorf("failed to parse price: %w", err)
 	}
 
-	domainCreateHttpResp, err := SharedClient.DomainCreateWithResponse(ctx, newDomain, apiclient.DomainCreateJSONRequestBody{
+	domainCreateHttpResp, err := SharedClient.DomainCreateWithResponse(ctx, newDomain, nil, apiclient.DomainCreateJSONRequestBody{
 		AgreeToTerms: "yes",
 		Cost:         int64(math.Round(price * 100)),
 	})

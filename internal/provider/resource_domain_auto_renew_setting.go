@@ -80,6 +80,7 @@ func (r *DomainAutoRenewSettingResource) Create(ctx context.Context, req resourc
 	updateHttpResp, err := r.client.DomainUpdateAutoRenewWithResponse(
 		ctx,
 		data.Domain.ValueString(),
+		nil,
 		body,
 	)
 	if err != nil {
@@ -167,6 +168,7 @@ func (r *DomainAutoRenewSettingResource) Update(ctx context.Context, req resourc
 	updateHttpResp, err := r.client.DomainUpdateAutoRenewWithResponse(
 		ctx,
 		data.Domain.ValueString(),
+		nil,
 		body,
 	)
 	if err != nil {

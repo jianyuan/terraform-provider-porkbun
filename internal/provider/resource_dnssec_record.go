@@ -78,6 +78,7 @@ func (r *DnssecRecordResource) Create(ctx context.Context, req resource.CreateRe
 	createHttpResp, err := r.client.DnsCreateDnssecRecordWithResponse(
 		ctx,
 		data.Domain.ValueString(),
+		nil,
 		params,
 	)
 
@@ -92,6 +93,7 @@ func (r *DnssecRecordResource) Create(ctx context.Context, req resource.CreateRe
 	readHttpResp, err := r.client.DnsGetDnssecRecordsWithResponse(
 		ctx,
 		data.Domain.ValueString(),
+		nil,
 		apiclient.DnsGetDnssecRecordsJSONRequestBody{},
 	)
 	if err != nil {
@@ -130,6 +132,7 @@ func (r *DnssecRecordResource) Read(ctx context.Context, req resource.ReadReques
 	httpResp, err := r.client.DnsGetDnssecRecordsWithResponse(
 		ctx,
 		data.Domain.ValueString(),
+		nil,
 		apiclient.DnsGetDnssecRecordsJSONRequestBody{},
 	)
 	if err != nil {
@@ -176,6 +179,7 @@ func (r *DnssecRecordResource) Delete(ctx context.Context, req resource.DeleteRe
 		ctx,
 		data.Domain.ValueString(),
 		data.KeyTag.ValueString(),
+		nil,
 		apiclient.DnsDeleteDnssecRecordJSONRequestBody{},
 	)
 	if err != nil {

@@ -55,6 +55,7 @@ func (r *DomainResource) quote(ctx context.Context, domain string) (cents int64,
 	httpResp, err := r.client.DomainCheckDomainWithResponse(
 		ctx,
 		domain,
+		nil,
 		apiclient.DomainCheckDomainJSONRequestBody{},
 	)
 	if err != nil {
@@ -159,7 +160,7 @@ func (r *DomainResource) Create(ctx context.Context, req resource.CreateRequest,
 		body.WhoisPrivacy = data.WhoisPrivacy.ValueBoolPointer()
 	}
 
-	httpResp, err := r.client.DomainCreateWithResponse(ctx, domain, body)
+	httpResp, err := r.client.DomainCreateWithResponse(ctx, domain, nil, body)
 	if err != nil {
 		resp.Diagnostics.Append(fwdiag.NewClientCreateError(err))
 		return

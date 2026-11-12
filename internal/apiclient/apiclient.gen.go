@@ -6736,21 +6736,6 @@ type GetDomainGlue200JSONResponseBody_Glue struct {
 // GetDomainGlue200JSONResponseBodyHosts0 defines parameters for GetDomainGlue.
 type GetDomainGlue200JSONResponseBodyHosts0 = string
 
-// GetDomainGlue200JSONResponseBodyHosts2 defines parameters for GetDomainGlue.
-type GetDomainGlue200JSONResponseBodyHosts2 = string
-
-// GetDomainGlue200JSONResponseBodyHosts3 defines parameters for GetDomainGlue.
-type GetDomainGlue200JSONResponseBodyHosts3 = []string
-
-// GetDomainGlue200JSONResponseBodyHosts4 defines parameters for GetDomainGlue.
-type GetDomainGlue200JSONResponseBodyHosts4 GetDomainGlue200JSONResponseBody_Hosts_4
-
-// GetDomainGlue200JSONResponseBody_Hosts_4 defines parameters for GetDomainGlue.
-type GetDomainGlue200JSONResponseBody_Hosts_4 struct {
-	V4 *[]string `json:"v4,omitempty"`
-	V6 *[]string `json:"v6,omitempty"`
-}
-
 // GetDomainGlue200JSONResponseBody_Hosts defines parameters for GetDomainGlue.
 type GetDomainGlue200JSONResponseBody_Hosts struct {
 	union json.RawMessage
@@ -10243,84 +10228,6 @@ func (t *GetDomainGlue200JSONResponseBody_Hosts) FromGlueAddresses(v GlueAddress
 
 // MergeGlueAddresses performs a merge with any union data inside the GetDomainGlue200JSONResponseBody_Hosts, using the provided GlueAddresses
 func (t *GetDomainGlue200JSONResponseBody_Hosts) MergeGlueAddresses(v GlueAddresses) error {
-	b, err := json.Marshal(v)
-	if err != nil {
-		return err
-	}
-
-	merged, err := runtime.JSONMerge(t.union, b)
-	t.union = merged
-	return err
-}
-
-// AsGetDomainGlue200JSONResponseBodyHosts2 returns the union data inside the GetDomainGlue200JSONResponseBody_Hosts as a GetDomainGlue200JSONResponseBodyHosts2
-func (t GetDomainGlue200JSONResponseBody_Hosts) AsGetDomainGlue200JSONResponseBodyHosts2() (GetDomainGlue200JSONResponseBodyHosts2, error) {
-	var body GetDomainGlue200JSONResponseBodyHosts2
-	err := json.Unmarshal(t.union, &body)
-	return body, err
-}
-
-// FromGetDomainGlue200JSONResponseBodyHosts2 overwrites any union data inside the GetDomainGlue200JSONResponseBody_Hosts as the provided GetDomainGlue200JSONResponseBodyHosts2
-func (t *GetDomainGlue200JSONResponseBody_Hosts) FromGetDomainGlue200JSONResponseBodyHosts2(v GetDomainGlue200JSONResponseBodyHosts2) error {
-	b, err := json.Marshal(v)
-	t.union = b
-	return err
-}
-
-// MergeGetDomainGlue200JSONResponseBodyHosts2 performs a merge with any union data inside the GetDomainGlue200JSONResponseBody_Hosts, using the provided GetDomainGlue200JSONResponseBodyHosts2
-func (t *GetDomainGlue200JSONResponseBody_Hosts) MergeGetDomainGlue200JSONResponseBodyHosts2(v GetDomainGlue200JSONResponseBodyHosts2) error {
-	b, err := json.Marshal(v)
-	if err != nil {
-		return err
-	}
-
-	merged, err := runtime.JSONMerge(t.union, b)
-	t.union = merged
-	return err
-}
-
-// AsGetDomainGlue200JSONResponseBodyHosts3 returns the union data inside the GetDomainGlue200JSONResponseBody_Hosts as a GetDomainGlue200JSONResponseBodyHosts3
-func (t GetDomainGlue200JSONResponseBody_Hosts) AsGetDomainGlue200JSONResponseBodyHosts3() (GetDomainGlue200JSONResponseBodyHosts3, error) {
-	var body GetDomainGlue200JSONResponseBodyHosts3
-	err := json.Unmarshal(t.union, &body)
-	return body, err
-}
-
-// FromGetDomainGlue200JSONResponseBodyHosts3 overwrites any union data inside the GetDomainGlue200JSONResponseBody_Hosts as the provided GetDomainGlue200JSONResponseBodyHosts3
-func (t *GetDomainGlue200JSONResponseBody_Hosts) FromGetDomainGlue200JSONResponseBodyHosts3(v GetDomainGlue200JSONResponseBodyHosts3) error {
-	b, err := json.Marshal(v)
-	t.union = b
-	return err
-}
-
-// MergeGetDomainGlue200JSONResponseBodyHosts3 performs a merge with any union data inside the GetDomainGlue200JSONResponseBody_Hosts, using the provided GetDomainGlue200JSONResponseBodyHosts3
-func (t *GetDomainGlue200JSONResponseBody_Hosts) MergeGetDomainGlue200JSONResponseBodyHosts3(v GetDomainGlue200JSONResponseBodyHosts3) error {
-	b, err := json.Marshal(v)
-	if err != nil {
-		return err
-	}
-
-	merged, err := runtime.JSONMerge(t.union, b)
-	t.union = merged
-	return err
-}
-
-// AsGetDomainGlue200JSONResponseBodyHosts4 returns the union data inside the GetDomainGlue200JSONResponseBody_Hosts as a GetDomainGlue200JSONResponseBodyHosts4
-func (t GetDomainGlue200JSONResponseBody_Hosts) AsGetDomainGlue200JSONResponseBodyHosts4() (GetDomainGlue200JSONResponseBodyHosts4, error) {
-	var body GetDomainGlue200JSONResponseBodyHosts4
-	err := json.Unmarshal(t.union, &body)
-	return body, err
-}
-
-// FromGetDomainGlue200JSONResponseBodyHosts4 overwrites any union data inside the GetDomainGlue200JSONResponseBody_Hosts as the provided GetDomainGlue200JSONResponseBodyHosts4
-func (t *GetDomainGlue200JSONResponseBody_Hosts) FromGetDomainGlue200JSONResponseBodyHosts4(v GetDomainGlue200JSONResponseBodyHosts4) error {
-	b, err := json.Marshal(v)
-	t.union = b
-	return err
-}
-
-// MergeGetDomainGlue200JSONResponseBodyHosts4 performs a merge with any union data inside the GetDomainGlue200JSONResponseBody_Hosts, using the provided GetDomainGlue200JSONResponseBodyHosts4
-func (t *GetDomainGlue200JSONResponseBody_Hosts) MergeGetDomainGlue200JSONResponseBodyHosts4(v GetDomainGlue200JSONResponseBodyHosts4) error {
 	b, err := json.Marshal(v)
 	if err != nil {
 		return err

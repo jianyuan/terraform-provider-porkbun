@@ -44,6 +44,7 @@ func (r *DomainNameserversResource) Create(ctx context.Context, req resource.Cre
 	createHttpResp, err := r.client.DomainUpdateNsWithResponse(
 		ctx,
 		data.Domain.ValueString(),
+		nil,
 		apiclient.DomainUpdateNsJSONRequestBody{
 			Ns: nameservers,
 		},
@@ -133,6 +134,7 @@ func (r *DomainNameserversResource) Update(ctx context.Context, req resource.Upd
 	updateHttpResp, err := r.client.DomainUpdateNsWithResponse(
 		ctx,
 		data.Domain.ValueString(),
+		nil,
 		apiclient.DomainUpdateNsJSONRequestBody{
 			Ns: nameservers,
 		},
