@@ -69,6 +69,7 @@ func (r *URLForwardResource) Create(ctx context.Context, req resource.CreateRequ
 	httpResp, err := r.client.DomainAddUrlForwardWithResponse(
 		ctx,
 		data.Domain.ValueString(),
+		nil,
 		params,
 	)
 	if err != nil {
@@ -186,6 +187,7 @@ func (r *URLForwardResource) Delete(ctx context.Context, req resource.DeleteRequ
 		ctx,
 		data.Domain.ValueString(),
 		data.Id.ValueString(),
+		nil,
 		apiclient.DomainDeleteUrlForwardJSONRequestBody{},
 	)
 	if err != nil {

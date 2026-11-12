@@ -3,6 +3,10 @@ info:
   title: Overlay
   version: 0.0.0
 actions:
+  # Upstream spec bug: the IdempotencyKey parameter is referenced twice on this operation
+  - target: $.paths['/linkinbio/get/{domain}'].post.parameters[2]
+    remove: true
+
   # Ensure DNS Create returns flexible id type
   - target: $.paths['/dns/create/{domain}'].post.responses['200'].content['application/json'].schema.properties.id
     update:
@@ -10,26 +14,6 @@ actions:
       x-go-type: porkbuntypes.StringID
       x-go-type-import:
         path: github.com/jianyuan/terraform-provider-porkbun/internal/porkbuntypes
-
-  # Ensure Get Glue returns an array of items
-  - target: $.paths['/domain/getGlue/{domain}'].get.responses['200'].content['application/json'].schema.properties.hosts.items
-    update:
-      items:
-        oneOf:
-          - type: string
-          - type: array
-            items:
-              type: string
-          - type: object
-            properties:
-              v4:
-                type: array
-                items:
-                  type: string
-              v6:
-                type: array
-                items:
-                  type: string
 
   # Ensure DNS Records Response records ttl and prio are flexible integers
   - target: $.components.schemas.DnsRecordsResponse.properties.records.items.properties['ttl', 'prio']

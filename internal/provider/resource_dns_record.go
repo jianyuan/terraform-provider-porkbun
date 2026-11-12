@@ -76,6 +76,7 @@ func (r *DnsRecordResource) Create(ctx context.Context, req resource.CreateReque
 	httpResp, err := r.client.DnsCreateWithResponse(
 		ctx,
 		data.Domain.ValueString(),
+		nil,
 		body,
 	)
 	if err != nil {
@@ -122,8 +123,8 @@ func (r *DnsRecordResource) Update(ctx context.Context, req resource.UpdateReque
 
 	body := apiclient.DnsEditJSONRequestBody{
 		Name:    data.Subdomain.ValueStringPointer(),
-		Type:    apiclient.EditDnsRequestType(data.Type.ValueString()),
-		Content: data.Content.ValueString(),
+		Type:    porkbuntypes.StringPointerAs[apiclient.EditDnsRequestType](data.Type.ValueStringPointer()),
+		Content: data.Content.ValueStringPointer(),
 		Prio:    data.Priority.ValueInt64Pointer(),
 		Ttl:     data.Ttl.ValueInt64Pointer(),
 		Notes:   data.Notes.ValueStringPointer(),
@@ -133,6 +134,7 @@ func (r *DnsRecordResource) Update(ctx context.Context, req resource.UpdateReque
 		ctx,
 		data.Domain.ValueString(),
 		data.Id.ValueString(),
+		nil,
 		body,
 	)
 
@@ -186,6 +188,7 @@ func (r *DnsRecordResource) Delete(ctx context.Context, req resource.DeleteReque
 		ctx,
 		data.Domain.ValueString(),
 		data.Id.ValueString(),
+		nil,
 		apiclient.DnsDeleteJSONRequestBody{},
 	)
 	if err != nil {

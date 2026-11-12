@@ -17,40 +17,14 @@ type GlueRecordsDataSourceModel struct {
 	Hosts  supertypes.MapNestedObjectValueOf[GlueRecordsDataSourceModelHostItem] `tfsdk:"hosts"`
 }
 
-func (m *GlueRecordsDataSourceModel) FromAPI(ctx context.Context, hosts [][]apiclient.GetDomainGlue200JSONResponseBody_Hosts) (diags diag.Diagnostics) {
+func (m *GlueRecordsDataSourceModel) FromAPI(ctx context.Context, glue []apiclient.GetDomainGlue200JSONResponseBody_Glue) (diags diag.Diagnostics) {
 	outHosts := make(map[string]GlueRecordsDataSourceModelHostItem)
 
-	for _, host := range hosts {
-		if len(host) != 2 {
-			diags.AddError("Client error", "Unable to read, got unexpected glue record format")
-			return
-		}
-
-		hostname, err := host[0].AsGetDomainGlue200JSONResponseBodyHosts0()
-		if err != nil {
-			diags.AddError("Client error", "Unable to read, got unexpected glue record format")
-			return
-		}
-
+	for _, g := range glue {
 		var mm GlueRecordsDataSourceModelHostItem
-
-		if ipAddresses, err := host[1].AsGetDomainGlue200JSONResponseBodyHosts1(); err == nil {
-			diags.Append(mm.FromAPI(ctx, ipAddresses)...)
-		} else if ipAddresses, err := host[1].AsGetDomainGlue200JSONResponseBodyHosts2(); err == nil {
-			var ips []string
-			if ipAddresses.V4 != nil {
-				ips = append(ips, *ipAddresses.V4...)
-			}
-			if ipAddresses.V6 != nil {
-				ips = append(ips, *ipAddresses.V6...)
-			}
-			diags.Append(mm.FromAPI(ctx, ips)...)
-		} else {
-			diags.AddError("Client error", "Unable to read, got unexpected glue record format")
-			return
-		}
-
-		outHosts[hostname] = mm
+		ips := append(append([]string{}, g.V4...), g.V6...)
+		diags.Append(mm.FromAPI(ctx, ips)...)
+		outHosts[g.Host] = mm
 	}
 
 	m.Hosts = supertypes.NewMapNestedObjectValueOfValueMap(ctx, outHosts)
@@ -126,12 +100,12 @@ func (d *GlueRecordsDataSource) Read(ctx context.Context, req datasource.ReadReq
 	} else if !apiclient.IsOK(httpResp) {
 		resp.Diagnostics.Append(fwdiag.NewClientReadHTTPResponseError(httpResp))
 		return
-	} else if httpResp.JSON200.Hosts == nil {
+	} else if httpResp.JSON200.Glue == nil {
 		resp.Diagnostics.AddError("Client error", "Unable to read, got no glue records")
 		return
 	}
 
-	resp.Diagnostics.Append(data.FromAPI(ctx, *httpResp.JSON200.Hosts)...)
+	resp.Diagnostics.Append(data.FromAPI(ctx, *httpResp.JSON200.Glue)...)
 	if resp.Diagnostics.HasError() {
 		return
 	}
