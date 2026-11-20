@@ -1,0 +1,126 @@
+name: Label PR
+
+on:
+  pull_request_target:
+    types: [opened, edited, reopened, synchronize]
+  # Labels open PRs and PRs merged since the latest release.
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: write
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || 'backfill' }}
+  cancel-in-progress: true
+
+jobs:
+  label:
+    name: Label PR
+    runs-on: ubuntu-latest
+    steps:
+      # Labels the PR from its Conventional Commit title, e.g. "feat(api)!: ...", falling back to
+      # its changed files. Only reads the event payload and the API, so it is safe to run on
+      # pull_request_target.
+      - uses: actions/github-script@v9
+        with:
+          script: |
+            // Candidate labels in order of preference. Only labels that already exist in the repo
+            // are applied, because addLabels would otherwise create them.
+            const candidates = {
+              feat: ["enhancement", "feature"],
+              fix: ["bug", "fix"],
+              docs: ["documentation", "docs"],
+              maintenance: ["maintenance", "chore"],
+              dependencies: ["dependencies"],
+              breaking: ["breaking-change", "breaking"],
+            };
+            const typeKeys = {
+              feat: "feat",
+              fix: "fix",
+              docs: "docs",
+              build: "maintenance",
+              chore: "maintenance",
+              ci: "maintenance",
+              perf: "maintenance",
+              refactor: "maintenance",
+              revert: "maintenance",
+              style: "maintenance",
+              test: "maintenance",
+            };
+            // Used when the title has no known type: the first rule that matches every changed file.
+            const fileRules = [
+              ["docs", (file) => /(^|\/)docs?\/|\.(md|mdx|rst)$|^mkdocs\.ya?ml$/i.test(file)],
+              ["dependencies", (file) => /(^|\/)(uv\.lock|poetry\.lock|package-lock\.json|pnpm-lock\.yaml|yarn\.lock|bun\.lockb?|go\.sum|Cargo\.lock|Gemfile\.lock|composer\.lock)$/.test(file)],
+              ["maintenance", (file) => /^\.github\/|^\.pre-commit-config\.yaml$|^renovate\.json5?$|^\.gitignore$/.test(file)],
+            ];
+            const typeLabelKeys = new Set(Object.values(typeKeys));
+            const bots = new Set(["renovate[bot]", "dependabot[bot]"]);
+
+            const { owner, repo } = context.repo;
+            const repoLabels = await github.paginate(github.rest.issues.listLabelsForRepo, { owner, repo, per_page: 100 });
+            const existing = new Set(repoLabels.map((label) => label.name));
+            const labelFor = Object.fromEntries(
+              Object.entries(candidates).map(([key, names]) => [key, names.find((name) => existing.has(name))]),
+            );
+            const managed = new Set(Object.values(labelFor).filter(Boolean));
+
+            async function label(pr) {
+              const keys = new Set();
+              const match = pr.title.match(/^(\w+)(?:\(([^)]*)\))?(!)?:/);
+              if (match) {
+                const [, type, scope, breaking] = match;
+                if (typeKeys[type]) keys.add(typeKeys[type]);
+                if (scope === "deps") keys.add("dependencies");
+                if (breaking) keys.add("breaking");
+              }
+              if (/^BREAKING[ -]CHANGE:/m.test(pr.body ?? "")) keys.add("breaking");
+              if (bots.has(pr.user.login)) keys.add("dependencies");
+
+              if (![...keys].some((key) => typeLabelKeys.has(key))) {
+                const files = await github.paginate(github.rest.pulls.listFiles, { owner, repo, pull_number: pr.number, per_page: 100 });
+                const names = files.map((file) => file.filename);
+                const rule = names.length > 0 && fileRules.find(([, test]) => names.every(test));
+                if (rule) keys.add(rule[0]);
+              }
+
+              const wanted = new Set([...keys].map((key) => labelFor[key]).filter(Boolean));
+              const current = new Set(pr.labels.map((label) => label.name));
+              const toAdd = [...wanted].filter((name) => !current.has(name));
+              const toRemove = [...current].filter((name) => managed.has(name) && !wanted.has(name));
+
+              const issue = { owner, repo, issue_number: pr.number };
+              if (toAdd.length > 0) {
+                await github.rest.issues.addLabels({ ...issue, labels: toAdd });
+              }
+              for (const name of toRemove) {
+                await github.rest.issues.removeLabel({ ...issue, name });
+              }
+              core.info(`#${pr.number} ${pr.title}: added ${toAdd.join(", ") || "none"}; removed ${toRemove.join(", ") || "none"}`);
+            }
+
+            if (context.eventName !== "workflow_dispatch") {
+              await label(context.payload.pull_request);
+              return;
+            }
+
+            let since = null;
+            try {
+              const { data: release } = await github.rest.repos.getLatestRelease({ owner, repo });
+              since = release.published_at ?? release.created_at;
+            } catch (error) {
+              if (error.status !== 404) throw error;
+            }
+            const open = await github.paginate(github.rest.pulls.list, { owner, repo, state: "open", per_page: 100 });
+            // Sorted by last update, so paging can stop once PRs predate the latest release.
+            const merged = await github.paginate(
+              github.rest.pulls.list,
+              { owner, repo, state: "closed", sort: "updated", direction: "desc", per_page: 100 },
+              (response, done) => {
+                if (since && response.data.some((pr) => pr.updated_at < since)) done();
+                return response.data.filter((pr) => pr.merged_at && (!since || pr.merged_at > since));
+              },
+            );
+            for (const pr of [...open, ...merged]) {
+              await label(pr);
+            }
