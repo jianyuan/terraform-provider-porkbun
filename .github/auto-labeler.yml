@@ -1,0 +1,43 @@
+# Each key is a label. It applies when any matcher in its list holds; a matcher
+# holds when all its conditions hold. Labels missing from the repo are skipped.
+enhancement:
+  - title: '^feat(\([^)]*\))?!?:'
+
+bug:
+  - title: '^fix(\([^)]*\))?!?:'
+    # Dependency bumps go under Dependencies only.
+    not:
+      title: '^fix\(deps\)'
+
+documentation:
+  - title: '^docs(\([^)]*\))?!?:'
+  # Fallback for titles without a Conventional Commit type.
+  - files:
+      - '**/*.md'
+      - '**/*.mdx'
+      - '**/*.rst'
+      - docs/**
+      - mkdocs.yml
+    not:
+      title: &typed '^(build|chore|ci|docs|feat|fix|perf|refactor|revert|style|test)(\([^)]*\))?!?:'
+
+dependencies:
+  - title: '^\w+\(deps\)!?:'
+  - author:
+      - renovate[bot]
+      - dependabot[bot]
+  - files:
+      - '**/uv.lock'
+      - '**/poetry.lock'
+      - '**/package-lock.json'
+      - '**/pnpm-lock.yaml'
+      - '**/yarn.lock'
+      - '**/bun.lock'
+      - '**/bun.lockb'
+      - '**/go.sum'
+      - '**/Cargo.lock'
+      - '**/Gemfile.lock'
+      - '**/composer.lock'
+    not:
+      title: *typed
+
