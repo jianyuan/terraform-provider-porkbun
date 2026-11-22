@@ -126,6 +126,7 @@ func (p *PorkbunProvider) Resources(ctx context.Context) []func() resource.Resou
 		NewDomainNameserversResource,
 		NewDomainResource,
 		NewGlueRecordResource,
+		NewEmailForwardResource,
 		NewURLForwardResource,
 	}
 }
@@ -141,6 +142,7 @@ func (p *PorkbunProvider) DataSources(ctx context.Context) []func() datasource.D
 		NewDomainNameserversDataSource,
 		NewDomainsDataSource,
 		NewGlueRecordsDataSource,
+		NewEmailForwardsDataSource,
 		NewURLForwardsDataSource,
 	}
 }

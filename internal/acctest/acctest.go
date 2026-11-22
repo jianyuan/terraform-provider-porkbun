@@ -25,6 +25,7 @@ var (
 	TestApiKey                = os.Getenv("PORKBUN_API_KEY")
 	TestSecretKey             = os.Getenv("PORKBUN_SECRET_KEY")
 	TestRunDomainRegistration = os.Getenv("PORKBUN_RUN_DOMAIN_REGISTRATION") == "1"
+	TestRunEmailForward       = os.Getenv("PORKBUN_RUN_EMAIL_FORWARD") == "1"
 	TestDomain                string
 
 	SharedClient *apiclient.ClientWithResponses
