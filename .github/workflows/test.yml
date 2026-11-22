@@ -8,12 +8,20 @@ on:
     paths-ignore:
       - "README.md"
   push:
+    branches:
+      - main
     paths-ignore:
       - "README.md"
 
 # Testing only needs permissions to read the repository contents.
 permissions:
   contents: read
+
+# The acceptance tests share one Porkbun account, so queue whole runs. A job-level
+# group would make the matrix versions cancel each other.
+concurrency:
+  group: porkbun-acceptance
+  cancel-in-progress: false
 
 jobs:
   # Ensure project builds before running testing matrix
@@ -62,7 +70,8 @@ jobs:
       max-parallel: 1
       matrix:
         terraform:
-          - "1.13.*"
+          - "1.16.*"
+          - "1.17.*"
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-go@v7

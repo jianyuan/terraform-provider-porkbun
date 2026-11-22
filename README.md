@@ -13,7 +13,7 @@ If you find this provider useful, please consider supporting me through GitHub S
 
 ## Requirements
 
-- [Terraform](https://developer.hashicorp.com/terraform/downloads) >= 1.13
+- [Terraform](https://developer.hashicorp.com/terraform/downloads) >= 1.16
 - [Go](https://golang.org/doc/install) >= 1.27
 
 ## Building The Provider
