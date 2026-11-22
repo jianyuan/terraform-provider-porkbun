@@ -45,8 +45,10 @@ func run() error {
 	if err := json.Unmarshal(raw, &spec); err != nil {
 		return fmt.Errorf("parsing spec: %w", err)
 	}
-	log.Print("repairing spec (empty `properties` arrays)")
-	fixEmptyProperties(spec)
+	log.Print("repairing spec (empty `properties` and `items` arrays)")
+	fixEmptyArrays(spec)
+	log.Print("repairing spec (duplicate parameter refs)")
+	dedupeParameters(spec)
 
 	var buf bytes.Buffer
 	enc := json.NewEncoder(&buf)
@@ -75,22 +77,52 @@ func run() error {
 	return nil
 }
 
-// fixEmptyProperties replaces `"properties": []` (an empty PHP array serialized
-// as a JSON array) with an empty object, as required by OpenAPI.
-func fixEmptyProperties(v any) {
+// fixEmptyArrays replaces `"properties": []` and `"items": []` (empty PHP arrays
+// serialized as JSON arrays) with an empty object, as required by OpenAPI.
+func fixEmptyArrays(v any) {
 	switch v := v.(type) {
 	case map[string]any:
 		for k, child := range v {
-			if arr, ok := child.([]any); ok && k == "properties" && len(arr) == 0 {
+			if arr, ok := child.([]any); ok && (k == "properties" || k == "items") && len(arr) == 0 {
 				log.Printf("  fixed empty array at %q", k)
 				v[k] = map[string]any{}
 				continue
 			}
-			fixEmptyProperties(child)
+			fixEmptyArrays(child)
 		}
 	case []any:
 		for _, child := range v {
-			fixEmptyProperties(child)
+			fixEmptyArrays(child)
+		}
+	}
+}
+
+// dedupeParameters drops repeated `$ref` entries from each operation's
+// `parameters`, which upstream sometimes lists twice (e.g. IdempotencyKey).
+func dedupeParameters(v any) {
+	switch v := v.(type) {
+	case map[string]any:
+		if params, ok := v["parameters"].([]any); ok {
+			seen := map[string]bool{}
+			kept := params[:0]
+			for _, p := range params {
+				if ref, ok := p.(map[string]any)["$ref"].(string); ok {
+					if seen[ref] {
+						log.Printf("  dropped duplicate parameter %q", ref)
+						continue
+					}
+					seen[ref] = true
+				}
+				kept = append(kept, p)
+			}
+			v["parameters"] = kept
+		}
+		for _, child := range v {
+			dedupeParameters(child)
+		}
+	case []any:
+		for _, child := range v {
+			dedupeParameters(child)
 		}
 	}
 }
