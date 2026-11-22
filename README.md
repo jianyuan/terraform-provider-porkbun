@@ -1,6 +1,8 @@
 # Terraform Provider Porkbun
 
-Unoffical Terraform provider for [Porkbun](https://porkbun.com).
+Unofficial Terraform provider for [Porkbun](https://porkbun.com).
+
+> **Available for consulting.** Need help with Terraform, infrastructure automation or AI agents? Get in touch at [jian.fyi](https://jian.fyi?utm_source=github&utm_medium=readme&utm_campaign=terraform-provider-porkbun).
 
 ## Support Development
 
@@ -11,8 +13,8 @@ If you find this provider useful, please consider supporting me through GitHub S
 
 ## Requirements
 
-- [Terraform](https://developer.hashicorp.com/terraform/downloads) >= 1.0
-- [Go](https://golang.org/doc/install) >= 1.22
+- [Terraform](https://developer.hashicorp.com/terraform/downloads) >= 1.13
+- [Go](https://golang.org/doc/install) >= 1.27
 
 ## Building The Provider
 
