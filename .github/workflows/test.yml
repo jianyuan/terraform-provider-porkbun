@@ -57,12 +57,16 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    concurrency:
+      group: porkbun-acceptance
+      cancel-in-progress: false
     strategy:
       fail-fast: false
       max-parallel: 1
       matrix:
         terraform:
-          - "1.13.*"
+          - "1.16.*"
+          - "1.17.*"
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-go@v7
