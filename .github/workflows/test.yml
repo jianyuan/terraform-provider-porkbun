@@ -15,6 +15,12 @@ on:
 permissions:
   contents: read
 
+# The acceptance tests share one Porkbun account, so queue whole runs. A job-level
+# group would make the matrix versions cancel each other.
+concurrency:
+  group: porkbun-acceptance
+  cancel-in-progress: false
+
 jobs:
   # Ensure project builds before running testing matrix
   build:
@@ -57,9 +63,6 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     timeout-minutes: 15
-    concurrency:
-      group: porkbun-acceptance
-      cancel-in-progress: false
     strategy:
       fail-fast: false
       max-parallel: 1
