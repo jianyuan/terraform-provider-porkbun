@@ -3,7 +3,11 @@ package provider
 import (
 	"context"
 
+	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
+	supertypes "github.com/orange-cloudavenue/terraform-plugin-framework-supertypes"
+
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
+	"github.com/jianyuan/terraform-plugin-framework-utils/fwschema"
 	"github.com/jianyuan/terraform-provider-porkbun/internal/apiclient"
 	"github.com/jianyuan/terraform-provider-porkbun/internal/fwdiag"
 )
@@ -23,7 +27,20 @@ func (d *DomainNameserversDataSource) Metadata(ctx context.Context, req datasour
 }
 
 func (d *DomainNameserversDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
-	resp.Schema = domainNameserversSchema().GetDataSource(ctx)
+	resp.Schema = fwschema.Describe(ctx, schema.Schema{
+		MarkdownDescription: "Get the authoritative name servers listed at the registry for your domain.",
+		Attributes: map[string]schema.Attribute{
+			"domain": schema.StringAttribute{
+				MarkdownDescription: "The domain name for which to retrieve the authoritative name servers.",
+				Required:            true,
+			},
+			"nameservers": schema.SetAttribute{
+				MarkdownDescription: "The authoritative name servers for the domain.",
+				Computed:            true,
+				CustomType:          supertypes.NewSetTypeOf[string](ctx),
+			},
+		},
+	}, fwschema.DefaultSteps()...)
 }
 
 func (d *DomainNameserversDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {

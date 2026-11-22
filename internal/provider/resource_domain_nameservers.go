@@ -4,7 +4,15 @@ import (
 	"context"
 	"net/http"
 
+	"github.com/hashicorp/terraform-plugin-framework-validators/setvalidator"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
+	supertypes "github.com/orange-cloudavenue/terraform-plugin-framework-supertypes"
+
 	"github.com/hashicorp/terraform-plugin-framework/resource"
+	"github.com/jianyuan/terraform-plugin-framework-utils/fwschema"
 	"github.com/jianyuan/terraform-provider-porkbun/internal/apiclient"
 	"github.com/jianyuan/terraform-provider-porkbun/internal/fwdiag"
 )
@@ -24,7 +32,26 @@ func (r *DomainNameserversResource) Metadata(ctx context.Context, req resource.M
 }
 
 func (r *DomainNameserversResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
-	resp.Schema = domainNameserversSchema().GetResource(ctx)
+	resp.Schema = fwschema.Describe(ctx, schema.Schema{
+		MarkdownDescription: "Update the name servers for your domain.",
+		Attributes: map[string]schema.Attribute{
+			"domain": schema.StringAttribute{
+				MarkdownDescription: "The domain name for which to manage the authoritative name servers.",
+				Required:            true,
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.RequiresReplace(),
+				},
+			},
+			"nameservers": schema.SetAttribute{
+				MarkdownDescription: "The authoritative name servers for the domain.",
+				Required:            true,
+				CustomType:          supertypes.NewSetTypeOf[string](ctx),
+				Validators: []validator.Set{
+					setvalidator.SizeAtLeast(1),
+				},
+			},
+		},
+	}, fwschema.DefaultSteps()...)
 }
 
 func (r *DomainNameserversResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {

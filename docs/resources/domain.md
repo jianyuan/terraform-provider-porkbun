@@ -32,12 +32,12 @@ resource "porkbun_domain" "example" {
 
 ### Required
 
-- `domain` (String) <i style="color:red;font-weight: bold">(ForceNew)</i> The fully qualified domain name to register.
+- `domain` (String) <span style="color:red">(Force new)</span> The fully qualified domain name to register.
 
 ### Optional
 
 - `max_cost` (Number) The most, in US cents, that this registration may cost. The apply fails before anything is charged if the live quote is higher. Omit to accept any price.
-- `whois_privacy` (Boolean) <i style="color:red;font-weight: bold">(ForceNew)</i> Indicates if WHOIS privacy protection is active to hide personal registrant details from the public WHOIS database. Whether to register with WHOIS privacy. Defaults to the account-level setting. A TLD that does not offer privacy ignores this.
+- `whois_privacy` (Boolean) <span style="color:red">(Force new)</span> Whether to register with WHOIS privacy protection, which hides personal registrant details from the public WHOIS database. Defaults to the account-level setting. A TLD that does not offer privacy ignores this.
 
 ### Read-Only
 

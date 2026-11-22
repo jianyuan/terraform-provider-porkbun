@@ -6,10 +6,16 @@ import (
 	"math/big"
 	"net/http"
 
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/boolplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
+
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+	"github.com/jianyuan/terraform-plugin-framework-utils/fwschema"
 	"github.com/jianyuan/terraform-plugin-framework-utils/fwtypes"
 	"github.com/jianyuan/terraform-provider-porkbun/internal/apiclient"
 	"github.com/jianyuan/terraform-provider-porkbun/internal/fwdiag"
@@ -44,7 +50,78 @@ func (r *DomainResource) Metadata(ctx context.Context, req resource.MetadataRequ
 }
 
 func (r *DomainResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
-	resp.Schema = domainSchema().GetResource(ctx)
+	resp.Schema = fwschema.Describe(ctx, schema.Schema{
+		MarkdownDescription: "Registers a domain and holds it in state.\n\n" +
+			"The price is not written in the configuration. On create the provider quotes the domain " +
+			"through `/domain/checkDomain`, converts the quote to the US cents the API demands, and " +
+			"sends that as `cost`. Set `max_cost` to put a ceiling on what an unattended apply may spend: " +
+			"a first-year promotional price that lapses would otherwise be paid silently at the standard rate.\n\n" +
+			"Porkbun exposes no endpoint that deletes a registration, so `terraform destroy` only drops the " +
+			"resource from state. The registration itself stands until it expires. Guard the resource with " +
+			"`prevent_destroy` if an accidental removal from state would be costly to reconcile.",
+		Attributes: map[string]schema.Attribute{
+			"domain": schema.StringAttribute{
+				MarkdownDescription: "The fully qualified domain name to register.",
+				Required:            true,
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.RequiresReplace(),
+				},
+			},
+			"max_cost": schema.Int64Attribute{
+				MarkdownDescription: "The most, in US cents, that this registration may cost. The apply fails " +
+					"before anything is charged if the live quote is higher. Omit to accept any price.",
+				Optional: true,
+			},
+			"cost": schema.Int64Attribute{
+				MarkdownDescription: "What the registration actually cost, in US cents.",
+				Computed:            true,
+			},
+			"order_id": schema.Int64Attribute{
+				MarkdownDescription: "Porkbun's internal order id for the registration.",
+				Computed:            true,
+			},
+			"whois_privacy": schema.BoolAttribute{
+				MarkdownDescription: "Whether to register with WHOIS privacy protection, which hides personal registrant details from the public WHOIS database. Defaults to the account-level setting. A TLD that does not offer privacy ignores this.",
+				Optional:            true,
+				Computed:            true,
+				PlanModifiers: []planmodifier.Bool{
+					boolplanmodifier.RequiresReplace(),
+				},
+			},
+			"status": schema.StringAttribute{
+				MarkdownDescription: "The status of the domain.",
+				Computed:            true,
+			},
+			"tld": schema.StringAttribute{
+				MarkdownDescription: "The TLD of the domain.",
+				Computed:            true,
+			},
+			"create_date": schema.StringAttribute{
+				MarkdownDescription: "The creation date of the domain.",
+				Computed:            true,
+			},
+			"expire_date": schema.StringAttribute{
+				MarkdownDescription: "The expiration date of the domain.",
+				Computed:            true,
+			},
+			"security_lock": schema.BoolAttribute{
+				MarkdownDescription: "Indicates if the Registrar Lock/Transfer Lock is enabled to prevent unauthorized domain transfers.",
+				Computed:            true,
+			},
+			"auto_renew": schema.BoolAttribute{
+				MarkdownDescription: "Indicates whether the domain will automatically renew before its expiration date.",
+				Computed:            true,
+			},
+			"api_access": schema.BoolAttribute{
+				MarkdownDescription: "Indicates whether API access is enabled for the domain.",
+				Computed:            true,
+			},
+			"not_local": schema.BoolAttribute{
+				MarkdownDescription: "Indicates if the domain is registered with an external, third-party registrar.",
+				Computed:            true,
+			},
+		},
+	}, fwschema.DefaultSteps()...)
 }
 
 // quote asks the API what the domain costs right now and returns the total in US

@@ -6,10 +6,17 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
+
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+	"github.com/jianyuan/terraform-plugin-framework-utils/fwschema"
 	"github.com/jianyuan/terraform-provider-porkbun/internal/apiclient"
 	"github.com/jianyuan/terraform-provider-porkbun/internal/fwdiag"
 	"github.com/jianyuan/terraform-provider-porkbun/internal/porkbuntypes"
@@ -53,7 +60,62 @@ func (r *DnsRecordResource) Metadata(ctx context.Context, req resource.MetadataR
 }
 
 func (r *DnsRecordResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
-	resp.Schema = dnsRecordSchema().GetResource(ctx)
+	resp.Schema = fwschema.Describe(ctx, schema.Schema{
+		MarkdownDescription: "Manage a DNS record for a domain.",
+		Attributes: map[string]schema.Attribute{
+			"domain": schema.StringAttribute{
+				MarkdownDescription: "The domain name.",
+				Required:            true,
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.RequiresReplace(),
+				},
+			},
+			"id": schema.StringAttribute{
+				MarkdownDescription: "The record ID.",
+				Computed:            true,
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.UseStateForUnknown(),
+				},
+			},
+			"subdomain": schema.StringAttribute{
+				MarkdownDescription: "The subdomain for the record being created, not including the domain itself. Omit to create a record on the root domain. Use * to create a wildcard record.",
+				Optional:            true,
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.RequiresReplace(),
+				},
+			},
+			"name": schema.StringAttribute{
+				MarkdownDescription: "The full name of the record being created, including the subdomain and the domain itself.",
+				Computed:            true,
+			},
+			"type": schema.StringAttribute{
+				MarkdownDescription: "The DNS record type.",
+				Required:            true,
+				Validators: []validator.String{
+					stringvalidator.OneOf(DnsRecordTypes...),
+				},
+			},
+			"content": schema.StringAttribute{
+				MarkdownDescription: "The record value.",
+				Required:            true,
+			},
+			"ttl": schema.Int64Attribute{
+				MarkdownDescription: "Time to live in seconds. Minimum is determined by account settings (typically 600). Defaults to the account minimum if omitted or 0.",
+				Optional:            true,
+				Computed:            true,
+			},
+			"priority": schema.Int64Attribute{
+				MarkdownDescription: "The priority for `MX` and `SRV` records. Defaults to 0 if omitted.",
+				Optional:            true,
+				Computed:            true,
+			},
+			"notes": schema.StringAttribute{
+				MarkdownDescription: "Optional notes to store with the record. Not served in DNS.",
+				Optional:            true,
+				Computed:            true,
+			},
+		},
+	}, fwschema.DefaultSteps()...)
 }
 
 func (r *DnsRecordResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {

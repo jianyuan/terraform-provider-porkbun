@@ -35,16 +35,16 @@ resource "porkbun_url_forward" "wildcard" {
 
 ### Required
 
-- `domain` (String) <i style="color:red;font-weight: bold">(ForceNew)</i> The domain for the URL forward.
-- `include_path` (Boolean) <i style="color:red;font-weight: bold">(ForceNew)</i> Whether to append the request URI path to the forwarding destination.
-- `location` (String) <i style="color:red;font-weight: bold">(ForceNew)</i> The destination URL to forward to.
-- `type` (String) <i style="color:red;font-weight: bold">(ForceNew)</i> Redirect kind. `permanent` = HTTP 301; `temporary` = HTTP 302 (default); `masked` = loads the destination in a frame (URL masking). For a precise code — including a 307 temporary redirect — use `redirect_type`. Value must be one of : `permanent`, `temporary`, `masked`.
-- `wildcard` (Boolean) <i style="color:red;font-weight: bold">(ForceNew)</i> Whether to also forward all subdomains of the forwarded subdomain.
+- `domain` (String) <span style="color:red">(Force new)</span> The domain for the URL forward.
+- `include_path` (Boolean) <span style="color:red">(Force new)</span> Whether to append the request URI path to the forwarding destination.
+- `location` (String) <span style="color:red">(Force new)</span> The destination URL to forward to.
+- `type` (String) <span style="color:red">(Force new)</span> Redirect kind. `permanent` = HTTP 301; `temporary` = HTTP 302 (default); `masked` = loads the destination in a frame (URL masking). For a precise code — including a 307 temporary redirect — use `redirect_type`. Valid values: `permanent`, `temporary`, `masked`.
+- `wildcard` (Boolean) <span style="color:red">(Force new)</span> Whether to also forward all subdomains of the forwarded subdomain.
 
 ### Optional
 
-- `redirect_type` (String) <i style="color:red;font-weight: bold">(ForceNew)</i> The exact redirect type; takes precedence over `type` when supplied. `301` = permanent, `302` or `307` = temporary (this is how you request 307), `masked` = URL masking. Omit to derive from type (temporary->302, permanent->301). Value must be one of : `301`, `302`, `307`, `masked`.
-- `subdomain` (String) <i style="color:red;font-weight: bold">(ForceNew)</i> The subdomain portion only (optional, leave blank or omit for root domain). Alphanumeric and hyphens only.
+- `redirect_type` (String) <span style="color:red">(Force new)</span> The exact redirect type; takes precedence over `type` when supplied. `301` = permanent, `302` or `307` = temporary (this is how you request 307), `masked` = URL masking. Omit to derive from type (temporary->302, permanent->301). Valid values: `301`, `302`, `307`, `masked`.
+- `subdomain` (String) <span style="color:red">(Force new)</span> The subdomain portion only (optional, leave blank or omit for root domain). Alphanumeric and hyphens only.
 
 ### Read-Only
 

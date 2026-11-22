@@ -3,12 +3,12 @@
 page_title: "porkbun_url_forwards Data Source - terraform-provider-porkbun"
 subcategory: ""
 description: |-
-  
+  Retrieve all URL forwards associated with a domain.
 ---
 
 # porkbun_url_forwards (Data Source)
 
-
+Retrieve all URL forwards associated with a domain.
 
 ## Example Usage
 

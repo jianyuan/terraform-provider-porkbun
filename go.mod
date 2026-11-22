@@ -9,10 +9,9 @@ require (
 	github.com/hashicorp/terraform-plugin-go v0.31.0
 	github.com/hashicorp/terraform-plugin-sdk/v2 v2.41.1
 	github.com/hashicorp/terraform-plugin-testing v1.16.0
-	github.com/jianyuan/terraform-plugin-framework-utils v1.0.0
+	github.com/jianyuan/terraform-plugin-framework-utils v1.2.0
 	github.com/oapi-codegen/nullable v1.2.0
 	github.com/oapi-codegen/runtime v1.9.1
-	github.com/orange-cloudavenue/terraform-plugin-framework-superschema v1.12.0
 	github.com/orange-cloudavenue/terraform-plugin-framework-supertypes v1.2.0
 	github.com/samber/lo v1.53.0
 )
@@ -34,7 +33,7 @@ require (
 	github.com/bmatcuk/doublestar/v4 v4.10.0 // indirect
 	github.com/clipperhouse/stringish v0.1.1 // indirect
 	github.com/clipperhouse/uax29/v2 v2.3.0 // indirect
-	github.com/cloudflare/circl v1.6.3 // indirect
+	github.com/cloudflare/circl v1.6.5 // indirect
 	github.com/fatih/color v1.19.0 // indirect
 	github.com/getkin/kin-openapi v0.153.0 // indirect
 	github.com/go-openapi/jsonpointer v1.0.2 // indirect
@@ -55,10 +54,9 @@ require (
 	github.com/hashicorp/hc-install v0.10.0 // indirect
 	github.com/hashicorp/hcl/v2 v2.25.0 // indirect
 	github.com/hashicorp/logutils v1.0.0 // indirect
-	github.com/hashicorp/terraform-exec v0.25.2 // indirect
-	github.com/hashicorp/terraform-json v0.28.0 // indirect
+	github.com/hashicorp/terraform-exec v0.26.0 // indirect
+	github.com/hashicorp/terraform-json v0.29.0 // indirect
 	github.com/hashicorp/terraform-plugin-docs v0.25.0 // indirect
-	github.com/hashicorp/terraform-plugin-framework-timeouts v0.7.0 // indirect
 	github.com/hashicorp/terraform-plugin-log v0.11.0 // indirect
 	github.com/hashicorp/terraform-registry-address v0.5.1 // indirect
 	github.com/hashicorp/terraform-svchost v0.2.1 // indirect
@@ -87,7 +85,7 @@ require (
 	github.com/vmihailenco/tagparser/v2 v2.0.0 // indirect
 	github.com/yuin/goldmark v1.7.13 // indirect
 	github.com/yuin/goldmark-meta v1.1.0 // indirect
-	github.com/zclconf/go-cty v1.19.0 // indirect
+	github.com/zclconf/go-cty v1.20.0 // indirect
 	go.abhg.dev/goldmark/frontmatter v0.2.0 // indirect
 	go.yaml.in/yaml/v4 v4.0.0 // indirect
 	golang.org/x/crypto v0.59.0 // indirect
@@ -99,7 +97,7 @@ require (
 	golang.org/x/text v0.44.0 // indirect
 	golang.org/x/tools v0.53.0 // indirect
 	google.golang.org/appengine v1.6.8 // indirect
-	google.golang.org/genproto/googleapis/rpc v0.0.0-20261110000943-09e21b237f2c // indirect
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20261118221215-c8830f628b3f // indirect
 	google.golang.org/grpc v1.85.0 // indirect
 	google.golang.org/protobuf v1.36.12 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
