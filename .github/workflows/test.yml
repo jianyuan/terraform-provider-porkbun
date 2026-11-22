@@ -87,5 +87,5 @@ jobs:
           TF_ACC: "1"
           PORKBUN_API_KEY: ${{ secrets.PORKBUN_API_KEY }}
           PORKBUN_SECRET_KEY: ${{ secrets.PORKBUN_SECRET_KEY }}
-        run: go test -v -cover ./internal/provider/
+        run: go tool gotestsum --format github-actions -- -cover ./internal/provider/
         timeout-minutes: 10
