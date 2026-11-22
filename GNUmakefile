@@ -27,7 +27,7 @@ generate: ## Generate code and documentation
 
 .PHONY: testacc
 testacc: ## Run acceptance tests
-	TF_ACC=1 $(GO_VER) test ./... -v $(TESTARGS) -timeout 120m
+	TF_ACC=1 $(GO_VER) tool gotestsum --format testname -- ./... $(TESTARGS) -timeout 120m
 
 .PHONY: sweep
 sweep: ## Run sweepers
