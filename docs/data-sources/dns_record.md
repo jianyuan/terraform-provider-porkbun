@@ -32,6 +32,6 @@ data "porkbun_dns_record" "test" {
 - `content` (String) The record value.
 - `name` (String) The full name of the record being created, including the subdomain and the domain itself.
 - `notes` (String) Notes for the DNS record. Not served in DNS.
-- `priority` (Number) The priority for `MX` and `SRV` records. Defaults to 0 if omitted..
+- `priority` (Number) The priority for `MX` and `SRV` records. Defaults to 0 if omitted.
 - `ttl` (Number) Time to live in seconds. Minimum is determined by account settings (typically 600). Defaults to the account minimum if omitted or 0.
 - `type` (String) The DNS record type.

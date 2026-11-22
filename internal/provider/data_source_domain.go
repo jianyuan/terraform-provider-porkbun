@@ -3,7 +3,10 @@ package provider
 import (
 	"context"
 
+	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
+
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
+	"github.com/jianyuan/terraform-plugin-framework-utils/fwschema"
 	"github.com/jianyuan/terraform-provider-porkbun/internal/apiclient"
 	"github.com/jianyuan/terraform-provider-porkbun/internal/fwdiag"
 )
@@ -24,8 +27,51 @@ func (d *DomainDataSource) Metadata(ctx context.Context, req datasource.Metadata
 }
 
 func (d *DomainDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
-	resp.Schema = domainSchema().GetDataSource(ctx)
-
+	resp.Schema = fwschema.Describe(ctx, schema.Schema{
+		MarkdownDescription: "Get the metadata for a single domain.",
+		Attributes: map[string]schema.Attribute{
+			"domain": schema.StringAttribute{
+				MarkdownDescription: "Fully qualified domain name in the authenticated account.",
+				Required:            true,
+			},
+			"status": schema.StringAttribute{
+				MarkdownDescription: "The status of the domain.",
+				Computed:            true,
+			},
+			"tld": schema.StringAttribute{
+				MarkdownDescription: "The TLD of the domain.",
+				Computed:            true,
+			},
+			"create_date": schema.StringAttribute{
+				MarkdownDescription: "The creation date of the domain.",
+				Computed:            true,
+			},
+			"expire_date": schema.StringAttribute{
+				MarkdownDescription: "The expiration date of the domain.",
+				Computed:            true,
+			},
+			"security_lock": schema.BoolAttribute{
+				MarkdownDescription: "Indicates if the Registrar Lock/Transfer Lock is enabled to prevent unauthorized domain transfers.",
+				Computed:            true,
+			},
+			"whois_privacy": schema.BoolAttribute{
+				MarkdownDescription: "Indicates if WHOIS privacy protection is active to hide personal registrant details from the public WHOIS database.",
+				Computed:            true,
+			},
+			"auto_renew": schema.BoolAttribute{
+				MarkdownDescription: "Indicates whether the domain will automatically renew before its expiration date.",
+				Computed:            true,
+			},
+			"api_access": schema.BoolAttribute{
+				MarkdownDescription: "Indicates whether API access is enabled for the domain.",
+				Computed:            true,
+			},
+			"not_local": schema.BoolAttribute{
+				MarkdownDescription: "Indicates if the domain is registered with an external, third-party registrar.",
+				Computed:            true,
+			},
+		},
+	}, fwschema.ForceNew(), fwschema.Enum())
 }
 
 func (d *DomainDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {

@@ -3,9 +3,12 @@ package provider
 import (
 	"context"
 
+	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
+
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+	"github.com/jianyuan/terraform-plugin-framework-utils/fwschema"
 	"github.com/jianyuan/terraform-provider-porkbun/internal/apiclient"
 	"github.com/jianyuan/terraform-provider-porkbun/internal/fwdiag"
 	supertypes "github.com/orange-cloudavenue/terraform-plugin-framework-supertypes"
@@ -58,7 +61,45 @@ func (d *DnssecRecordsDataSource) Metadata(ctx context.Context, req datasource.M
 }
 
 func (d *DnssecRecordsDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
-	resp.Schema = dnssecRecordsSchema().GetDataSource(ctx)
+	resp.Schema = fwschema.Describe(ctx, schema.Schema{
+		MarkdownDescription: "Retrieves all DNSSEC records associated with the domain at the registry.",
+		Attributes: map[string]schema.Attribute{
+			"domain": schema.StringAttribute{
+				MarkdownDescription: "The domain name.",
+				Required:            true,
+			},
+			"records": schema.SetNestedAttribute{
+				MarkdownDescription: "All DNSSEC records.",
+				Computed:            true,
+				CustomType:          supertypes.NewSetNestedObjectTypeOf[DnssecRecordsDataSourceModelRecordsItem](ctx),
+				NestedObject: schema.NestedAttributeObject{
+					CustomType: supertypes.NewObjectTypeOf[DnssecRecordsDataSourceModelRecordsItem](ctx),
+					Attributes: map[string]schema.Attribute{
+						"alg": schema.StringAttribute{
+							MarkdownDescription: "DS Data algorithm number (e.g. 13 for ECDSA P-256 SHA-256).",
+							Computed:            true,
+						},
+						"digest": schema.StringAttribute{
+							MarkdownDescription: "Hex-encoded digest value.",
+							Computed:            true,
+						},
+						"digest_type": schema.StringAttribute{
+							MarkdownDescription: "Digest type number (e.g. 2 for SHA-256).",
+							Computed:            true,
+						},
+						"key_tag": schema.StringAttribute{
+							MarkdownDescription: "DNSSEC key tag.",
+							Computed:            true,
+						},
+						"pub_key": schema.StringAttribute{
+							MarkdownDescription: "Public key.",
+							Computed:            true,
+						},
+					},
+				},
+			},
+		},
+	}, fwschema.ForceNew(), fwschema.Enum())
 }
 
 func (d *DnssecRecordsDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {

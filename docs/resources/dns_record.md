@@ -55,14 +55,14 @@ import {
 ### Required
 
 - `content` (String) The record value.
-- `domain` (String) <i style="color:red;font-weight: bold">(ForceNew)</i>.
-- `type` (String) The DNS record type. Value must be one of : `A`, `MX`, `CNAME`, `ALIAS`, `TXT`, `NS`, `AAAA`, `SRV`, `TLSA`, `CAA`, `HTTPS`, `SVCB`.
+- `domain` (String) <span style="color:red">(Force new)</span> The domain name.
+- `type` (String) The DNS record type. Valid values: `A`, `MX`, `CNAME`, `ALIAS`, `TXT`, `NS`, `AAAA`, `SRV`, `TLSA`, `CAA`, `HTTPS`, `SVCB`.
 
 ### Optional
 
 - `notes` (String) Optional notes to store with the record. Not served in DNS.
-- `priority` (Number) The priority for `MX` and `SRV` records. Defaults to 0 if omitted..
-- `subdomain` (String) <i style="color:red;font-weight: bold">(ForceNew)</i> The subdomain for the record being created, not including the domain itself. Omit to create a record on the root domain. Use * to create a wildcard record.
+- `priority` (Number) The priority for `MX` and `SRV` records. Defaults to 0 if omitted.
+- `subdomain` (String) <span style="color:red">(Force new)</span> The subdomain for the record being created, not including the domain itself. Omit to create a record on the root domain. Use * to create a wildcard record.
 - `ttl` (Number) Time to live in seconds. Minimum is determined by account settings (typically 600). Defaults to the account minimum if omitted or 0.
 
 ### Read-Only

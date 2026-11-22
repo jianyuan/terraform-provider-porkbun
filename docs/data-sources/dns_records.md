@@ -38,8 +38,8 @@ data "porkbun_dns_records" "example" {
 
 Optional:
 
-- `subdomain` (String) Record subdomain. Ensure that if an attribute is set, also these are set: "[<.type]".
-- `type` (String) Record type. Value must be one of : `A`, `MX`, `CNAME`, `ALIAS`, `TXT`, `NS`, `AAAA`, `SRV`, `TLSA`, `CAA`, `HTTPS`, `SVCB`.
+- `subdomain` (String) Record subdomain. Requires `type`.
+- `type` (String) Record type. Valid values: `A`, `MX`, `CNAME`, `ALIAS`, `TXT`, `NS`, `AAAA`, `SRV`, `TLSA`, `CAA`, `HTTPS`, `SVCB`.
 
 
 <a id="nestedatt--records"></a>
@@ -51,6 +51,6 @@ Read-Only:
 - `id` (String) The record ID.
 - `name` (String) The full name of the record being created, including the subdomain and the domain itself.
 - `notes` (String) Notes for the DNS record. Not served in DNS.
-- `priority` (Number) The priority for `MX` and `SRV` records. Defaults to 0 if omitted..
+- `priority` (Number) The priority for `MX` and `SRV` records. Defaults to 0 if omitted.
 - `ttl` (Number) Time to live in seconds. Minimum is determined by account settings (typically 600). Defaults to the account minimum if omitted or 0.
 - `type` (String) The DNS record type.

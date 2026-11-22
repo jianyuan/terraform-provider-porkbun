@@ -33,19 +33,19 @@ import {
 
 ### Required
 
-- `alg` (String) <i style="color:red;font-weight: bold">(ForceNew)</i> DS Data algorithm number (e.g. 13 for ECDSA P-256 SHA-256).
-- `digest` (String) <i style="color:red;font-weight: bold">(ForceNew)</i> Hex-encoded digest value.
-- `digest_type` (String) <i style="color:red;font-weight: bold">(ForceNew)</i> Digest type number (e.g. 2 for SHA-256).
-- `domain` (String) <i style="color:red;font-weight: bold">(ForceNew)</i> The domain for the record being created.
-- `key_tag` (String) <i style="color:red;font-weight: bold">(ForceNew)</i> DNSSEC key tag.
+- `alg` (String) <span style="color:red">(Force new)</span> DS Data algorithm number (e.g. 13 for ECDSA P-256 SHA-256).
+- `digest` (String) <span style="color:red">(Force new)</span> Hex-encoded digest value.
+- `digest_type` (String) <span style="color:red">(Force new)</span> Digest type number (e.g. 2 for SHA-256).
+- `domain` (String) <span style="color:red">(Force new)</span> The domain for the record being created.
+- `key_tag` (String) <span style="color:red">(Force new)</span> DNSSEC key tag.
 
 ### Optional
 
-- `key_data_algo` (String) <i style="color:red;font-weight: bold">(ForceNew)</i> Key data algorithm.
-- `key_data_flags` (String) <i style="color:red;font-weight: bold">(ForceNew)</i> Key data flags (optional, used when submitting full key data).
-- `key_data_protocol` (String) <i style="color:red;font-weight: bold">(ForceNew)</i> Key data protocol.
-- `key_data_public_key` (String) <i style="color:red;font-weight: bold">(ForceNew)</i> Key data public key in base64.
-- `max_sig_life` (String) <i style="color:red;font-weight: bold">(ForceNew)</i> Maximum signature lifetime in seconds (registry-specific).
+- `key_data_algo` (String) <span style="color:red">(Force new)</span> Key data algorithm.
+- `key_data_flags` (String) <span style="color:red">(Force new)</span> Key data flags (optional, used when submitting full key data).
+- `key_data_protocol` (String) <span style="color:red">(Force new)</span> Key data protocol.
+- `key_data_public_key` (String) <span style="color:red">(Force new)</span> Key data public key in base64.
+- `max_sig_life` (String) <span style="color:red">(Force new)</span> Maximum signature lifetime in seconds (registry-specific).
 
 ## Import
 
