@@ -97,7 +97,7 @@ func (d *DomainsDataSource) Schema(ctx context.Context, req datasource.SchemaReq
 				},
 			},
 		},
-	}, fwschema.ForceNew(), fwschema.Enum())
+	}, fwschema.DefaultSteps()...)
 }
 
 func (d *DomainsDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {

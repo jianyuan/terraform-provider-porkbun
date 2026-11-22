@@ -40,7 +40,7 @@ func (d *DomainNameserversDataSource) Schema(ctx context.Context, req datasource
 				CustomType:          supertypes.NewSetTypeOf[string](ctx),
 			},
 		},
-	}, fwschema.ForceNew(), fwschema.Enum())
+	}, fwschema.DefaultSteps()...)
 }
 
 func (d *DomainNameserversDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {

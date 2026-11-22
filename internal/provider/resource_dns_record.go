@@ -115,7 +115,7 @@ func (r *DnsRecordResource) Schema(ctx context.Context, req resource.SchemaReque
 				Computed:            true,
 			},
 		},
-	}, fwschema.ForceNew(), fwschema.Enum())
+	}, fwschema.DefaultSteps()...)
 }
 
 func (r *DnsRecordResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {

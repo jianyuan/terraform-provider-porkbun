@@ -132,7 +132,7 @@ func (r *DnssecRecordResource) Schema(ctx context.Context, req resource.SchemaRe
 				},
 			},
 		},
-	}, fwschema.ForceNew(), fwschema.Enum())
+	}, fwschema.DefaultSteps()...)
 }
 
 func (r *DnssecRecordResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {

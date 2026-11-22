@@ -90,7 +90,7 @@ func (d *URLForwardsDataSource) Schema(ctx context.Context, req datasource.Schem
 				},
 			},
 		},
-	}, fwschema.ForceNew(), fwschema.Enum())
+	}, fwschema.DefaultSteps()...)
 }
 
 func (d *URLForwardsDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {

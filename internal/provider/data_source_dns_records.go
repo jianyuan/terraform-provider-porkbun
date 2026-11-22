@@ -73,7 +73,7 @@ func (d *DnsRecordsDataSource) Schema(ctx context.Context, req datasource.Schema
 						},
 					},
 					"subdomain": schema.StringAttribute{
-						MarkdownDescription: "Record subdomain. Requires `type`.",
+						MarkdownDescription: "Record subdomain.",
 						Optional:            true,
 						Validators: []validator.String{
 							stringvalidator.AlsoRequires(path.MatchRelative().AtParent().AtName("type")),
@@ -120,7 +120,7 @@ func (d *DnsRecordsDataSource) Schema(ctx context.Context, req datasource.Schema
 				},
 			},
 		},
-	}, fwschema.ForceNew(), fwschema.Enum())
+	}, fwschema.DefaultSteps()...)
 }
 
 func (d *DnsRecordsDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {

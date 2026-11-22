@@ -75,7 +75,7 @@ func (d *DnsRecordDataSource) Schema(ctx context.Context, req datasource.SchemaR
 				Computed:            true,
 			},
 		},
-	}, fwschema.ForceNew(), fwschema.Enum())
+	}, fwschema.DefaultSteps()...)
 }
 
 func (d *DnsRecordDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {

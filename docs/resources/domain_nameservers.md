@@ -29,4 +29,4 @@ resource "porkbun_domain_nameservers" "example" {
 ### Required
 
 - `domain` (String) <span style="color:red">(Force new)</span> The domain name for which to manage the authoritative name servers.
-- `nameservers` (Set of String) The authoritative name servers for the domain. At least one is required.
+- `nameservers` (Set of String) The authoritative name servers for the domain. Must contain at least 1 element.

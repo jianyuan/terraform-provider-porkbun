@@ -121,7 +121,7 @@ func (r *DomainResource) Schema(ctx context.Context, req resource.SchemaRequest,
 				Computed:            true,
 			},
 		},
-	}, fwschema.ForceNew(), fwschema.Enum())
+	}, fwschema.DefaultSteps()...)
 }
 
 // quote asks the API what the domain costs right now and returns the total in US

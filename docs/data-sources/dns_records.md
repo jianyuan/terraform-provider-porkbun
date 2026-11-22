@@ -38,7 +38,7 @@ data "porkbun_dns_records" "example" {
 
 Optional:
 
-- `subdomain` (String) Record subdomain. Requires `type`.
+- `subdomain` (String) Record subdomain. Also requires: `type`.
 - `type` (String) Record type. Valid values: `A`, `MX`, `CNAME`, `ALIAS`, `TXT`, `NS`, `AAAA`, `SRV`, `TLSA`, `CAA`, `HTTPS`, `SVCB`.
 
 

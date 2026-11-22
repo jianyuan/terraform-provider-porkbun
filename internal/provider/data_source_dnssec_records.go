@@ -99,7 +99,7 @@ func (d *DnssecRecordsDataSource) Schema(ctx context.Context, req datasource.Sch
 				},
 			},
 		},
-	}, fwschema.ForceNew(), fwschema.Enum())
+	}, fwschema.DefaultSteps()...)
 }
 
 func (d *DnssecRecordsDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {

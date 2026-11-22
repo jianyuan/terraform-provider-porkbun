@@ -43,7 +43,7 @@ func (r *DomainNameserversResource) Schema(ctx context.Context, req resource.Sch
 				},
 			},
 			"nameservers": schema.SetAttribute{
-				MarkdownDescription: "The authoritative name servers for the domain. At least one is required.",
+				MarkdownDescription: "The authoritative name servers for the domain.",
 				Required:            true,
 				CustomType:          supertypes.NewSetTypeOf[string](ctx),
 				Validators: []validator.Set{
@@ -51,7 +51,7 @@ func (r *DomainNameserversResource) Schema(ctx context.Context, req resource.Sch
 				},
 			},
 		},
-	}, fwschema.ForceNew(), fwschema.Enum())
+	}, fwschema.DefaultSteps()...)
 }
 
 func (r *DomainNameserversResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {

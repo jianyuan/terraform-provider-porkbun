@@ -111,7 +111,7 @@ func (r *URLForwardResource) Schema(ctx context.Context, req resource.SchemaRequ
 				},
 			},
 		},
-	}, fwschema.ForceNew(), fwschema.Enum())
+	}, fwschema.DefaultSteps()...)
 }
 
 func (r *URLForwardResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
