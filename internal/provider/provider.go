@@ -128,6 +128,7 @@ func (p *PorkbunProvider) Resources(ctx context.Context) []func() resource.Resou
 		NewGlueRecordResource,
 		NewEmailForwardResource,
 		NewURLForwardResource,
+		NewWebhookResource,
 	}
 }
 
